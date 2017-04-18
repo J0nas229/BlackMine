@@ -18,18 +18,21 @@
  * @link https://itxtech.org
  *
  */
-
+ 
 namespace pocketmine\item;
 
-use pocketmine\block\Block;
-
-class FlowerPot extends Item {
-	public function __construct($meta = 0, $count = 1) {
-		$this->block = Block::get(Item::FLOWER_POT_BLOCK);
-		parent::__construct(self::FLOWER_POT, 0, $count, "Flower Pot");
+class CookedMutton extends Food{
+	public function __construct($meta = 0, $count = 1){
+		parent::__construct(self::COOKED_MUTTON, $meta, $count, "Cooked Mutton");
+	}
+	
+	public function getFoodRestore() : int{
+		return 6;
 	}
 
-	public function getMaxStackSize() : int{
-		return 64;
+	public function getSaturationRestore() : float{
+		return 9.6;
 	}
-} 
+
+}
+

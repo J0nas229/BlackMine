@@ -21,17 +21,19 @@
 
 namespace pocketmine\item;
 
-class CookedPorkchop extends Food{
-	public function __construct($meta = 0, $count = 1){
-		parent::__construct(self::COOKED_PORKCHOP, $meta, $count, "Cooked Porkchop");
-	}
+use pocketmine\entity\Effect;
 
-	public function getFoodRestore() : int{
-		return 8;
-	}
+interface FoodSource{
+	public function getResidue();
+	
+	public function getFoodRestore() : int;
 
-	public function getSaturationRestore() : float{
-		return 12.8;
-	}
+	public function getSaturationRestore() : float;
+
+	/**
+	 * @return Effect[]
+	 */
+	public function getAdditionalEffects() : array;
+	
+	
 }
-
