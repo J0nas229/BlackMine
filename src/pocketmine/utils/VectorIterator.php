@@ -22,15 +22,15 @@
 namespace pocketmine\utils;
 
 use pocketmine\block\Block;
-use pocketmine\level\Level;
+use pocketmine\level\ChunkManager;
 use pocketmine\math\Vector3;
 
 /**
  * This class performs ray tracing and iterates along blocks on a line
  */
-class BlockIterator implements \Iterator{
+class VectorIterator implements \Iterator{
 
-	/** @var Level */
+	/** @var ChunkManager */
 	private $level;
 	private $maxDistance;
 
@@ -38,10 +38,10 @@ class BlockIterator implements \Iterator{
 
 	private $end = false;
 
-	/** @var \SplFixedArray<Block>[3] */
-	private $blockQueue;
+	/** @var \SplFixedArray<Vector3>[3] */
+	private $positionQueue;
 	private $currentBlock = 0;
-	/** @var Block */
+	/** @var Vector3 */
 	private $currentBlockObject = null;
 	private $currentDistance = 0;
 	private $maxDistanceInt = 0;
@@ -56,13 +56,19 @@ class BlockIterator implements \Iterator{
 	private $secondFace;
 	private $thirdFace;
 
-	public function __construct(Level $level, Vector3 $start, Vector3 $direction, $yOffset = 0, $maxDistance = 0){
+	public function __construct(ChunkManager $level, Vector3 $from, Vector3 $to){
+		if($from->equals($to)){
+			$this->end = true;
+			$this->currentBlock = -1;
+			return;
+		}
+		$direction = $to->subtract($from)->normalize();
+		$maxDistance = $from->distance($to);
 		$this->level = $level;
 		$this->maxDistance = (int) $maxDistance;
-		$this->blockQueue = new \SplFixedArray(3);
+		$this->positionQueue = new \SplFixedArray(3);
 
-		$startClone = new Vector3($start->x, $start->y, $start->z);
-		$startClone->y += $yOffset;
+		$startClone = new Vector3($from->x, $from->y, $from->z);
 
 		$this->currentDistance = 0;
 
@@ -75,7 +81,7 @@ class BlockIterator implements \Iterator{
 		$thirdPosition = 0;
 
 		$pos = new Vector3($startClone->x, $startClone->y, $startClone->z);
-		$startBlock = $this->level->getBlock(new Vector3(floor($pos->x), floor($pos->y), floor($pos->z)));
+		$startBlock = new Vector3(floor($pos->x), floor($pos->y), floor($pos->z));
 
 		if($this->getXLength($direction) > $mainDirection){
 			$this->mainFace = $this->getXFace($direction);
@@ -149,7 +155,7 @@ class BlockIterator implements \Iterator{
 		$this->secondError -= self::$gridSize;
 		$this->thirdError -= self::$gridSize;
 
-		$this->blockQueue[0] = $lastBlock;
+		$this->positionQueue[0] = $lastBlock;
 
 		$this->currentBlock = -1;
 
@@ -158,7 +164,7 @@ class BlockIterator implements \Iterator{
 		$startBlockFound = false;
 
 		for($cnt = $this->currentBlock; $cnt >= 0; --$cnt){
-			if($this->blockEquals($this->blockQueue[$cnt], $startBlock)){
+			if($this->posEquals($this->positionQueue[$cnt], $startBlock)){
 				$this->currentBlock = $cnt;
 				$startBlockFound = true;
 				break;
@@ -172,7 +178,7 @@ class BlockIterator implements \Iterator{
 		$this->maxDistanceInt = round($maxDistance / (sqrt($mainDirection ** 2 + $secondDirection ** 2 + $thirdDirection ** 2) / $mainDirection));
 	}
 
-	private function blockEquals(Block $a, Block $b){
+	private function posEquals(Vector3 $a, Vector3 $b){
 		return $a->x === $b->x and $a->y === $b->y and $a->z === $b->z;
 	}
 
@@ -204,15 +210,15 @@ class BlockIterator implements \Iterator{
 		return $direction > 0 ? ($position - $blockPosition) : ($blockPosition + 1 - $position);
 	}
 
-	private function getXPosition(Vector3 $direction, Vector3 $position, Block $block){
+	private function getXPosition(Vector3 $direction, Vector3 $position, Vector3 $block){
 		return $this->getPosition($direction->x, $position->x, $block->x);
 	}
 
-	private function getYPosition(Vector3 $direction, Vector3 $position, Block $block){
+	private function getYPosition(Vector3 $direction, Vector3 $position, Vector3 $block){
 		return $this->getPosition($direction->y, $position->y, $block->y);
 	}
 
-	private function getZPosition(Vector3 $direction, Vector3 $position, Block $block){
+	private function getZPosition(Vector3 $direction, Vector3 $position, Vector3 $block){
 		return $this->getPosition($direction->z, $position->z, $block->z);
 	}
 
@@ -222,7 +228,7 @@ class BlockIterator implements \Iterator{
 		if($this->currentBlock <= -1){
 			throw new \OutOfBoundsException;
 		}else{
-			$this->currentBlockObject = $this->blockQueue[$this->currentBlock--];
+			$this->currentBlockObject = $this->positionQueue[$this->currentBlock--];
 		}
 	}
 
@@ -271,31 +277,31 @@ class BlockIterator implements \Iterator{
 		$this->thirdError += $this->thirdStep;
 
 		if($this->secondError > 0 and $this->thirdError > 0){
-			$this->blockQueue[2] = $this->blockQueue[0]->getSide($this->mainFace);
+			$this->positionQueue[2] = $this->positionQueue[0]->getSide($this->mainFace);
 
 			if(($this->secondStep * $this->thirdError) < ($this->thirdStep * $this->secondError)){
-				$this->blockQueue[1] = $this->blockQueue[2]->getSide($this->secondFace);
-				$this->blockQueue[0] = $this->blockQueue[1]->getSide($this->thirdFace);
+				$this->positionQueue[1] = $this->positionQueue[2]->getSide($this->secondFace);
+				$this->positionQueue[0] = $this->positionQueue[1]->getSide($this->thirdFace);
 			}else{
-				$this->blockQueue[1] = $this->blockQueue[2]->getSide($this->thirdFace);
-				$this->blockQueue[0] = $this->blockQueue[1]->getSide($this->secondFace);
+				$this->positionQueue[1] = $this->positionQueue[2]->getSide($this->thirdFace);
+				$this->positionQueue[0] = $this->positionQueue[1]->getSide($this->secondFace);
 			}
 
 			$this->thirdError -= self::$gridSize;
 			$this->secondError -= self::$gridSize;
 			$this->currentBlock = 2;
 		}elseif($this->secondError > 0){
-			$this->blockQueue[1] = $this->blockQueue[0]->getSide($this->mainFace);
-			$this->blockQueue[0] = $this->blockQueue[1]->getSide($this->secondFace);
+			$this->positionQueue[1] = $this->positionQueue[0]->getSide($this->mainFace);
+			$this->positionQueue[0] = $this->positionQueue[1]->getSide($this->secondFace);
 			$this->secondError -= self::$gridSize;
 			$this->currentBlock = 1;
 		}elseif($this->thirdError > 0){
-			$this->blockQueue[1] = $this->blockQueue[0]->getSide($this->mainFace);
-			$this->blockQueue[0] = $this->blockQueue[1]->getSide($this->thirdFace);
+			$this->positionQueue[1] = $this->positionQueue[0]->getSide($this->mainFace);
+			$this->positionQueue[0] = $this->positionQueue[1]->getSide($this->thirdFace);
 			$this->thirdError -= self::$gridSize;
 			$this->currentBlock = 1;
 		}else{
-			$this->blockQueue[0] = $this->blockQueue[0]->getSide($this->mainFace);
+			$this->positionQueue[0] = $this->positionQueue[0]->getSide($this->mainFace);
 			$this->currentBlock = 0;
 		}
 	}
