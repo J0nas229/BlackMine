@@ -23,16 +23,16 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 
-class Bedrock extends Solid{
+class InvisibleBedrock extends Transparent{
 
-	protected $id = self::BEDROCK;
+	protected $id = self::INVISIBLE_BEDROCK;
 
 	public function __construct(){
 
 	}
 
 	public function getName() : string{
-		return "Bedrock";
+		return "Invisible Bedrock";
 	}
 
 	public function getHardness() {

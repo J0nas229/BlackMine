@@ -21,15 +21,32 @@
 
 namespace pocketmine\block;
 
-use pocketmine\item\Item;
-use pocketmine\Player;
+class InactiveRedstoneLamp extends ActiveRedstoneLamp{
+	protected $id = self::INACTIVE_REDSTONE_LAMP;
 
-class DaylightDetectorInverted extends DaylightDetector{
-	protected $id = self::DAYLIGHT_SENSOR_INVERTED;
+	public function getLightLevel(){
+		return 0;
+	}
 
-	public function onActivate(Item $item, Player $player = null){
-		$this->getLevel()->setBlock($this, new DaylightDetector(), true, true);
-		$this->getTile()->onUpdate();
+	public function getName() : string{
+		return "Inactive Redstone Lamp";
+	}
+
+	public function isLightedByAround(){
+		return false;
+	}
+
+	public function turnOn(){
+		//if($isLightedByAround){
+		$this->getLevel()->setBlock($this, new ActiveRedstoneLamp(), true, true);
+		/*}else{
+			$this->getLevel()->setBlock($this, new ActiveRedstoneLamp(), true, false);
+			//$this->lightAround();
+		}*/
+		return true;
+	}
+
+	public function turnOff(){
 		return true;
 	}
 }

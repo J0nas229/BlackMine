@@ -1,124 +1,101 @@
 <?php
-/**
- * src/pocketmine/block/DaylightDetector.php
- *
- * @package default
- */
-
 
 /*
  *
- *  _                       _           _ __  __ _
- * (_)                     (_)         | |  \/  (_)
- *  _ _ __ ___   __ _  __ _ _  ___ __ _| | \  / |_ _ __   ___
- * | | '_ ` _ \ / _` |/ _` | |/ __/ _` | | |\/| | | '_ \ / _ \
- * | | | | | | | (_| | (_| | | (_| (_| | | |  | | | | | |  __/
- * |_|_| |_| |_|\__,_|\__, |_|\___\__,_|_|_|  |_|_|_| |_|\___|
- *                     __/ |
- *                    |___/
+ *  _____   _____   __   _   _   _____  __    __  _____
+ * /  ___| | ____| |  \ | | | | /  ___/ \ \  / / /  ___/
+ * | |     | |__   |   \| | | | | |___   \ \/ /  | |___
+ * | |  _  |  __|  | |\   | | | \___  \   \  /   \___  \
+ * | |_| | | |___  | | \  | | |  ___| |   / /     ___| |
+ * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
  *
- * This program is a third party build by ImagicalMine.
- *
- * PocketMine is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author ImagicalMine Team
- * @link http://forums.imagicalcorp.ml/
+ * @author iTX Technologies
+ * @link https://itxtech.org
  *
- *
-*/
+ */
 
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
-use pocketmine\level\Level;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
+use pocketmine\tile\DLDetector;
+use pocketmine\tile\Tile;
 
-class DaylightDetector extends Transparent implements Redstone, RedstoneSwitch
-{
+class DaylightDetector extends RedstoneSource{
+	protected $id = self::DAYLIGHT_SENSOR;
+	//protected $hasStartedUpdate = false;
 
-    protected $id = self::DAYLIGHT_DETECTOR;
+	public function getName() : string{
+		return "Daylight Sensor";
+	}
 
-    /**
-     *
-     * @param unknown $meta (optional)
-     */
-    public function __construct($meta = 0)
-    {
-        $this->meta = $meta;
-    }
+	public function getBoundingBox(){
+		if($this->boundingBox === null){
+			$this->boundingBox = $this->recalculateBoundingBox();
+		}
+		return $this->boundingBox;
+	}
 
+	public function canBeFlowedInto(){
+		return false;
+	}
 
-    /**
-     *
-     * @return unknown
-     */
-    public function getName()
-    {
-        return "Daylight Detector";
-    }
+	public function canBeActivated() : bool {
+		return true;
+	}
 
+	/**
+	 * @return DLDetector
+	 */
+	protected function getTile(){
+		$t = $this->getLevel()->getTile($this);
+		if($t instanceof DLDetector){
+			return $t;
+		}else{
+			$nbt = new CompoundTag("", [
+				new StringTag("id", Tile::DAY_LIGHT_DETECTOR),
+				new IntTag("x", $this->x),
+				new IntTag("y", $this->y),
+				new IntTag("z", $this->z)
+			]);
+			return Tile::createTile(Tile::DAY_LIGHT_DETECTOR, $this->getLevel(), $nbt);
+		}
+	}
 
-    /**
-     *
-     * @return unknown
-     */
-    public function isRedstone()
-    {
-        return true;
-    }
+	public function onActivate(Item $item, Player $player = null){
+		$this->getLevel()->setBlock($this, new DaylightDetectorInverted(), true, true);
+		$this->getTile()->onUpdate();
+		return true;
+	}
 
+	public function isActivated(Block $from = null){
+		return $this->getTile()->isActivated();
+	}
 
+	public function onBreak(Item $item){
+		$this->getLevel()->setBlock($this, new Air());
+		if($this->isActivated()) $this->deactivate();
+	}
 
-    /**
-     *
-     * @return unknown
-     */
-    public function canBeActivated()
-    {
-        return true;
-    }
+	public function getHardness() {
+		return 0.2;
+	}
 
+	public function getResistance(){
+		return 1;
+	}
 
-    /**
-     *
-     * @param unknown $type
-     * @return unknown
-     */
-    public function onUpdate($type)
-    {
-        if ($type === Level::BLOCK_UPDATE_SCHEDULED || $type === Level::BLOCK_UPDATE_NORMAL) {
-            $this->power=$this->getLightLevel();
-            $this->getLevel()->setBlock($this, $this, true, true);
-            $this->getLevel()->scheduleUpdate($this, 50);
-            $this->BroadcastRedstoneUpdate(Level::REDSTONE_UPDATE_NORMAL, $this->getPower());
-        }
-        return false;
-    }
-
-
-    /**
-     *
-     * @param Item    $item
-     * @param Player  $player (optional)
-     */
-    public function onActivate(Item $item, Player $player = null)
-    {
-        $this->id=self::DAYLIGHT_DETECTOR_INVERTED;
-        $this->getLevel()->setBlock($this, $this, true);
-        $this->BroadcastRedstoneUpdate(Level::REDSTONE_UPDATE_NORMAL, $this->getPower());
-    }
-
-
-    /**
-     *
-     * @param Item    $item
-     * @return unknown
-     */
-    public function getDrops(Item $item)
-    {
-        return [[self::DAYLIGHT_DETECTOR, 0, 1]];
-    }
+	public function getDrops(Item $item) : array {
+		return [
+			[self::DAYLIGHT_SENSOR, 0, 1]
+		];
+	}
 }
