@@ -13,16 +13,17 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
+ * @author Pocketmine Team
+ * @link http://www.pocketmine.net
  *
  *
 */
 
 namespace pocketmine\item;
 
-class MagmaCream extends Item {
-    public function __construct($meta = 0, $count =1){
-        parent::__construct(self::MAGMA_CREAM, $meta, $count, "Magma Cream");
-    }
+
+class NetherStar extends Item{
+	public function __construct($meta = 0, $count = 1){
+		parent::__construct(self::NETHER_STAR, $meta, $count, "Nether Star");
+	}
 }
