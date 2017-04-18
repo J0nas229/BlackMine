@@ -1301,11 +1301,13 @@ class Server {
 
 			$level->initLevel();
 
-			$level->setTickRate($this->baseTickRate);
-		}catch(\Throwable $e) {
-	//		$this->logger->error($this->getLanguage()->translateString("pocketmine.level.generateError", [$name, $e->getMessage()]));
-		///	$this->logger->logException($e);
+	$level = new Level($this, $name, $path, $provider);
+		}catch(\Throwable $e){
+
+			$this->logger->error($this->getLanguage()->translateString("pocketmine.level.loadError", [$name, $e->getMessage()]));
+			$this->logger->logException($e);
 			return false;
+		}
 		}
 
 		$this->getPluginManager()->callEvent(new LevelInitEvent($level));
