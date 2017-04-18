@@ -1,8 +1,5 @@
 # ![ImagicalMine](http://i.imgur.com/6Hlm8mn.gif)
 
-[![Join the chat at https://gitter.im/ImagicalMine/ImagicalMine](https://badges.gitter.im/ImagicalMine/ImagicalMine.svg)](https://gitter.im/ImagicalMine/ImagicalMine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)<br>[![Travis Build](https://travis-ci.org/ImagicalCorp/ImagicalMine.svg)](https://travis-ci.org/ImagicalCorp/ImagicalMine)
-
-
 ## Acknowledgements
 
 - This is a third-party build of [PocketMine-MP](https://github.com/PocketMine/PocketMine-MP). ImagicalMine is in no way affiliated with [PocketMine-MP](https://github.com/PocketMine/PocketMine-MP).
@@ -18,8 +15,8 @@
 ## Demo Server
 
 Below is the ImagicalMine demo server details, you can see what features ImagicalMine has before downloading it.<br>
-**IP: play.imagicalmine.net**<br>
-**Port: 19134**
+**IP: nightcorepe.tk**<br>
+**Port: 19132**
 
 ## Installation
 
