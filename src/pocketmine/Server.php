@@ -311,7 +311,10 @@ class Server {
 	public $netherEnabled = false;
 	public $netherName = "nether";
 	public $netherLevel = null;
-	public $weatherChangeTime = 12000;
+ 	public $weatherRandomDurationMin = 6000;
+ 	public $weatherRandomDurationMax = 12000;
+	public $lightningTime = 200;
+	public $lightningFire = false;
 	public $lookup = [];
 	public $hungerHealth = 10;
 	public $lightningTime = 100;
