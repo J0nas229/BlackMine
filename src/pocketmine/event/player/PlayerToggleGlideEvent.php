@@ -1,5 +1,4 @@
 <?php
-
 /*
  *
  *  ____            _        _   __  __ _                  __  __ ____
@@ -22,40 +21,26 @@
 namespace pocketmine\event\player;
 
 use pocketmine\event\Cancellable;
-use pocketmine\item\Item;
 use pocketmine\Player;
 
-/**
- * Called when a player eats something
- */
-class PlayerItemConsumeEvent extends PlayerEvent implements Cancellable{
+class PlayerToggleGlideEvent extends PlayerEvent implements Cancellable{
 
 	public static $handlerList = null;
-
-	/** @var Item */
-	private $item;
-
-	/**
-	 * @param Player $player
-	 * @param Item   $item
-	 */
-	public function __construct(Player $player, Item $item){
+	/** @var bool */
+	protected $isGliding;
+	public function __construct(Player $player, $isGliding){
 		$this->player = $player;
-		$this->item = $item;
+		$this->isGliding = (bool) $isGliding;
 	}
-
-	/**
-	 * @return Item
-	 */
-	public function getItem(){
-		return clone $this->item;
+	public function isGliding(){
+		return $this->isGliding;
 	}
 
 	/**
 	 * @return EventName|string
      */
 	public function getName(){
-		return "PlayerItemConsumeEvent";
+		return "PlayerToggleGlideEvent";
 	}
 
 }
