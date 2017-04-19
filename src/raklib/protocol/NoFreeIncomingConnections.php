@@ -13,8 +13,25 @@
  *
  */
 
+
 namespace raklib\protocol;
 
-class ACK extends AcknowledgePacket{
-	public static $ID = 0xc0;
+use raklib\RakLib;
+
+class NoFreeIncomingConnections extends Packet{
+	public static $ID = MessageIdentifiers::ID_NO_FREE_INCOMING_CONNECTIONS;
+
+	public $serverID;
+
+	public function decode(){
+		parent::decode();
+		$this->offset += 16; //magic
+		$this->serverID = $this->getLong();
+	}
+
+	public function encode(){
+		parent::encode();
+		$this->put(RakLib::MAGIC);
+		$this->putLong($this->serverID);
+	}
 }

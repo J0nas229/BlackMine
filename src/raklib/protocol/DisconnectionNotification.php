@@ -15,6 +15,14 @@
 
 namespace raklib\protocol;
 
-class ACK extends AcknowledgePacket{
-	public static $ID = 0xc0;
+class DisconnectionNotification extends Packet{
+	public static $ID = MessageIdentifiers::ID_DISCONNECTION_NOTIFICATION;
+
+	public function encode(){
+		parent::encode();
+	}
+
+	public function decode(){
+		parent::decode();
+	}
 }

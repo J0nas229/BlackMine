@@ -15,6 +15,9 @@
 
 namespace raklib\protocol;
 
-class ACK extends AcknowledgePacket{
-	public static $ID = 0xc0;
+#include <rules/RakLibPacket.h>
+
+
+class UnconnectedPingOpenConnections extends UnconnectedPing{
+	public static $ID = MessageIdentifiers::ID_UNCONNECTED_PING_OPEN_CONNECTIONS;
 }
