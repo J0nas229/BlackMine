@@ -13,8 +13,8 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
+ * @author Pocketmine Team
+ * @link http://www.pocketmine.net
  *
  *
 */
@@ -24,35 +24,39 @@ namespace pocketmine\block;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 
-class NetherBrickFence extends Transparent{
+class Prismarine extends Solid{
 
-	protected $id = self::NETHER_BRICK_FENCE;
+	const NORMAL = 0;
+	const DARK = 1;
+	const BRICKS = 2;
+
+	protected $id = self::PRISMARINE;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
 	public function getHardness(){
-		return 2;
-	}
-
-	public function getToolType(){
-		//Different then the woodfences
-		return Tool::TYPE_PICKAXE;
+		return 1.5;
 	}
 
 	public function getName() : string{
-		return "Nether Brick Fence";
+		static $names = [
+			self::NORMAL => "Prismarine",
+			self::DARK => "Dark Prismarine",
+			self::BRICKS => "Prismarine Bricks",
+		];
+		return $names[$this->meta & 0x03] ?? "Unknown";
 	}
 
-	public function canConnect(Block $block){
-		return ($block instanceof NetherBrickFence) or ($block->isSolid() and !$block->isTransparent());
+	public function getToolType(){
+		return Tool::TYPE_PICKAXE;
 	}
 
 	public function getDrops(Item $item) : array{
 		if($item->isPickaxe() >= Tool::TIER_WOODEN){
 			return [
-				[Item::NETHER_BRICK_FENCE, $this->meta, 1],
+				[$this->id, $this->meta & 0x03, 1],
 			];
 		}else{
 			return [];
