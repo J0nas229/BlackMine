@@ -313,8 +313,6 @@ class Server {
 	public $netherLevel = null;
  	public $weatherRandomDurationMin = 6000;
  	public $weatherRandomDurationMax = 12000;
-	public $lightningTime = 200;
-	public $lightningFire = false;
 	public $lookup = [];
 	public $hungerHealth = 10;
 	public $lightningTime = 100;
