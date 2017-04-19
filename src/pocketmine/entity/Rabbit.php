@@ -25,9 +25,9 @@ use pocketmine\item\enchantment\Enchantment;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
-use pocketmine\level\Level;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 
@@ -48,8 +48,7 @@ class Rabbit extends Animal{
 	public $height = 0.5;
 	public $width = 0.5;
 	public $length = 0.5;
-
-	public $dropExp = [1, 3];
+	public $maxhealth = 3;
 
 	public function initEntity(){
 		$this->setMaxHealth(3);

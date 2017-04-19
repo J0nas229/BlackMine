@@ -15,54 +15,30 @@
  * (at your option) any later version.
  *
  * @author BlueLightJapan Team
- * @link http://bluelight.cf
  * 
 */
 
 namespace pocketmine\entity;
 
-use pocketmine\Player;
 use pocketmine\network\protocol\UpdateAttributesPacket;
 use pocketmine\network\protocol\AddEntityPacket;
-use pocketmine\network\protocol\MobArmorEquipmentPacket;
-use pocketmine\item\Item as ItemItem;
+use pocketmine\Player;
 use pocketmine\math\Vector3;
 
-class Horse extends Living implements Rideable{
+class Donkey extends Animal implements Rideable{
 
-	const NETWORK_ID = 23;
+	const NETWORK_ID = 24;
 
-	const DATA_HORSE_TYPE = 19;
-
-	const TYPE_NORMAL = -1;
-	const TYPE_WHITE = 0;
-	const TYPE_BROWN = 2;
-	const TYPE_ZOMBIE = 3;
-	const TYPE_SKELETON = 4;
-	const TYPE_GOLD = 6;
-	const TYPE_LIGHTBROWN = 7;
-	const TYPE_DARKBROWN = 8;
-	const TYPE_GRAY = 9;
-	const TYPE_SILVER = 10;
-	const TYPE_BLACK = 12;
-	const TYPE_BLACKANDWHITE = 14;
-	const TYPE_WHITEANDBLACK = 15;
-
-	const TYPE_WEAR_LEATHER = 18;
-	const TYPE_WEAR_IRON = 19;
-	const TYPE_WEAR_GOLD = 20;
-	const TYPE_WEAR_DIAMOND = 21;
-
-	public $width = 0.6;
-	public $length = 1.8;
+	public $width = 0.3;
+	public $length = 0.9;
 	public $height = 1.8;
 	public $maxhealth = 52;
 	public $maxjump = 3;
 
 	public function getName(){
-		return "Horse";
+		return "Donkey";
 	}
-
+	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();
@@ -75,56 +51,11 @@ class Horse extends Living implements Rideable{
 		$pk->speedZ = $this->motionZ;
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
-
-		@$flags |= 1 << Entity::DATA_FLAG_SADDLED;
-		@$flags |= 1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG;
-		@$flags |= 1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG;
-
-		$pk->metadata = [
-
-		Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, $flags],
-		Entity::DATA_AIR => [Entity::DATA_TYPE_SHORT, 400],
-		Entity::DATA_MAX_AIR => [Entity::DATA_TYPE_SHORT, 400],
-		Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, ""],
-		Entity::DATA_LEAD_HOLDER_EID => [Entity::DATA_TYPE_LONG, -1],
-		Entity::DATA_SCALE => [Entity::DATA_TYPE_FLOAT, 1],
-		];
-
+		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
-
 		$this->sendAttribute($player);
-
 		parent::spawnTo($player);
-
-		$this->setChestPlate(419);
-
 	}
-
-	public function getSaveId(){
-		$class = new \ReflectionClass(static::class);
-		return $class->getShortName();
-	}
-
-	public function getDrops(){
-		return [ItemItem::get(ItemItem::LEATHER, 0, mt_rand(0, 2))];
-	}
-
-	public function setChestPlate($id = 419){
-		$pk = new MobArmorEquipmentPacket();
-		$pk->eid = $this->getId();
-		$pk->slots = [
-
-		ItemItem::get(0,0),
-		ItemItem::get($id,0),
-		ItemItem::get(0,0),
-		ItemItem::get(0,0)
-
-		];
-		foreach($this->level->getPlayers() as $player){
-			$player->dataPacket($pk);
-		}
-	}
-
 	public function sendAttribute(Player $player){
 		$entry = array();
 		$entry[] = new Attribute($this->getId(), "minecraft:horse.jump_strength", 0, $this->maxjump, 0.6679779);

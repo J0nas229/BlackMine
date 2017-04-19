@@ -23,16 +23,16 @@ namespace pocketmine\entity;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
-class Shulker extends Monster{
-	const NETWORK_ID = 54;
+class EnderDragon extends Monster{
+	const NETWORK_ID = 53;
 
-	public $width = 1;
-	public $length = 1;
-	public $height = 1;
-	public $maxhealth = 30;
+	public $width = 0.3;
+	public $length = 0.9;
+	public $height = 1.8;
+	public $maxhealth = 200;
 
 	public function getName(){
-		return "Stray";
+		return "EnderDragon";
 	}
 	
 	public function spawnTo(Player $player){

@@ -21,10 +21,8 @@
 
 namespace pocketmine\entity;
 
-
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
-use pocketmine\item\enchantment\Enchantment;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
@@ -34,16 +32,10 @@ class Zombie extends Monster{
 	public $width = 0.6;
 	public $length = 0.6;
 	public $height = 1.8;
+	public $maxhealth = 20;
 
-	public $dropExp = [5, 5];
-
-	public function getName() : string{
+	public function getName(){
 		return "Zombie";
-	}
-	
-	public function initEntity(){
-		$this->setMaxHealth(20);
-		parent::initEntity();
 	}
 
 	public function spawnTo(Player $player){
@@ -65,13 +57,12 @@ class Zombie extends Monster{
 	}
 
 	public function getDrops(){
-		$lootingL = 0;
-		$cause = $this->lastDamageCause;
-		$drops = [];
-		if($cause instanceof EntityDamageByEntityEvent and $cause->getDamager() instanceof Player){
-			$lootingL = $cause->getDamager()->getItemInHand()->getEnchantmentLevel(Enchantment::TYPE_WEAPON_LOOTING);
-			if(mt_rand(0, 199) < (5 + 2 * $lootingL)){
-				switch(mt_rand(0, 3)){
+		$drops = [
+			ItemItem::get(ItemItem::FEATHER, 0, 1)
+		];
+		if($this->lastDamageCause instanceof EntityDamageByEntityEvent and $this->lastDamageCause->getEntity() instanceof Player){
+			if(mt_rand(0, 199) < 5){
+				switch(mt_rand(0, 2)){
 					case 0:
 						$drops[] = ItemItem::get(ItemItem::IRON_INGOT, 0, 1);
 						break;
@@ -82,10 +73,6 @@ class Zombie extends Monster{
 						$drops[] = ItemItem::get(ItemItem::POTATO, 0, 1);
 						break;
 				}
-			}
-			$count = mt_rand(0, 2 + $lootingL);
-			if($count > 0){
-				$drops[] = ItemItem::get(ItemItem::ROTTEN_FLESH, 0, $count);
 			}
 		}
 

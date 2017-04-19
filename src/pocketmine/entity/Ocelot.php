@@ -21,9 +21,9 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\level\Level;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 
@@ -40,8 +40,7 @@ class Ocelot extends Animal{
 	public $width = 0.312;
 	public $length = 2.188;
 	public $height = 0.75;
-
-	public $dropExp = [1, 3];
+	public $maxhealth = 10;
 	
 	public function getName() : string{
 		return "Ocelot";
