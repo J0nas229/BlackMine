@@ -21,35 +21,36 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\Player;
+use pocketmine\level\Level;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\Player;
 
-class ZombieVillager extends Zombie{
-	const NETWORK_ID = 44;
+class EnderCrystal extends Vehicle{
+	const NETWORK_ID = 71;
 
-	public $width = 1.031;
-	public $length = 0.891;
-	public $height = 2.125;
+	public $height = 0.7;
+	public $width = 1.6;
 
-	public function initEntity(){
-		$this->setMaxHealth(20);
-		parent::initEntity();
-	}
+	public $gravity = 0.5;
+	public $drag = 0.1;
 
-	public function getName() : string{
-		return "Zombie Villager";
+	public function __construct(Level $level, CompoundTag $nbt){
+		parent::__construct($level, $nbt);
 	}
 
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
-		$pk->type = ZombieVillager::NETWORK_ID;
 		$pk->eid = $this->getId();
+		$pk->type = EnderCrystal::NETWORK_ID;
 		$pk->x = $this->x;
 		$pk->y = $this->y;
 		$pk->z = $this->z;
-		$pk->speedX = $this->motionX;
-		$pk->speedY = $this->motionY;
-		$pk->speedZ = $this->motionZ;
+		$pk->speedX = 0;
+		$pk->speedY = 0;
+		$pk->speedZ = 0;
+		$pk->yaw = 0;
+		$pk->pitch = 0;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
 

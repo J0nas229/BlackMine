@@ -10,7 +10,7 @@
  * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -21,29 +21,28 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\item\enchantment\Enchantment;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 
-class Pig extends Animal{
-	const NETWORK_ID = 12;
+class Shulker extends Monster{
+	const NETWORK_ID = 54;
 
-	public $width = 0.3;
+	public $width = 0.5;
 	public $length = 0.9;
-	public $height = 1.9;
+	public $height = 1.0;
 
-	public $dropExp = [1, 3];
+	public $dropExp = [1, 4];
 	
 	public function getName() : string{
-		return "Pig";
+		return "Shulker";
 	}
 	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();
-		$pk->type = Pig::NETWORK_ID;
+		$pk->type = Shulker::NETWORK_ID;
 		$pk->x = $this->x;
 		$pk->y = $this->y;
 		$pk->z = $this->z;
@@ -54,17 +53,14 @@ class Pig extends Animal{
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk);
-
 		parent::spawnTo($player);
 	}
 	
 	public function getDrops(){
-		$lootingL = 0;
-		$cause = $this->lastDamageCause;
-		if($cause instanceof EntityDamageByEntityEvent and $cause->getDamager() instanceof Player){
-			$lootingL = $cause->getDamager()->getItemInHand()->getEnchantmentLevel(Enchantment::TYPE_WEAPON_LOOTING);
+		$drops = [];
+		if ($this->lastDamageCause instanceof EntityDamageByEntityEvent and $this->lastDamageCause->getEntity() instanceof Player) {
+			if (mt_rand(0, 1) === 1) $drops[] = ItemItem::get(ItemItem::SHULKER_SHELL, 0, 1);
 		}
-		$drops = array(ItemItem::get(ItemItem::RAW_PORKCHOP, 0, mt_rand(1, 3 + $lootingL)));
 		return $drops;
 	}
 }
