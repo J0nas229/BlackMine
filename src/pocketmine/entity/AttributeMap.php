@@ -25,8 +25,8 @@ class AttributeMap implements \ArrayAccess{
 	/** @var Attribute[] */
 	private $attributes = [];
 
-	//public function addAttribute(Attribute $attribute){
-		//$this->attributes[$attribute->getId()] = $attribute;
+	public function addAttribute(Attribute $attribute){
+		$this->attributes[$attribute->getId()] = $attribute;
 	}
 
 	/**
@@ -38,14 +38,10 @@ class AttributeMap implements \ArrayAccess{
 		return $this->attributes[$id] ?? null;
 	}
 
-	public function getAll(): array{
-		return $this->attributes;
-	}
-
 	/**
 	 * @return Attribute[]
 	 */
-	public function needSend() : array{
+	public function needSend(){
 		return array_filter($this->attributes, function (Attribute $attribute){
 			return $attribute->isSyncable() and $attribute->isDesynchronized();
 		});
