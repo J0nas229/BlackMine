@@ -1,5 +1,9 @@
 # ![ImagicalMine](http://i.imgur.com/6Hlm8mn.gif)
 
+
+[![CircleCI](https://circleci.com/gh/ServerSoftwareArchive/ImagicalMine.svg?style=svg)](https://circleci.com/gh/ServerSoftwareArchive/ImagicalMine)
+
+
 ## Acknowledgements
 
 - This is a third-party build of [PocketMine-MP](https://github.com/PocketMine/PocketMine-MP). ImagicalMine is in no way affiliated with [PocketMine-MP](https://github.com/PocketMine/PocketMine-MP).
