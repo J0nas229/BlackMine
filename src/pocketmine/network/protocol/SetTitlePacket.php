@@ -23,41 +23,45 @@ namespace pocketmine\network\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\item\Item;
+class SetTitlePacket extends DataPacket{
 
-class ContainerSetSlotPacket extends DataPacket{
+	const NETWORK_ID = Info::SET_TITLE_PACKET;
 
-	const NETWORK_ID = Info::CONTAINER_SET_SLOT_PACKET;
+	const TYPE_CLEAR = 0;
+	const TYPE_RESET = 1;
+	const TYPE_TITLE = 2;
+	const TYPE_SUB_TITLE = 3;
+	const TYPE_ACTION_BAR = 4;
+	const TYPE_TIMES = 5;
 
-	public $windowid;
-	public $slot;
-	/** @var Item */
-	public $item;
-	public $hotbarSlot;
-	public $unknown;
+	public $type;
+	public $title;
+	public $fadeInDuration;
+	public $duration;
+	public $fadeOutDuration;
 
 	public function decode(){
-		$this->windowid = $this->getByte();
-		$this->slot = $this->getVarInt();
-		$this->hotbarSlot = $this->getVarInt();
-		$this->item = $this->getSlot();
-		$this->unknown = $this->getByte();
+		$this->type = $this->getVarInt();
+		$this->title = $this->getString();
+		$this->fadeInDuration = $this->getVarInt();
+		$this->duration = $this->getVarInt();
+		$this->fadeOutDuration = $this->getVarInt();
 	}
 
 	public function encode(){
 		$this->reset();
-		$this->putByte($this->windowid);
-		$this->putVarInt($this->slot);
-		$this->putVarInt($this->hotbarSlot);
-		$this->putSlot($this->item);
-		$this->putByte($this->unknown);
+		$this->putVarInt($this->type);
+		$this->putString($this->title);
+		$this->putVarInt($this->fadeInDuration);
+		$this->putVarInt($this->duration);
+		$this->putVarInt($this->fadeOutDuration);
 	}
 
 	/**
 	 * @return PacketName|string
      */
 	public function getName(){
-		return "ContainerSetSlotPacket";
+		return "SetTitlePacket";
 	}
 
 }

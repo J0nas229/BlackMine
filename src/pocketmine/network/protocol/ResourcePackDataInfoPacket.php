@@ -19,36 +19,34 @@
  *
 */
 
+
 namespace pocketmine\network\protocol;
 
 #include <rules/DataPacket.h>
 
+class ResourcePackDataInfoPacket extends DataPacket{
+	const NETWORK_ID = Info::RESOURCE_PACK_DATA_INFO_PACKET;
 
-class PlayerInputPacket extends DataPacket{
-
-	const NETWORK_ID = Info::PLAYER_INPUT_PACKET;
-
-	public $motionX;
-	public $motionY;
-	public $unknownBool1;
-	public $unknownBool2;
+	public $packId;
+	public $maxChunkSize;
+	public $chunkCount;
+	public $compressedPackSize;
+	public $sha256;
 
 	public function decode(){
-		$this->motionX = $this->getLFloat();
-		$this->motionY = $this->getLFloat();
-		$this->unknownBool1 = $this->getBool();
-		$this->unknownBool2 = $this->getBool();
+		$this->packId = $this->getString();
+		$this->maxChunkSize = $this->getLInt();
+		$this->chunkCount = $this->getLInt();
+		$this->compressedPackSize = $this->getLLong();
+		$this->sha256 = $this->getString();
 	}
 
 	public function encode(){
-
+		$this->reset();
+		$this->putString($this->packId);
+		$this->putLInt($this->maxChunkSize);
+		$this->putLInt($this->chunkCount);
+		$this->putLLong($this->compressedPackSize);
+		$this->putString($this->sha256);
 	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "PlayerInputPacket";
-	}
-
 }

@@ -23,41 +23,30 @@ namespace pocketmine\network\protocol;
 
 #include <rules/DataPacket.h>
 
-use pocketmine\item\Item;
 
-class ContainerSetSlotPacket extends DataPacket{
+class BlockPickRequestPacket extends DataPacket{
 
-	const NETWORK_ID = Info::CONTAINER_SET_SLOT_PACKET;
+	const NETWORK_ID = Info::BLOCK_PICK_REQUEST_PACKET;
 
-	public $windowid;
-	public $slot;
-	/** @var Item */
-	public $item;
-	public $hotbarSlot;
+	public $x;
+	public $y;
+	public $z;
 	public $unknown;
 
 	public function decode(){
-		$this->windowid = $this->getByte();
-		$this->slot = $this->getVarInt();
-		$this->hotbarSlot = $this->getVarInt();
-		$this->item = $this->getSlot();
+		$this->getBlockCoords($this->x, $this->y, $this->z);
 		$this->unknown = $this->getByte();
 	}
 
 	public function encode(){
-		$this->reset();
-		$this->putByte($this->windowid);
-		$this->putVarInt($this->slot);
-		$this->putVarInt($this->hotbarSlot);
-		$this->putSlot($this->item);
-		$this->putByte($this->unknown);
+
 	}
 
 	/**
 	 * @return PacketName|string
      */
 	public function getName(){
-		return "ContainerSetSlotPacket";
+		return "BlockPickRequestPacket";
 	}
 
 }
