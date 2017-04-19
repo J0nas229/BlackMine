@@ -13,7 +13,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author PocketMine Team
+ * @author Pocketmine Team
  * @link http://www.pocketmine.net/
  *
  *
@@ -21,30 +21,32 @@
 
 namespace pocketmine\block;
 
-use pocketmine\item\Tool;
+use pocketmine\item\Item;
 
-class Tripwire extends Transparent{
+class SeaLantern extends Solid{
 
-	protected $id = self::TRIPWIRE;
+	protected $id = self::SEA_LANTERN;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
 	public function getName() : string{
-		return "Tripwire";
-	}
-
-	public function getToolType(){
-		return Tool::TYPE_SHEARS;
+		return "Sea Lantern";
 	}
 
 	public function getHardness(){
-		return 0;
+		return 0.3;
 	}
 
-	public function getResistance(){
-		return 0;
+	public function getLightLevel(){
+		return 15;
+	}
+
+	public function getDrops(Item $item) : array{
+		return [
+			[Item::PRISMARINE_CRYSTALS, 0, 3],
+		];
 	}
 
 }

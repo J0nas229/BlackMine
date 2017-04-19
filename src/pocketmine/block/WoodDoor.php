@@ -21,40 +21,36 @@
 
 namespace pocketmine\block;
 
-
+use pocketmine\item\Item;
 use pocketmine\item\Tool;
-use pocketmine\math\AxisAlignedBB;
 
-class SoulSand extends Solid{
+class WoodDoor extends Door{
 
-	protected $id = self::SOUL_SAND;
+	protected $id = self::WOOD_DOOR_BLOCK;
 
-	public function __construct(){
-
+	public function __construct($meta = 0){
+		$this->meta = $meta;
 	}
 
 	public function getName() : string{
-		return "Soul Sand";
+		return "Wood Door Block";
+	}
+
+	public function canBeActivated() : bool {
+		return true;
 	}
 
 	public function getHardness() {
-		return 0.5;
+		return 3;
 	}
 
 	public function getToolType(){
-		return Tool::TYPE_SHOVEL;
+		return Tool::TYPE_AXE;
 	}
 
-	protected function recalculateBoundingBox() {
-
-		return new AxisAlignedBB(
-			$this->x,
-			$this->y,
-			$this->z,
-			$this->x + 1,
-			$this->y + 1 - 0.125,
-			$this->z + 1
-		);
+	public function getDrops(Item $item) : array {
+		return [
+			[Item::WOODEN_DOOR, 0, 1],
+		];
 	}
-
 }
