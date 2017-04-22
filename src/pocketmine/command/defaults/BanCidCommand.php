@@ -30,56 +30,49 @@
 
 namespace pocketmine\command\defaults;
 
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
-use pocketmine\Server;
 
 
-class BanListCommand extends VanillaCommand{
+class BanCidCommand extends VanillaCommand{
 
 	public function __construct($name){
 		parent::__construct(
 			$name,
-			"%pocketmine.command.banlist.description",
-			"%pocketmine.command.banlist.usage"
+			"%pocketmine.command.bancid.description",
+			"%pocketmine.command.bancid.usage"
 		);
-		$this->setPermission("pocketmine.command.ban.list");
+		$this->setPermission("pocketmine.command.bancid");
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
 		if(!$this->testPermission($sender)){
 			return true;
 		}
-		
-		$args[0] = (isset($args[0]) ? strtolower($args[0]): "");
-		$title = "";
-		
-		switch($args[0]){
-			case "ips":
-				$list = $sender->getServer()->getIPBans();	
-				$title = "commands.banlist.ips";
-				break;
-			case "cids":
-				$list = $list = $sender->getServer()->getCIDBans(); 
-				$title = "commands.banlist.cids";
-				break;
-			case "players":
-				$list = $sender->getServer()->getNameBans();
-				$title = "commands.banlist.players";
-				break;
-			default:
-				$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
-				return false;			
+
+		if(count($args) === 0){
+			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
+
+			return false;
 		}
-		
-		$message = "";
-		$list = $list->getEntries();
-		foreach($list as $entry){
-			$message .= $entry->getName() . ", ";
+
+		$cid = array_shift($args);
+		$reason = implode(" ", $args);
+
+		$sender->getServer()->getCIDBans()->addBan($cid, $reason, null, $sender->getName());
+
+		$player = null;
+
+		foreach($sender->getServer()->getOnlinePlayers() as $p){
+			if($p->getClientId() == $cid) {
+				$p->kick($reason !== "" ? "Banned by admin. Reason:" . $reason : "Banned by admin.");
+				$player = $p;
+				break;
+			}
 		}
-		
-		$sender->sendMessage(Server::getInstance()->getLanguage()->translateString($title, [count($list)]));
-		$sender->sendMessage(\substr($message, 0, -2));
+
+		Command::broadcastCommandMessage($sender, new TranslationContainer("%commands.bancid.success", [$player !== null ? $player->getName() : $cid]));
 
 		return true;
 	}

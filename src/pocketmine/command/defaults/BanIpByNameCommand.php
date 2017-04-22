@@ -30,57 +30,48 @@
 
 namespace pocketmine\command\defaults;
 
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
-use pocketmine\Server;
+use pocketmine\Player;
 
 
-class BanListCommand extends VanillaCommand{
+class BanIpByNameCommand extends VanillaCommand{
 
 	public function __construct($name){
 		parent::__construct(
 			$name,
-			"%pocketmine.command.banlist.description",
-			"%pocketmine.command.banlist.usage"
+			"%pocketmine.command.banipbyname.description",
+			"%pocketmine.command.banipbyname.usage"
 		);
-		$this->setPermission("pocketmine.command.ban.list");
+		$this->setPermission("pocketmine.command.banipbyname");
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
 		if(!$this->testPermission($sender)){
-			return true;
+			return \true;
 		}
-		
-		$args[0] = (isset($args[0]) ? strtolower($args[0]): "");
-		$title = "";
-		
-		switch($args[0]){
-			case "ips":
-				$list = $sender->getServer()->getIPBans();	
-				$title = "commands.banlist.ips";
-				break;
-			case "cids":
-				$list = $list = $sender->getServer()->getCIDBans(); 
-				$title = "commands.banlist.cids";
-				break;
-			case "players":
-				$list = $sender->getServer()->getNameBans();
-				$title = "commands.banlist.players";
-				break;
-			default:
-				$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
-				return false;			
-		}
-		
-		$message = "";
-		$list = $list->getEntries();
-		foreach($list as $entry){
-			$message .= $entry->getName() . ", ";
-		}
-		
-		$sender->sendMessage(Server::getInstance()->getLanguage()->translateString($title, [count($list)]));
-		$sender->sendMessage(\substr($message, 0, -2));
 
-		return true;
+		if(\count($args) === 0){
+			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
+
+			return \false;
+		}
+
+		$name = \array_shift($args);
+		$reason = \implode(" ", $args);
+		
+		if ($sender->getServer()->getPlayer($name) instanceof Player) $target = $sender->getServer()->getPlayer($name);
+		else return \false;
+
+		$sender->getServer()->getIPBans()->addBan($target->getAddress(), $reason, \null, $sender->getName());
+
+		if(($player = $sender->getServer()->getPlayerExact($name)) instanceof Player){
+			$player->kick($reason !== "" ? "Banned by admin. Reason:" . $reason : "Banned by admin.");
+		}
+
+		Command::broadcastCommandMessage($sender, new TranslationContainer("%commands.banipbyname.success", [$player !== \null ? $player->getName() : $name]));
+
+		return \true;
 	}
 }

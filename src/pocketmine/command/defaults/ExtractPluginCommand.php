@@ -2,6 +2,12 @@
 
 /*
  *
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ *
  *  _____            _               _____           
  * / ____|          (_)             |  __ \          
  *| |  __  ___ _ __  _ ___ _   _ ___| |__) | __ ___  
@@ -26,20 +32,20 @@ namespace pocketmine\command\defaults;
 
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
-use pocketmine\plugin\FolderPluginLoader;
+use pocketmine\plugin\PharPluginLoader;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-class MakePluginCommand extends VanillaCommand{
+class ExtractPluginCommand extends VanillaCommand{
 
 	public function __construct($name){
 		parent::__construct(
 			$name,
-			"Creates a Phar plugin from a unarchived",
-			"/makeplugin <pluginName>"
+			"Extracts the source code from a Phar plugin",
+			"/extractplugin <pluginName>"
 		);
-		$this->setPermission("pocketmine.command.makeplugin");
+		$this->setPermission("pocketmine.command.extractplugin");
 	}
 
 	public function execute(CommandSender $sender, $commandLabel, array $args){
@@ -51,7 +57,7 @@ class MakePluginCommand extends VanillaCommand{
 			$sender->sendMessage(TextFormat::RED . "Usage: ".$this->usageMessage);
 			return true;
 		}
-		
+
 		$pluginName = trim(implode(" ", $args));
 		if($pluginName === "" or !(($plugin = Server::getInstance()->getPluginManager()->getPlugin($pluginName)) instanceof Plugin)){
 			$sender->sendMessage(TextFormat::RED . "Invalid plugin name, check the name case.");
@@ -60,56 +66,29 @@ class MakePluginCommand extends VanillaCommand{
 		}
 		$description = $plugin->getDescription();
 
-		if(!($plugin->getPluginLoader() instanceof FolderPluginLoader)){
-			$sender->sendMessage(TextFormat::RED . "Plugin ".$description->getName()." is not in folder structure.");
+		if(!($plugin->getPluginLoader() instanceof PharPluginLoader)){
+			$sender->sendMessage(TextFormat::RED . "Plugin ".$description->getName()." is not in Phar structure.");
 			return true;
 		}
 
-		$pharPath = Server::getInstance()->getPluginPath().DIRECTORY_SEPARATOR . "GenisysPro" . DIRECTORY_SEPARATOR . $description->getName()."_v".$description->getVersion().".phar";
-		if(file_exists($pharPath)){
-			$sender->sendMessage("Phar plugin already exists, overwriting...");
-			@unlink($pharPath);
-		}
-		$phar = new \Phar($pharPath);
-		$phar->setMetadata([
-			"name" => $description->getName(),
-			"version" => $description->getVersion(),
-			"main" => $description->getMain(),
-			"api" => $description->getCompatibleApis(),
-			"depend" => $description->getDepend(),
-			"description" => $description->getDescription(),
-			"authors" => $description->getAuthors(),
-			"website" => $description->getWebsite(),
-			"creationDate" => time()
-		]);
-		if($description->getName() === "DevTools"){
-			$phar->setStub('<?php require("phar://". __FILE__ ."/src/DevTools/ConsoleScript.php"); __HALT_COMPILER();');
+		$folderPath = Server::getInstance()->getPluginPath().DIRECTORY_SEPARATOR . "GenisysPro" . DIRECTORY_SEPARATOR . $description->getName()."_v".$description->getVersion()."/";
+		if(file_exists($folderPath)){
+			$sender->sendMessage("Plugin already exists, overwriting...");
 		}else{
-			$phar->setStub('<?php echo "PocketMine-iTX plugin '.$description->getName() .' v'.$description->getVersion().'\nThis file has been generated using GenisysPro at '.date("r").'\n----------------\n";if(extension_loaded("phar")){$phar = new \Phar(__FILE__);foreach($phar->getMetadata() as $key => $value){echo ucfirst($key).": ".(is_array($value) ? implode(", ", $value):$value)."\n";}} __HALT_COMPILER();');
+			@mkdir($folderPath);
 		}
-		$phar->setSignatureAlgorithm(\Phar::SHA1);
+
 		$reflection = new \ReflectionClass("pocketmine\\plugin\\PluginBase");
 		$file = $reflection->getProperty("file");
 		$file->setAccessible(true);
-		$filePath = rtrim(str_replace("\\", "/", $file->getValue($plugin)), "/") . "/";
-		$phar->startBuffering();
-		foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($filePath)) as $file){
-			$path = ltrim(str_replace(["\\", $filePath], ["/", ""], $file), "/");
-			if($path{0} === "." or strpos($path, "/.") !== false){
-				continue;
-			}
-			$phar->addFile($file, $path);
-			$sender->sendMessage("[GenisysPro] Adding $path");
-		}
+		$pharPath = str_replace("\\", "/", rtrim($file->getValue($plugin), "\\/"));
 
-		foreach($phar as $file => $finfo){
-			/** @var \PharFileInfo $finfo */
-			if($finfo->getSize() > (1024 * 512)){
-				$finfo->compress(\Phar::GZ);
-			}
+		foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pharPath)) as $fInfo){
+			$path = $fInfo->getPathname();
+			@mkdir(dirname($folderPath . str_replace($pharPath, "", $path)), 0755, true);
+			file_put_contents($folderPath . str_replace($pharPath, "", $path), file_get_contents($path));
 		}
-		$phar->stopBuffering();
-		$license = "
+			$license = "
   _____            _               _____           
  / ____|          (_)             |  __ \          
 | |  __  ___ _ __  _ ___ _   _ ___| |__) | __ ___  
@@ -119,8 +98,8 @@ class MakePluginCommand extends VanillaCommand{
                          __/ |                    
                         |___/         
  ";
-  $sender->sendMessage($license);
-		$sender->sendMessage("Phar plugin ".$description->getName() ." v".$description->getVersion()." has been created on ".$pharPath);
+		$sender->sendMessage($license);
+		$sender->sendMessage("Source plugin ".$description->getName() ." v".$description->getVersion()." has been created on ".$folderPath);
 		return true;
 	}
 

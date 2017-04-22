@@ -2582,7 +2582,7 @@ class Server {
 		$pk = new PlayerListPacket();
 		$pk->type = PlayerListPacket::TYPE_ADD;
 		foreach ($this->playerList as $player) {
-			$pk->entries[] = [$player->getUniqueId(), $player->getId(), $player->getDisplayName(), $player->getskinID(), $player->getSkinData(), $player->isSkinTransparent()];
+			$pk->entries[] = [$player->getUniqueId(), $player->getId(), $player->getDisplayName(), $player->getskinID(), $player->getSkinData()];
 		}
 
 		$p->dataPacket($pk);
