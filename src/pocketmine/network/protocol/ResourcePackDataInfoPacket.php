@@ -49,4 +49,9 @@ class ResourcePackDataInfoPacket extends DataPacket{
 		$this->putLLong($this->compressedPackSize);
 		$this->putString($this->sha256);
 	}
+
+	public function handle(NetworkSession $session) : bool{
+		return $session->handleResourcePackDataInfo($this);
+	}
+
 }

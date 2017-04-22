@@ -24,7 +24,6 @@ namespace pocketmine\network\protocol;
 #include <rules/DataPacket.h>
 
 class ChangeDimensionPacket extends DataPacket{
-
 	const NETWORK_ID = Info::CHANGE_DIMENSION_PACKET;
 
 	const DIMENSION_NORMAL = 0;
@@ -46,13 +45,6 @@ class ChangeDimensionPacket extends DataPacket{
 		$this->putVarInt($this->dimension);
 		$this->putVector3f($this->x, $this->y, $this->z);
 		$this->putBool($this->unknown);
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "ChangeDimensionPacket";
 	}
 
 }

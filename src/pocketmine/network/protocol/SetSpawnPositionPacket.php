@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class SetSpawnPositionPacket extends DataPacket{
-
 	const NETWORK_ID = Info::SET_SPAWN_POSITION_PACKET;
 
 	public $unknown;
@@ -43,13 +42,6 @@ class SetSpawnPositionPacket extends DataPacket{
 		$this->putVarInt($this->unknown);
 		$this->putBlockCoords($this->x, $this->y, $this->z);
 		$this->putBool($this->unknownBool);
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "SetSpawnPositionPacket";
 	}
 
 }

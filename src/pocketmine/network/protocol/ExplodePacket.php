@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class ExplodePacket extends DataPacket{
-
 	const NETWORK_ID = Info::EXPLODE_PACKET;
 
 	public $x;
@@ -53,13 +52,6 @@ class ExplodePacket extends DataPacket{
 				$this->putBlockCoords($record->x, $record->y, $record->z);
 			}
 		}
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "ExplodePacket";
 	}
 
 }

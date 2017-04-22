@@ -19,15 +19,24 @@
  *
 */
 
-namespace pocketmine\network;
+namespace pocketmine\network\protocol;
 
-use raklib\protocol\EncapsulatedPacket;
+#include <rules/DataPacket.h>
 
-class CachedEncapsulatedPacket extends EncapsulatedPacket{
 
-	private $internalData = null;
+class ClientToServerHandshakePacket extends DataPacket{
+	const NETWORK_ID = Info::CLIENT_TO_SERVER_HANDSHAKE_PACKET;
 
-	public function toBinary($internal = false){
-		return $this->internalData === null ? ($this->internalData = parent::toBinary($internal)) : $this->internalData;
+	public function canBeSentBeforeLogin() : bool{
+		return true;
+	}
+
+	public function decode(){
+		//No payload
+	}
+
+	public function encode(){
+		$this->reset();
+		//No payload
 	}
 }

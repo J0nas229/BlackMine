@@ -19,15 +19,23 @@
  *
 */
 
-namespace pocketmine\network;
 
-use raklib\protocol\EncapsulatedPacket;
+namespace pocketmine\network\protocol;
 
-class CachedEncapsulatedPacket extends EncapsulatedPacket{
+#include <rules/DataPacket.h>
 
-	private $internalData = null;
 
-	public function toBinary($internal = false){
-		return $this->internalData === null ? ($this->internalData = parent::toBinary($internal)) : $this->internalData;
+class RiderJumpPacket extends DataPacket{
+	const NETWORK_ID = Info::RIDER_JUMP_PACKET;
+
+	public $unknown;
+
+	public function decode(){
+		$this->unknown = $this->getVarInt();
+	}
+
+	public function encode(){
+		$this->reset();
+		$this->putVarInt($this->unknown);
 	}
 }
