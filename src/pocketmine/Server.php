@@ -12,49 +12,9 @@ use pocketmine\command\selectors;
 use pocketmine\command\selectors\All as SelectorAll;
 use pocketmine\command\selectors\Player as SelectorPlayer;
 use pocketmine\command\selectors\Random as SelectorRand;
-use pocketmine\entity\Arrow;
-use pocketmine\entity\Bat;
-use pocketmine\entity\Blaze;
-use pocketmine\entity\Boat;
-use pocketmine\entity\CavernSpider;
-use pocketmine\entity\ChargedCreeper;
-use pocketmine\entity\Chicken;
-use pocketmine\entity\Cow;
-use pocketmine\entity\Creeper;
+use pocketmine\entity\Attribute;
 use pocketmine\entity\Effect;
-use pocketmine\entity\Egg;
-use pocketmine\entity\Enderman;
 use pocketmine\entity\Entity;
-use pocketmine\entity\ExperienceOrb;
-use pocketmine\entity\FallingSand;
-use pocketmine\entity\Ghast;
-use pocketmine\entity\Human;
-use pocketmine\entity\IronGolem;
-use pocketmine\entity\Item as DroppedItem;
-use pocketmine\entity\MagmaCube;
-use pocketmine\entity\Minecart;
-use pocketmine\entity\Mooshroom;
-use pocketmine\entity\Ozelot;
-use pocketmine\entity\Painting;
-use pocketmine\entity\Pig;
-use pocketmine\entity\PigZombie;
-use pocketmine\entity\PrimedTNT;
-use pocketmine\entity\Rabbit;
-use pocketmine\entity\Sheep;
-use pocketmine\entity\Silverfish;
-use pocketmine\entity\Skeleton;
-use pocketmine\entity\Slime;
-use pocketmine\entity\Snowball;
-use pocketmine\entity\SnowGolem;
-use pocketmine\entity\Spider;
-use pocketmine\entity\Squid;
-use pocketmine\entity\ThrownExpBottle;
-use pocketmine\entity\ThrownPotion;
-use pocketmine\entity\Villager;
-use pocketmine\entity\WitherSkeleton;
-use pocketmine\entity\Wolf;
-use pocketmine\entity\Zombie;
-use pocketmine\entity\ZombieVillager;
 use pocketmine\event\HandlerList;
 use pocketmine\event\level\LevelInitEvent;
 use pocketmine\event\level\LevelLoadEvent;
@@ -458,14 +418,23 @@ class Server {
 	public function getPort(): int{
 		return $this->getConfigInt("server-port", 19132);
 	}
-
+	
+    /**
+	 * @return int
+	 */
+	public function getViewDistance() : int{
+		return max(2, $this->getConfigInt("view-distance", 8));
+	}
 
 	/**
+	 * Returns a view distance up to the currently-allowed limit.
+	 *
+	 * @param int $distance
 	 *
 	 * @return int
 	 */
-	public function getViewDistance(): int{
-		return max(56, $this->getProperty("chunk-sending.max-chunks", 256));
+	public function getAllowedViewDistance(int $distance) : int{
+		return max(2, min($distance, $this->memoryManager->getViewDistance($this->getViewDistance())));
 	}
 
 
@@ -1846,15 +1815,17 @@ class Server {
 			$this->consoleSender = new ConsoleCommandSender();
 			$this->commandMap = new SimpleCommandMap($this);
 
-			$this->registerEntities();
-			$this->registerTiles();
-
+			Entity::init();
+			Tile::init();
 			InventoryType::init();
 			Block::init();
+			Enchantment::init();
 			Item::init();
 			Biome::init();
 			Effect::init();
-			Enchantment::init();
+			Attribute::init();
+	//		EnchantmentLevelTable::init();
+			//Color::init();
 			$this->craftingManager = new CraftingManager();
 
 			$this->pluginManager = new PluginManager($this, $this->commandMap);
@@ -2919,73 +2890,7 @@ class Server {
 		}
 
 		return true;
-	}
 
-
-	/**
-	 *
-	 */
-	private function registerEntities() {
-		Entity::registerEntity(Arrow::class);
-		Entity::registerEntity(Bat::class);
-		Entity::registerEntity(Blaze::class);
-		Entity::registerEntity(Boat::class);
-		Entity::registerEntity(CavernSpider::class);
-		Entity::registerEntity(ChargedCreeper::class);
-		Entity::registerEntity(Chicken::class);
-		Entity::registerEntity(Cow::class);
-		Entity::registerEntity(Creeper::class);
-		Entity::registerEntity(DroppedItem::class);
-		Entity::registerEntity(Egg::class);
-		Entity::registerEntity(Enderman::class);
-		Entity::registerEntity(ExperienceOrb::class);
-		Entity::registerEntity(FallingSand::class);
-		Entity::registerEntity(FishingHook::class);
-		Entity::registerEntity(Ghast::class);
-		Entity::registerEntity(IronGolem::class);
-		Entity::registerEntity(MagmaCube::class);
-		Entity::registerEntity(Minecart::class);
-		Entity::registerEntity(Mooshroom::class);
-		Entity::registerEntity(Ozelot::class);
-		Entity::registerEntity(Painting::class);
-		Entity::registerEntity(Pig::class);
-		Entity::registerEntity(PigZombie::class);
-		Entity::registerEntity(PrimedTNT::class);
-		Entity::registerEntity(Rabbit::class);
-		Entity::registerEntity(Sheep::class);
-		Entity::registerEntity(Silverfish::class);
-		Entity::registerEntity(Skeleton::class);
-		Entity::registerEntity(Slime::class);
-		Entity::registerEntity(Snowball::class);
-		Entity::registerEntity(SnowGolem::class);
-		Entity::registerEntity(Spider::class);
-		Entity::registerEntity(Squid::class);
-		Entity::registerEntity(ThrownExpBottle::class);
-		Entity::registerEntity(ThrownPotion::class);
-		Entity::registerEntity(Villager::class);
-		Entity::registerEntity(WitherSkeleton::class);
-		Entity::registerEntity(Wolf::class);
-		Entity::registerEntity(Zombie::class);
-		Entity::registerEntity(ZombieVillager::class);
-		Entity::registerEntity(Human::class, true);
-	}
-
-
-	/**
-	 *
-	 */
-	private function registerTiles() {
-		Tile::registerTile(BrewingStand::class);
-		Tile::registerTile(Chest::class);
-		Tile::registerTile(Dispenser::class);
-		Tile::registerTile(Dropper::class);
-		Tile::registerTile(EnchantTable::class);
-		Tile::registerTile(Furnace::class);
-		Tile::registerTile(FlowerPot::class);
-		Tile::registerTile(Hopper::class);
-		Tile::registerTile(Sign::class);
-		Tile::registerTile(Skull::class);
-		Tile::registerTile(TrappedChest::class);
 	}
 
 
