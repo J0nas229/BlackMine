@@ -21,13 +21,13 @@
 
 namespace pocketmine\entity;
 
+use pocketmine\item\Potion;
 use pocketmine\level\Level;
 use pocketmine\level\particle\SpellParticle;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
-use pocketmine\item\Potion;
 
 class ThrownPotion extends Projectile{
 	const NETWORK_ID = 86;
@@ -40,6 +40,8 @@ class ThrownPotion extends Projectile{
 
 	protected $gravity = 0.1;
 	protected $drag = 0.05;
+
+	private $hasSplashed = false;
 
 	public function __construct(Level $level, CompoundTag $nbt, Entity $shootingEntity = null){
 		if(!isset($nbt->PotionId)){
@@ -56,8 +58,9 @@ class ThrownPotion extends Projectile{
 		return (int) $this->namedtag["PotionId"];
 	}
 
-	public function kill(){
-		if($this->isAlive()) {
+	public function splash(){
+		if(!$this->hasSplashed){
+			$this->hasSplashed = true;
 			$color = Potion::getColor($this->getPotionId());
 			$this->getLevel()->addParticle(new SpellParticle($this, $color[0], $color[1], $color[2]));
 			$players = $this->getViewers();
@@ -69,7 +72,7 @@ class ThrownPotion extends Projectile{
 				}
 			}
 
-			parent::kill();
+			$this->kill();
 		}
 	}
 
@@ -85,8 +88,7 @@ class ThrownPotion extends Projectile{
 		$this->age++;
 
 		if($this->age > 1200 or $this->isCollided){
-			$this->kill();
-			$this->close();
+			$this->splash();
 			$hasUpdate = true;
 		}
 
@@ -97,7 +99,7 @@ class ThrownPotion extends Projectile{
 
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
-		$pk->type = self::NETWORK_ID;
+		$pk->type = ThrownPotion::NETWORK_ID;
 		$pk->eid = $this->getId();
 		$pk->x = $this->x;
 		$pk->y = $this->y;
