@@ -285,11 +285,20 @@ use pocketmine\katana\Katana;
 	public $countBookshelf = false;
 	public $mapEnabled = false;
 	public $zombieai = false;
-	public $chunkRadius = -1;
 	public $netherEnabled = false;
 	public $netherName = "nether";
 	public $redstoneEnabled = false;
 	public $allowInventoryCheats = true;
+	public $version;
+	public $allowSnowGolem;
+	public $allowIronGolem;
+	public $autoClearInv = true;
+	public $keepExperience = false;
+	public $limitedCreative = false;
+	public $chunkRadius = 10;
+	public $destroyBlockParticle = true;
+	public $fireSpread = false;
+	public $advancedCommandSelector = false;
 
 /**
 	 *
