@@ -1,31 +1,20 @@
 <?php
-/**
- * src/pocketmine/metadata/MetadataValue.php
- *
- * @package default
- */
-
 
 /*
  *
- *  _                       _           _ __  __ _
- * (_)                     (_)         | |  \/  (_)
- *  _ _ __ ___   __ _  __ _ _  ___ __ _| | \  / |_ _ __   ___
- * | | '_ ` _ \ / _` |/ _` | |/ __/ _` | | |\/| | | '_ \ / _ \
- * | | | | | | | (_| | (_| | | (_| (_| | | |  | | | | | |  __/
- * |_|_| |_| |_|\__,_|\__, |_|\___\__,_|_|_|  |_|_|_| |_|\___|
- *                     __/ |
- *                    |___/
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
- * This program is a third party build by ImagicalMine.
- *
- * PocketMine is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author ImagicalMine Team
- * @link http://forums.imagicalcorp.ml/
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
  *
  *
 */
@@ -34,45 +23,31 @@ namespace pocketmine\metadata;
 
 use pocketmine\plugin\Plugin;
 
-abstract class MetadataValue
-{
-    /** @var \WeakRef<Plugin> */
-    protected $owningPlugin;
+abstract class MetadataValue{
+	/** @var \WeakRef<Plugin> */
+	protected $owningPlugin;
 
-    /**
-     *
-     * @param Plugin  $owningPlugin
-     */
-    protected function __construct(Plugin $owningPlugin)
-    {
-        /** WeakRef dependency lock */
-        //$this->owningPlugin = new \WeakRef($owningPlugin);
-        $this->owningPlugin = $owningPlugin;
-    }
+	protected function __construct(Plugin $owningPlugin){
+		$this->owningPlugin = new \WeakRef($owningPlugin);
+	}
 
+	/**
+	 * @return Plugin
+	 */
+	public function getOwningPlugin(){
+		return $this->owningPlugin->get();
+	}
 
-    /**
-     *
-     * @return Plugin
-     */
-    public function getOwningPlugin()
-    {
-        /** WeakRef dependency lock */
-        //return $this->owningPlugin->get();
-        return $this->owningPlugin;
-    }
+	/**
+	 * Fetches the value of this metadata item.
+	 *
+	 * @return mixed
+	 */
+	public abstract function value();
 
-
-    /**
-     * Fetches the value of this metadata item.
-     *
-     * @return mixed
-     */
-    abstract public function value();
-
-    /**
-     * Invalidates this metadata item, forcing it to recompute when next
-     * accessed.
-     */
-    abstract public function invalidate();
+	/**
+	 * Invalidates this metadata item, forcing it to recompute when next
+	 * accessed.
+	 */
+	public abstract function invalidate();
 }
