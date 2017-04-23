@@ -1482,7 +1482,6 @@ use pocketmine\katana\Katana;
 				"LightningTime" => 6000,
 				"LightningFire" => false,
 				"AllowSplashPotion" => false,
-				"DestroyBlockParticle" => true,
 				"KeepInventory" => false,
 				"TitleTick" => false,
 				"SteveKick" => false,
@@ -1493,6 +1492,10 @@ use pocketmine\katana\Katana;
 				"MapEnabled" => false,
 				"ZombieAI" => false,
 				"inventory.allow-cheats" => false,
+				"player.keep-experience" => false,
+				"nether.allow-nether" => true,
+				"limitedCreative" => true,
+				//"nether.level-name" => nether
 			]);
 
 			$this->logger->info("Loading server properties...");
@@ -1552,6 +1555,10 @@ use pocketmine\katana\Katana;
 			$this->mapEnabled = $this->getProperty("MapEnabled", false);
 			$this->zombieai = $this->getProperty("ZombieAI", false);
 			$this->allowInventoryCheats = $this->getProperty("inventory.allow-cheats", false);
+		$this->keepExperience = $this->getProperty("player.keep-experience", false);
+		$this->netherEnabled = $this->getProperty("nether.allow-nether", false);
+		//$this->netherName = $this->getImagicalMineConfigInt("nether.level-name", "nether");
+		$this->limitedCreative = $this->getProperty("server.limited-creative", true);
 
 			if($this->crashdump){
 				if(!file_exists($dataPath . "crashdumps/")){
