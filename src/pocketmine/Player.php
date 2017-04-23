@@ -2019,7 +2019,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		$pk->y = $this->y;
 		$pk->z = $this->z;
 		$pk->seed = -1;
-	//	$pk->dimension = $this->level->getDimension();
+		//$pk->dimension = $this->level->getDimension();
 		$pk->gamemode = $this->gamemode & 0x01;
 		$pk->difficulty = $this->server->getDifficulty();
 		$pk->spawnX = $spawnPosition->getFloorX();
