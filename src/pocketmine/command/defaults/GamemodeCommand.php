@@ -27,6 +27,7 @@ use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use pocketmine\command\data\CommandParameter;
 
 class GamemodeCommand extends VanillaCommand{
 
@@ -34,10 +35,12 @@ class GamemodeCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.gamemode.description",
-			"%pocketmine.command.gamemode.usage",
+			"%commands.gamemode.usage",
 			["gm"]
 		);
 		$this->setPermission("pocketmine.command.gamemode");
+		//$this->commandParameters["default"] = [new CommandParameter("gamemode", CommandParameter::ARG_TYPE_INT, false)];
+
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
@@ -51,7 +54,7 @@ class GamemodeCommand extends VanillaCommand{
 			return false;
 		}
 
-		$gameMode = (int) Server::getGamemodeFromString($args[0]);
+		$gameMode = Server::getGamemodeFromString($args[0]);
 
 		if($gameMode === -1){
 			$sender->sendMessage("Unknown game mode");
@@ -73,16 +76,18 @@ class GamemodeCommand extends VanillaCommand{
 			return true;
 		}
 
-		if($target->setGamemode($gameMode) == false){
-			$sender->sendMessage(TextFormat::RED . "Game mode change for " . $target->getName() . " failed!");
+		$target->setGamemode($gameMode);
+		if($gameMode !== $target->getGamemode()){
+			$sender->sendMessage("Game mode change for " . $target->getName() . " failed!");
 		}else{
 			if($target === $sender){
-				Command::broadcastCommandMessage($sender, new TranslationContainer("commands.gamemode.success.self", [' ', ' ', Server::getGamemodeString($gameMode)]));
+				Command::broadcastCommandMessage($sender, new TranslationContainer("commands.gamemode.success.self", ['blame', 'mojang', Server::getGamemodeString($gameMode)]));
 			}else{
 				$target->sendMessage(new TranslationContainer("gameMode.changed"));
-				Command::broadcastCommandMessage($sender, new TranslationContainer("commands.gamemode.success.other", [$target->getName(), Server::getGamemodeString($gameMode)]));
+				Command::broadcastCommandMessage($sender, new TranslationContainer("commands.gamemode.success.other", ['blame mojang', $target->getName(), Server::getGamemodeString($gameMode)]));
 			}
 		}
+
 		return true;
 	}
 }

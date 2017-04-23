@@ -1,31 +1,23 @@
 <?php
 
 /*
- *
- *  _____            _               _____           
- * / ____|          (_)             |  __ \          
- *| |  __  ___ _ __  _ ___ _   _ ___| |__) | __ ___  
- *| | |_ |/ _ \ '_ \| / __| | | / __|  ___/ '__/ _ \ 
- *| |__| |  __/ | | | \__ \ |_| \__ \ |   | | | (_) |
- * \_____|\___|_| |_|_|___/\__, |___/_|   |_|  \___/ 
- *                         __/ |                    
- *                        |___/                     
+ * DevTools plugin for PocketMine-MP
+ * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author GenisysPro
- * @link https://github.com/GenisysPro/GenisysPro
- *
- *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
 */
 
 namespace pocketmine\command\defaults;
 
 use pocketmine\command\CommandSender;
-use pocketmine\event\TranslationContainer;
 use pocketmine\plugin\FolderPluginLoader;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
@@ -37,7 +29,8 @@ class MakePluginCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"Creates a Phar plugin from a unarchived",
-			"/makeplugin <pluginName>"
+			"/makeplugin <pluginName> (nogz)",
+			["mp"]
 		);
 		$this->setPermission("pocketmine.command.makeplugin");
 	}
@@ -48,24 +41,23 @@ class MakePluginCommand extends VanillaCommand{
 		}
 
 		if(count($args) === 0){
-			$sender->sendMessage(TextFormat::RED . "Usage: ".$this->usageMessage);
+			$sender->sendMessage(TextFormat::RED . "Usage: " . $this->usageMessage);
 			return true;
 		}
-		
+
 		$pluginName = trim(implode(" ", $args));
 		if($pluginName === "" or !(($plugin = Server::getInstance()->getPluginManager()->getPlugin($pluginName)) instanceof Plugin)){
 			$sender->sendMessage(TextFormat::RED . "Invalid plugin name, check the name case.");
-			$this->sendPluginList($sender);
 			return true;
 		}
 		$description = $plugin->getDescription();
 
 		if(!($plugin->getPluginLoader() instanceof FolderPluginLoader)){
-			$sender->sendMessage(TextFormat::RED . "Plugin ".$description->getName()." is not in folder structure.");
+			$sender->sendMessage(TextFormat::RED . "Plugin " . $description->getName() . " is not in folder structure.");
 			return true;
 		}
 
-		$pharPath = Server::getInstance()->getPluginPath().DIRECTORY_SEPARATOR . "GenisysPro" . DIRECTORY_SEPARATOR . $description->getName()."_v".$description->getVersion().".phar";
+		$pharPath = Server::getInstance()->getPluginPath() . DIRECTORY_SEPARATOR . "BDevTools" . DIRECTORY_SEPARATOR . $description->getName() . "_v" . $description->getVersion() . ".phar";
 		if(file_exists($pharPath)){
 			$sender->sendMessage("Phar plugin already exists, overwriting...");
 			@unlink($pharPath);
@@ -85,7 +77,7 @@ class MakePluginCommand extends VanillaCommand{
 		if($description->getName() === "DevTools"){
 			$phar->setStub('<?php require("phar://". __FILE__ ."/src/DevTools/ConsoleScript.php"); __HALT_COMPILER();');
 		}else{
-			$phar->setStub('<?php echo "PocketMine-iTX plugin '.$description->getName() .' v'.$description->getVersion().'\nThis file has been generated using GenisysPro at '.date("r").'\n----------------\n";if(extension_loaded("phar")){$phar = new \Phar(__FILE__);foreach($phar->getMetadata() as $key => $value){echo ucfirst($key).": ".(is_array($value) ? implode(", ", $value):$value)."\n";}} __HALT_COMPILER();');
+			$phar->setStub('<?php echo "PocketMine-MP/BlueLight plugin ' . $description->getName() . ' v' . $description->getVersion() . '\nThis file has been generated using BlueLight by BlueLightJapan Technologies at ' . date("r") . '\n----------------\n";if(extension_loaded("phar")){$phar = new \Phar(__FILE__);foreach($phar->getMetadata() as $key => $value){echo ucfirst($key).": ".(is_array($value) ? implode(", ", $value):$value)."\n";}} __HALT_COMPILER();');
 		}
 		$phar->setSignatureAlgorithm(\Phar::SHA1);
 		$reflection = new \ReflectionClass("pocketmine\\plugin\\PluginBase");
@@ -99,7 +91,7 @@ class MakePluginCommand extends VanillaCommand{
 				continue;
 			}
 			$phar->addFile($file, $path);
-			$sender->sendMessage("[GenisysPro] Adding $path");
+			$sender->sendMessage("[BlueLight] Adding $path");
 		}
 
 		foreach($phar as $file => $finfo){
@@ -108,32 +100,11 @@ class MakePluginCommand extends VanillaCommand{
 				$finfo->compress(\Phar::GZ);
 			}
 		}
-		$phar->stopBuffering();
-		$license = "
-  _____            _               _____           
- / ____|          (_)             |  __ \          
-| |  __  ___ _ __  _ ___ _   _ ___| |__) | __ ___  
-| | |_ |/ _ \ '_ \| / __| | | / __|  ___/ '__/ _ \ 
-| |__| |  __/ | | | \__ \ |_| \__ \ |   | | | (_) |
- \_____|\___|_| |_|_|___/\__, |___/_|   |_|  \___/ 
-                         __/ |                    
-                        |___/         
- ";
-  $sender->sendMessage($license);
-		$sender->sendMessage("Phar plugin ".$description->getName() ." v".$description->getVersion()." has been created on ".$pharPath);
-		return true;
-	}
-
-	private function sendPluginList(CommandSender $sender){
-		$list = "";
-		foreach(($plugins = $sender->getServer()->getPluginManager()->getPlugins()) as $plugin){
-			if(strlen($list) > 0){
-				$list .= TextFormat::WHITE . ", ";
-			}
-			$list .= $plugin->isEnabled() ? TextFormat::GREEN : TextFormat::RED;
-			$list .= $plugin->getDescription()->getFullName();
+		if(!isset($args[1]) or (isset($args[1]) and $args[1] != "nogz")){
+			$phar->compressFiles(\Phar::GZ);
 		}
-
-		$sender->sendMessage(new TranslationContainer("pocketmine.command.plugins.success", [count($plugins), $list]));
+		$phar->stopBuffering();
+		$sender->sendMessage("[BlueLight] Phar plugin " . $description->getName() . " v" . $description->getVersion() . " has been created on " . $pharPath);
+		return true;
 	}
 }

@@ -26,7 +26,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\network\protocol\SetDifficultyPacket;
 use pocketmine\Server;
-
+use pocketmine\command\data\CommandParameter;
 
 class DifficultyCommand extends VanillaCommand{
 
@@ -37,6 +37,8 @@ class DifficultyCommand extends VanillaCommand{
 			"%commands.difficulty.usage"
 		);
 		$this->setPermission("pocketmine.command.difficulty");
+		//$this->commandParameters["default"] = [new CommandParameter("difficulty", CommandParameter::ARG_TYPE_INT, false)];
+
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
