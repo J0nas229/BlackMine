@@ -26,7 +26,6 @@ use pocketmine\event\Cancellable;
 use pocketmine\level\Position;
 
 class EntityGenerateEvent extends EntityEvent implements Cancellable{
-
 	public static $handlerList = null;
 
 	const CAUSE_AI_HOLDER = 0;
@@ -67,12 +66,4 @@ class EntityGenerateEvent extends EntityEvent implements Cancellable{
 	public function getCause() : int{
 		return $this->cause;
 	}
-
-	/**
-	 * @return EventName|string
-     */
-	public function getName(){
-		return "EntityGenerateEvent";
-	}
-
 }
