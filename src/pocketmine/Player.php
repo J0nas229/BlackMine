@@ -2290,16 +2290,16 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 						if($this->level->useItemOn($blockVector, $item, $packet->face, $packet->fx, $packet->fy, $packet->fz, $this) === true){
 							break;
 						}
-					}elseif(!$this->inventory->getItemInHand()->deepEquals($packet->item)){
+					}elseif(!$this->inventory->getItemInHand()->Equals($packet->item)){
 						$this->inventory->sendHeldItem($this);
 					}else{
 						$item = $this->inventory->getItemInHand();
 						$oldItem = clone $item;
 						if($this->level->useItemOn($blockVector, $item, $packet->face, $packet->fx, $packet->fy, $packet->fz, $this)){
-							if(!$item->deepEquals($oldItem) or $item->getCount() !== $oldItem->getCount()){
+							if(!$item->Equals($oldItem) or $item->getCount() !== $oldItem->getCount()){
 								$this->inventory->setItemInHand($item);
 								$this->inventory->sendHeldItem($this->hasSpawned);
-							}
+							}//deepEquals
 							break;
 						}
 					}
@@ -2319,7 +2319,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 					if($this->isCreative()){
 						$item = $this->inventory->getItemInHand();
-					}elseif(!$this->inventory->getItemInHand()->deepEquals($packet->item)){
+					}elseif(!$this->inventory->getItemInHand()->Equals($packet->item)){
 						$this->inventory->sendHeldItem($this);
 						break;
 					}else{
@@ -3111,7 +3111,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 								$item = clone $packet->input[$y * 3 + $x];
 
 								foreach($needed as $k => $n){
-									if($n->deepEquals($item, !$n->hasAnyDamageValue(), $n->hasCompoundTag())){
+									if($n->Equals($item, !$n->hasAnyDamageValue(), $n->hasCompoundTag())){
 										$remove = min($n->getCount(), $item->getCount());
 										$n->setCount($n->getCount() - $remove);
 										$item->setCount($item->getCount() - $remove);
@@ -3139,7 +3139,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					$ingredients = $packet->input;
 					$result = $packet->output[0];
 
-					if(!$canCraft or !$recipe->getResult()->deepEquals($result)){
+					if(!$canCraft or !$recipe->getResult()->Equals($result)){
 						$this->server->getLogger()->debug("Unmatched recipe " . $recipe->getId() . " from player " . $this->getName() . ": expected " . $recipe->getResult() . ", got " . $result . ", using: " . implode(", ", $ingredients));
 						$this->inventory->sendContents($this);
 						break;
@@ -3150,11 +3150,11 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					foreach($ingredients as $ingredient){
 						$slot = -1;
 						foreach($this->inventory->getContents() as $index => $item){
-							if($ingredient->getId() !== 0 and $ingredient->deepEquals($item, !$ingredient->hasAnyDamageValue(), $ingredient->hasCompoundTag()) and ($item->getCount() - $used[$index]) >= 1){
+							if($ingredient->getId() !== 0 and $ingredient->Equals($item, !$ingredient->hasAnyDamageValue(), $ingredient->hasCompoundTag()) and ($item->getCount() - $used[$index]) >= 1){
 								$slot = $index;
 								$used[$index]++;
 								break;
-							}
+							}//deepEquals
 						}
 
 						if($ingredient->getId() !== 0 and $slot === -1){
