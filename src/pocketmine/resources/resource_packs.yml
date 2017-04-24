@@ -1,0 +1,8 @@
+
+# Edit this configuration file to add global resources to your MCPE server.
+
+# Whether to force the player to accept the material package.
+force_resources: false
+resource_stack:
+ #E.g
+ # - bitter fear of material
