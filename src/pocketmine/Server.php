@@ -166,7 +166,7 @@ class Server{
 	/** @var CraftingManager */
 	private $craftingManager;
 
- private $resourceManager;
+        private $resourceManager;
 
 	/** @var ConsoleCommandSender */
 	private $consoleSender;
@@ -191,6 +191,9 @@ class Server{
 
 	/** @var Network */
 	private $network;
+	
+	/** @var Katana */
+	private $katana;
 
 	private $networkCompressionAsync = true;
 	public $networkCompressionLevel = 7;
@@ -286,12 +289,20 @@ class Server{
 	public $countBookshelf = false;
 	public $allowInventoryCheats = false;
 	public $folderpluginloader = true;
+	
+	/**
+	 *
+	 * @return mc3coreLib
+	 */
+	public function getKatana() {
+		return $this->katana;
+	}
 
 	/**
 	 * @return string
 	 */
 	public function getName() : string{
-		return "GenisysPro";
+		return "ImagicalMine";
 	}
 
 	/**
@@ -1608,6 +1619,7 @@ class Server{
 			}
 			$internelConfig = new Config($file, Config::YAML, []);
 			$this->advancedConfig = new Config($this->dataPath . "ImagicalMine.yml", Config::YAML, []);
+			$this->katana = new Katana($this);
 			$cfgVer = $this->getAdvancedProperty("config.version", 0, $internelConfig);
 			$advVer = $this->getAdvancedProperty("config.version", 0);
 
