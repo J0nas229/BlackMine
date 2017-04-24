@@ -1,128 +1,117 @@
 <?php
+/**
+ * src/pocketmine/command/CommandReader.php
+ *
+ * @package default
+ */
 
-/*
- *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- *
- *
-*/
+
+
 
 namespace pocketmine\command;
 
 use pocketmine\Thread;
-use pocketmine\utils\MainLogger;
-use pocketmine\utils\Utils;
 
-class CommandReader extends Thread{
-	private $readline;
-	/** @var \Threaded */
-	protected $buffer;
-	private $shutdown = false;
-	private $stdin;
-	/** @var MainLogger */
-	private $logger;
+class CommandReader extends Thread
+{
+    private $readline;
 
-	public function __construct($logger){
-		$this->stdin = fopen("php://stdin", "r");
-		$opts = getopt("", ["disable-readline"]);
-		if(extension_loaded("readline") && !isset($opts["disable-readline"]) && (!function_exists("posix_isatty") || posix_isatty($this->stdin))){
-			$this->readline = true;
-		}else{
-			$this->readline = false;
-		}
-		$this->logger = $logger;
-		$this->buffer = new \Threaded;
-		$this->start();
-	}
+    /** @var \Threaded */
+    protected $buffer;
+    private $shutdown = false;
 
-	public function shutdown(){
-		$this->shutdown = true;
-	}
 
-	private function readline_callback($line){
-		if($line !== ""){
-			$this->buffer[] = $line;
-			readline_add_history($line);
-		}
-	}
+    public function __construct()
+    {
+        $this->buffer = new \Threaded;
+        $this->start();
+    }
 
-	private function readLine(){
-		if(!$this->readline){
-			$line = trim(fgets($this->stdin));
-			if($line !== ""){
-				$this->buffer[] = $line;
-			}
-		}else{
-			readline_callback_read_char();
-		}
-	}
 
-	/**
-	 * Reads a line from console, if available. Returns null if not available
-	 *
-	 * @return string|null
-	 */
-	public function getLine(){
-		if($this->buffer->count() !== 0){
-			return $this->buffer->shift();
-		}
 
-		return null;
-	}
 
-	public function quit(){
-		$this->shutdown();
-		// Windows sucks
-		if(Utils::getOS() !== "win"){
-			parent::quit();
-		}
-	}
+    public function shutdown()
+    {
+        $this->shutdown = true;
+    }
 
-	public function run(){
-		if($this->readline){
-			readline_callback_handler_install("Tesseract> ", [$this, "readline_callback"]);
-			$this->logger->setConsoleCallback("readline_redisplay");
-		}
 
-		while(!$this->shutdown){
-			$r = [$this->stdin];
-			$w = null;
-			$e = null;
-			if(stream_select($r, $w, $e, 0, 200000) > 0){
-				// PHP on Windows sucks
-				if(feof($this->stdin)){
-					if(Utils::getOS() == "win"){
-						$this->stdin = fopen("php://stdin", "r");
-						if(!is_resource($this->stdin)){
-							break;
-						}
-					}else{
-						break;
-					}
-				}
-				$this->readLine();
-			}
-		}
+    /**
+     *
+     * @return unknown
+     */
+    private function readline()
+    {
+        if (!$this->readline) {
+            global $stdin;
 
-		if($this->readline){
-			$this->logger->setConsoleCallback(null);
-			readline_callback_handler_remove();
-		}
-	}
+            if (!is_resource($stdin)) {
+                return "";
+            }
 
-	public function getThreadName(){
-		return "Console";
-	}
+            return trim(fgets($stdin));
+        } else {
+            $line = trim(readline("> "));
+            if ($line != "") {
+                readline_add_history($line);
+            }
+
+            return $line;
+        }
+    }
+
+
+    /**
+     * Reads a line from console, if available. Returns null if not available
+     *
+     * @return string|null
+     */
+    public function getLine()
+    {
+        if ($this->buffer->count() !== 0) {
+            return $this->buffer->shift();
+        }
+
+        return null;
+    }
+
+
+
+    public function run()
+    {
+        /* readline permanentley disabled in spite of config - it has no timeout and blocks server shutdown
+        old code -
+            $opts = getopt("", ["disable-readline"]);
+            if(extension_loaded("readline") and !isset($opts["disable-readline"])){
+                $this->readline = true;
+            }else{
+        */
+        global $stdin;
+        $stdin = fopen("php://stdin", "r");
+        stream_set_blocking($stdin, 0);
+        $this->readline = false;
+
+        $lastLine = microtime(true);
+        while (!$this->shutdown) {
+            if (($line = $this->readLine()) !== "") {
+                $this->buffer[] = preg_replace("#\\x1b\\x5b([^\\x1b]*\\x7e|[\\x40-\\x50])#", "", $line);
+            } elseif (!$this->shutdown and (microtime(true) - $lastLine) <= 0.1) { //Non blocking! Sleep to save CPU
+                $this->synchronized(function () {
+                        $this->wait(10000);
+                    });
+            }
+
+            $lastLine = microtime(true);
+        }
+    }
+
+
+    /**
+     *
+     * @return unknown
+     */
+    public function getThreadName()
+    {
+        return "Console";
+    }
 }
