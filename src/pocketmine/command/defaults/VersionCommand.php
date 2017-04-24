@@ -48,7 +48,7 @@ class VersionCommand extends VanillaCommand{
 			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended.title"));
 			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended1", [
 											$sender->getServer()->getName(), 
-											$sender->getServer()->getFormattedVersion("-"),
+											$sender->getServer()->getPocketMineVersion("-"),
 											$sender->getServer()->getCodename()
 			]));
 			$sender->sendMessage(new TranslationContainer("pocketmine.server.info.extended2", [
