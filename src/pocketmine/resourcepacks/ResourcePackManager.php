@@ -59,10 +59,10 @@ class ResourcePackManager{
 		$this->path = $path;
 
 		if(!file_exists($this->path)){
-			$this->server->getLogger()->debug("材质包路径 $path 不存在, 创造文件夹中...");
+			$this->server->getLogger()->debug("$path...");
 			mkdir($this->path);
 		}elseif(!is_dir($this->path)){
-			throw new \InvalidArgumentException("材质包路径 $path 已经存在且不是一个文件夹");
+			throw new \InvalidArgumentException("$path");
 		}
 
 		if(!file_exists($this->path . "resource_packs.yml")){
@@ -73,7 +73,7 @@ class ResourcePackManager{
 
 		$this->serverForceResources = (bool) $this->resourcePacksConfig->get("force_resources", false);
 
-		$this->server->getLogger()->info("加载材质包...");
+		$this->server->getLogger()->info("");
 
 		foreach($this->resourcePacksConfig->get("resource_stack", []) as $pos => $pack){
 			try{
@@ -82,7 +82,7 @@ class ResourcePackManager{
 					$newPack = null;
 					//Detect the type of resource pack.
 					if(is_dir($packPath)){
-						$this->server->getLogger()->warning("文件夹的材质包 $pack 暂时不支持,请压缩");
+						$this->server->getLogger()->warning("$pack");
 					}else{
 						$info = new \SplFileInfo($packPath);
 						switch($info->getExtension()){
@@ -90,7 +90,7 @@ class ResourcePackManager{
 								$newPack = new ZippedResourcePack($packPath);
 								break;
 							default:
-								$this->server->getLogger()->warning("未知类型材质包 $pack 暂时未支持");
+								$this->server->getLogger()->warning("$pack");
 								break;
 						}
 					}
@@ -100,14 +100,14 @@ class ResourcePackManager{
 						$this->uuidList[$newPack->getPackId()] = $newPack;
 					}
 				}else{
-					$this->server->getLogger()->warning("找不到材质包 $pack");
+					$this->server->getLogger()->warning("$pack");
 				}
 			}catch(\Throwable $e){
 				$this->server->getLogger()->logException($e);
 			}
 		}
 
-		$this->server->getLogger()->debug("成功加载 " . count($this->resourcePacks) . " 个材质包");
+		$this->server->getLogger()->debug("" . count($this->resourcePacks) . "");
 	}
 
 	/**
