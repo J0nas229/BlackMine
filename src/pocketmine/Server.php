@@ -1526,21 +1526,6 @@ use pocketmine\utils\Color;
 				"view-distance" => 8
 			]);
 
-			$version = $this->getFormattedVersion();
-			$this->version = $version;
-			$code = $this->getCodename();
-			$mcpe = $this->getVersion();
-			$protocol = Info::CURRENT_PROTOCOL;
-			$api = $this->getApiVersion();
-			$ip = Utils::getIP();
-			$port = $this->getPort();
-			$query = $this->getIp();
-			$ssl = $this->isExtensionInstalled("OpenSSL");
-			$mode = $this->checkAuthentication();
-			$lang = $this->getProperty("settings.language", "eng");
-			$date = date("D, F d, Y, H:i T");
-			$package = $packages;
-			
 			$this->forceLanguage = $this->getProperty("settings.force-language", false);
 			$this->baseLang = new BaseLang($this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE));
 			$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
