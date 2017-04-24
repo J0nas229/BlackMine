@@ -9,41 +9,31 @@
  *      | |  __/\__ \__ \  __/ | | (_| | (__| |_
  *      |_|\___||___/___/\___|_|  \__,_|\___|\__|
  *
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * @author Tessetact Team
- * @link http://www.github.com/TesseractTeam/Tesseract
  * 
  *
- */
+*/
 
 namespace pocketmine\block;
 
+class WetSponge extends Solid{
 
-use pocketmine\item\Tool;
+	protected $id = self::WET_SPONGE;
 
-class PurpurStairs extends Stair{
-
-	protected $id = self::PURPUR_STAIRS;
-
-	public function __construct($meta = 0){
-		$this->meta = $meta;
+	public function __construct(){
 	}
-
+	public function getResistance(){
+		return 3;
+	}
 	public function getHardness(){
-		return 1.5;
+		return 0.6;
 	}
-
-	public function getToolType(){
-		return Tool::TYPE_PICKAXE;
+	public function getName(){
+		return "Wet Sponge";
 	}
-
-	public function getName() : string{
-		return "Purpur Stairs"; 
-	}
-
-} 
+}

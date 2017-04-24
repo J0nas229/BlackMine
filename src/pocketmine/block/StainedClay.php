@@ -27,6 +27,7 @@ use pocketmine\item\Tool;
 class StainedClay extends Solid{
 
 	protected $id = self::STAINED_CLAY;
+	
 	const CLAY_WHITE = 0;
 	const CLAY_ORANGE = 1;
 	const CLAY_MAGENTA = 2;

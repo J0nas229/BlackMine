@@ -26,7 +26,7 @@ use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 
-class Lever extends Flowable{
+class Lever extends Solid{
 	protected $id = self::LEVER;
 
 	public function __construct($meta = 0){
@@ -37,7 +37,7 @@ class Lever extends Flowable{
 		return true;
 	}
 
-	public function getName(){
+	public function getName() : string{
 		return "Lever";
 	}
 
@@ -89,9 +89,57 @@ class Lever extends Flowable{
 		return false;
 	}
 
+	public function activate(array $ignore = []){
+		parent::activate($ignore);
+		$side = $this->meta;
+		if($this->isActivated()) $side ^= 0x08;
+		$faces = [
+				5 => 0,
+				6 => 0,
+				3 => 2,
+				1 => 4,
+				4 => 3,
+				2 => 5,
+				0 => 1,
+				7 => 1,
+		];
+
+		$block = $this->getSide($faces[$side])->getSide(Vector3::SIDE_UP);
+		if(!$this->equals($block)){
+			$this->activateBlock($block);
+		}
+
+		$this->checkTorchOn($this->getSide($faces[$side]),[$this->getOppositeSide($faces[$side])]);
+	}
+
+	public function deactivate(array $ignore = []){
+		parent::deactivate($ignore);
+		$side = $this->meta;
+		if($this->isActivated()) $side ^= 0x08;
+		$faces = [
+				5 => 0,
+				6 => 0,
+				3 => 2,
+				1 => 4,
+				4 => 3,
+				2 => 5,
+				0 => 1,
+				7 => 1,
+		];
+
+		$block = $this->getSide($faces[$side])->getSide(Vector3::SIDE_UP);
+		if(!$this->equals($block)){
+			$this->deactivateBlock($block);
+		}
+
+		$this->checkTorchOff($this->getSide($faces[$side]),[$this->getOppositeSide($faces[$side])]);
+	}
+
 	public function onActivate(Item $item, Player $player = null){
 		$this->meta ^= 0x08;
 		$this->getLevel()->setBlock($this, $this, true, false);
+		if($this->isActivated()) $this->activate();
+		else $this->deactivate();
 		return true;
 	}
 
@@ -99,6 +147,7 @@ class Lever extends Flowable{
 		if($this->isActivated()){
 			$this->meta ^= 0x08;
 			$this->getLevel()->setBlock($this, $this, true, false);
+			$this->deactivate();
 		}
 		$this->getLevel()->setBlock($this, new Air(), true, false);
 	}
