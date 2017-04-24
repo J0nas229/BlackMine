@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class BlockEntityDataPacket extends DataPacket{
-
 	const NETWORK_ID = Info::BLOCK_ENTITY_DATA_PACKET;
 
 	public $x;
@@ -42,13 +41,6 @@ class BlockEntityDataPacket extends DataPacket{
 		$this->reset();
 		$this->putBlockCoords($this->x, $this->y, $this->z);
 		$this->put($this->namedtag);
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "BlockEntityDataPacket";
 	}
 
 }

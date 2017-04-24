@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class AddItemEntityPacket extends DataPacket{
-
 	const NETWORK_ID = Info::ADD_ITEM_ENTITY_PACKET;
 
 	public $eid;
@@ -48,13 +47,6 @@ class AddItemEntityPacket extends DataPacket{
 		$this->putSlot($this->item);
 		$this->putVector3f($this->x, $this->y, $this->z);
 		$this->putVector3f($this->speedX, $this->speedY, $this->speedZ);
-	}
-
-	/**
-	 * @return AddItemEntityPacket|string
-     */
-	public function getName(){
-		return "AddItemEntityPacket";
 	}
 
 }

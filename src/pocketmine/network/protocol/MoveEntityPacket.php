@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class MoveEntityPacket extends DataPacket{
-
 	const NETWORK_ID = Info::MOVE_ENTITY_PACKET;
 
 	public $eid;
@@ -52,12 +51,4 @@ class MoveEntityPacket extends DataPacket{
 		$this->putByte($this->yaw / (360.0 / 256));
 		$this->putByte($this->headYaw / (360.0 / 256));
 	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "MoveEntityPacket";
-	}
-
 }

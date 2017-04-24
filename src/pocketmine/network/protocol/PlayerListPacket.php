@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class PlayerListPacket extends DataPacket{
-
 	const NETWORK_ID = Info::PLAYER_LIST_PACKET;
 
 	const TYPE_ADD = 0;
@@ -60,13 +59,6 @@ class PlayerListPacket extends DataPacket{
 				$this->putUUID($d[0]);
 			}
 		}
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "PlayerListPacket";
 	}
 
 }

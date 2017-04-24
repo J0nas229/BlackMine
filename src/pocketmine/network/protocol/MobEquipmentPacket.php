@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class MobEquipmentPacket extends DataPacket{
-
 	const NETWORK_ID = Info::MOB_EQUIPMENT_PACKET;
 
 	public $eid;
@@ -49,13 +48,6 @@ class MobEquipmentPacket extends DataPacket{
 		$this->putByte($this->slot);
 		$this->putByte($this->selectedSlot);
 		$this->putByte($this->unknownByte);
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "MobEquipmentPacket";
 	}
 
 }
