@@ -2,78 +2,70 @@
 
 /*
  *
- *  _                       _           _ __  __ _
- * (_)                     (_)         | |  \/  (_)
- *  _ _ __ ___   __ _  __ _ _  ___ __ _| | \  / |_ _ __   ___
- * | | '_ ` _ \ / _` |/ _` | |/ __/ _` | | |\/| | | '_ \ / _ \
- * | | | | | | | (_| | (_| | | (_| (_| | | |  | | | | | |  __/
- * |_|_| |_| |_|\__,_|\__, |_|\___\__,_|_|_|  |_|_|_| |_|\___|
- *                     __/ |
- *                    |___/
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
- * This program is a third party build by ImagicalMine.
- *
- * PocketMine is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author ImagicalMine Team
- * @link http://forums.imagicalmine.net/
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
  *
  *
 */
 
 namespace raklib\protocol;
 
-abstract class DataPacket extends Packet
-{
+#include <rules/RakLibPacket.h>
 
-    /** @var EncapsulatedPacket[] */
-    public $packets = [];
+abstract class DataPacket extends Packet{
 
-    public $seqNumber;
+	/** @var EncapsulatedPacket[] */
+	public $packets = [];
 
-    public function encode()
-    {
-        parent::encode();
-        $this->buffer .= substr(pack("V", $this->seqNumber), 0, -1);
-        foreach ($this->packets as $packet) {
-            $this->buffer .= $packet instanceof EncapsulatedPacket ? $packet->toBinary() : (string) $packet;
-        }
-    }
+	public $seqNumber;
 
-    public function length()
-    {
-        $length = 4;
-        foreach ($this->packets as $packet) {
-            $length += $packet instanceof EncapsulatedPacket ? $packet->getTotalLength() : strlen($packet);
-        }
+	public function encode(){
+		parent::encode();
+		$this->putLTriad($this->seqNumber);
+		foreach($this->packets as $packet){
+			$this->put($packet instanceof EncapsulatedPacket ? $packet->toBinary() : (string) $packet);
+		}
+	}
 
-        return $length;
-    }
+	public function length(){
+		$length = 4;
+		foreach($this->packets as $packet){
+			$length += $packet instanceof EncapsulatedPacket ? $packet->getTotalLength() : strlen($packet);
+		}
 
-    public function decode()
-    {
-        parent::decode();
-        $this->seqNumber = unpack("V", $this->get(3) . "\x00")[1];
+		return $length;
+	}
 
-        while (!$this->feof()) {
-            $offset = 0;
-            $data = substr($this->buffer, $this->offset);
-            $packet = EncapsulatedPacket::fromBinary($data, false, $offset);
-            $this->offset += $offset;
-            if (strlen($packet->buffer) === 0) {
-                break;
-            }
-            $this->packets[] = $packet;
-        }
-    }
+	public function decode(){
+		parent::decode();
+		$this->seqNumber = $this->getLTriad();
 
-    public function clean()
-    {
-        $this->packets = [];
-        $this->seqNumber = null;
-        return parent::clean();
-    }
+		while(!$this->feof()){
+			$offset = 0;
+			$data = substr($this->buffer, $this->offset);
+			$packet = EncapsulatedPacket::fromBinary($data, false, $offset);
+			$this->offset += $offset;
+			if(strlen($packet->buffer) === 0){
+				break;
+			}
+			$this->packets[] = $packet;
+		}
+	}
+
+	public function clean(){
+		$this->packets = [];
+		$this->seqNumber = null;
+		return parent::clean();
+	}
 }
