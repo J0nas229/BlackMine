@@ -1655,7 +1655,7 @@ use pocketmine\katana\Katana;
 				//($version->isDev() ? TextFormat::YELLOW : "") . $version->get(true) . TextFormat::WHITE,
 				//$this->getCodename(),
 				//$this->getApiVersion()
-			]));
+			//]));
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getName()]));
 
