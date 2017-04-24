@@ -24,6 +24,7 @@ namespace pocketmine\block;
 use pocketmine\inventory\EnchantInventory;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
+
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
@@ -91,7 +92,7 @@ class EnchantingTable extends Transparent{
 		return 6000;
 	}
 
-	public function getName(){
+	public function getName() : string{
 		return "Enchanting Table";
 	}
 
@@ -104,7 +105,7 @@ class EnchantingTable extends Transparent{
 			return true;
 		}
 		if($player instanceof Player){
-			if($player->isCreative()){
+			if($player->isCreative() and $player->getServer()->limitedCreative){
 				return true;
 			}
 			$tile = $this->getLevel()->getTile($this);
@@ -131,7 +132,7 @@ class EnchantingTable extends Transparent{
 				}
 
 				/** @var EnchantTable $enchantTable */
-				$enchantTable = Tile::createTile(Tile::ENCHANT_TABLE, $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), $nbt);
+				$enchantTable = Tile::createTile(Tile::ENCHANT_TABLE, $this->getLevel(), $nbt);
 			}
 			$player->addWindow(new EnchantInventory($this));
 			$player->craftingType = Player::CRAFTING_ENCHANT;
