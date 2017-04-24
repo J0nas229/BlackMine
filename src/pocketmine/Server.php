@@ -1650,11 +1650,11 @@ use pocketmine\katana\Katana;
 			$blue2= pack("c",0x1B)."[1;46m";
 			$reset= pack("c",0x1B)."[1;0m";
 
-			$this->logger->info($blue.$this->getLanguage()->translateString("pocketmine.server.info", [
-				$this->getName(),
-				($version->isDev() ? TextFormat::YELLOW : "") . $version->get(true) . TextFormat::WHITE,
-				$this->getCodename(),
-				$this->getApiVersion()
+			//$this->logger->info($blue.$this->getLanguage()->translateString("pocketmine.server.info", [
+				//$this->getName(),
+				//($version->isDev() ? TextFormat::YELLOW : "") . $version->get(true) . TextFormat::WHITE,
+				//$this->getCodename(),
+				//$this->getApiVersion()
 			]));
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.license", [$this->getName()]));
