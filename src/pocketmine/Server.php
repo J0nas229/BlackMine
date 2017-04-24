@@ -106,6 +106,7 @@ use pocketmine\utils\Utils;
 use pocketmine\utils\UUID;
 use pocketmine\utils\VersionString;
 use pocketmine\katana\Katana;
+use pocketmine\utils\Color;
 
 /**
  * The class that manages everything
