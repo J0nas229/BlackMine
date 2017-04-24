@@ -1816,7 +1816,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
             $this->close($this->getLeaveMessage(), "Server is white-listed");
 
             return;
-        } elseif ($this->server->getNameBans()->isBanned(strtolower($this->getName)) {
+        } elseif ($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress()) or $this->server->getCIDBans()->isBanned($this->randomClientId)) {
             $banentry = new BanEntry($this->getName());
             $reason = $banentry->getReason();
             $this->close($this->getLeaveMessage(), TextFormat::RED . "You are banned. Reason: \n" . $reason);
@@ -1904,29 +1904,28 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
         }
         $spawnPosition = $this->getSpawn();
 
-
-		$pk = new StartGamePacket();
-		$pk->entityUniqueId = $this->id;
-		$pk->entityRuntimeId = $this->id;
-		$pk->x = $this->x;
-		$pk->y = $this->y;
-		$pk->z = $this->z;
-		$pk->seed = -1;
-		$pk->dimension = 0; //TODO: implement this properly
-		$pk->gamemode = $this->gamemode & 0x01;
-		$pk->difficulty = $this->server->getDifficulty();
-		$pk->spawnX = $spawnPosition->getFloorX();
-		$pk->spawnY = $spawnPosition->getFloorY();
-		$pk->spawnZ = $spawnPosition->getFloorZ();
-		$pk->hasBeenLoadedInCreative = 1;
-		$pk->dayCycleStopTime = -1; //TODO: implement this properly
-		$pk->eduMode = 0;
-		$pk->rainLevel = 0; //TODO: implement these properly
-		$pk->lightningLevel = 0;
-		$pk->commandsEnabled = 1;
-		$pk->levelId = "";
-		$pk->worldName = $this->server->getMotd();
-		$this->dataPacket($pk);
+        $pk = new StartGamePacket();
+        $pk->entityUniqueId = $this->id;
+        $pk->entityRuntimeId = $this->id;
+        $pk->x = $this->x;
+        $pk->y = $this->y;
+        $pk->z = $this->z;
+        $pk->seed = -1;
+       // $pk->dimension = $this->level->getDimension();
+        $pk->gamemode = $this->gamemode & 0x01;
+        $pk->difficulty = $this->server->getDifficulty();
+        $pk->spawnX = $spawnPosition->getFloorX();
+        $pk->spawnY = $spawnPosition->getFloorY();
+        $pk->spawnZ = $spawnPosition->getFloorZ();
+        $pk->hasBeenLoadedInCreative = 1;
+        $pk->dayCycleStopTime = -1; //TODO: implement this properly
+        $pk->eduMode = 0;
+        $pk->rainLevel = 0; //TODO: implement these properly
+        $pk->lightningLevel = 0;
+        $pk->commandsEnabled = 1;
+        $pk->unknown = "UNKNOWN";
+        $pk->worldName = $this->server->getMotd();
+        $this->dataPacket($pk);
 
         $pk = new SetTimePacket();
         $pk->time = $this->level->getTime();
