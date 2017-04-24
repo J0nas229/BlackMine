@@ -1674,6 +1674,7 @@ use pocketmine\katana\Katana;
 			Effect::init();
 			Attribute::init();
 			EnchantmentLevelTable::init();
+			Color::init();
 			$this->craftingManager = new CraftingManager();
 
 			$this->pluginManager = new PluginManager($this, $this->commandMap);
