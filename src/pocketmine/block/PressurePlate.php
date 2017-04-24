@@ -23,9 +23,10 @@ namespace pocketmine\block;
 
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
+use pocketmine\math\Math;
+use pocketmine\math\Vector3;
 use pocketmine\level\Level;
 use pocketmine\level\sound\GenericSound;
-use pocketmine\math\Vector3;
 use pocketmine\Player;
 
 class PressurePlate extends RedstoneSource{

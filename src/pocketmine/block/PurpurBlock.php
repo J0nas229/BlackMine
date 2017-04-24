@@ -23,52 +23,62 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
+use pocketmine\Player;
 
-class Stone extends Solid{
-	const NORMAL = 0;
-	const GRANITE = 1;
-	const POLISHED_GRANITE = 2;
-	const DIORITE = 3;
-	const POLISHED_DIORITE = 4;
-	const ANDESITE = 5;
-	const POLISHED_ANDESITE = 6;
+class PurpurBlock extends Solid{
 
-	protected $id = self::STONE;
+	const PURPUR_NORMAL = 0;
+	const PURPUR_PILLAR = 2;
+
+	protected $id = self::PURPUR_BLOCK;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	public function getHardness(){
+	public function getHardness() {
 		return 1.5;
+	}
+
+	public function getName() : string{
+		static $names = [
+			0 => "Purrpur Block",
+			1 => "",
+			2 => "Purpur Pillar",
+		];
+
+		return $names[$this->meta & 0x03];
+	}
+
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
+		if($this->meta !== self::PURPUR_NORMAL){
+			$faces = [
+				0 => 0,
+				1 => 0,
+				2 => 0b1000,
+				3 => 0b1000,
+				4 => 0b0100,
+				5 => 0b0100,
+			];
+
+			$this->meta = (($this->meta & 0x03) | $faces[$face]);
+		}
+		$this->getLevel()->setBlock($block, $this, true, true);
+
+		return true;
 	}
 
 	public function getToolType(){
 		return Tool::TYPE_PICKAXE;
 	}
 
-	public function getName(){
-		static $names = [
-			self::NORMAL => "Stone",
-			self::GRANITE => "Granite",
-			self::POLISHED_GRANITE => "Polished Granite",
-			self::DIORITE => "Diorite",
-			self::POLISHED_DIORITE => "Polished Diorite",
-			self::ANDESITE => "Andesite",
-			self::POLISHED_ANDESITE => "Polished Andesite",
-			7 => "Unknown Stone",
-		];
-		return $names[$this->meta & 0x07];
-	}
-
-	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
+	public function getDrops(Item $item) : array {
+		if($item->isPickaxe() >= 1){
 			return [
-				[$this->getDamage() === 0 ? Item::COBBLESTONE : Item::STONE, $this->getDamage(), 1],
+				[Item::PURPUR_BLOCK, $this->meta & 0x03, 1],
 			];
 		}else{
 			return [];
 		}
 	}
-
 }

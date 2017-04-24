@@ -21,7 +21,8 @@
 
 namespace pocketmine\block;
 
-
+use pocketmine\item\Item;
+use pocketmine\Player;
 
 class SlimeBlock extends Solid{
 

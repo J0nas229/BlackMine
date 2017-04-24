@@ -22,13 +22,13 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
-use pocketmine\level\sound\ButtonClickSound;
 use pocketmine\Player;
+use pocketmine\level\sound\ButtonClickSound;
 
 class StoneButton extends WoodenButton{
 	protected $id = self::STONE_BUTTON;
 
-	public function getName() : string{
+	public function getName(){
 		return "Stone Button";
 	}
 
@@ -37,7 +37,6 @@ class StoneButton extends WoodenButton{
 			$this->meta ^= 0x08;
 			$this->getLevel()->setBlock($this, $this, true, false);
 			$this->getLevel()->addSound(new ButtonClickSound($this));
-			$this->activate();
 			$this->getLevel()->scheduleUpdate($this, 40);
 		}
 		return true;

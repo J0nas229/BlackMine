@@ -26,30 +26,20 @@ use pocketmine\item\Tool;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\Player;
 
-class WoodSlab extends Transparent{
+class PurpurSlab extends Transparent{
 
-	protected $id = self::WOOD_SLAB;
+	protected $id = self::PURPUR_SLAB;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	public function getHardness(){
-		return 2;
+	public function getHardness() {
+		return 3;
 	}
 
-	public function getName(){
-		static $names = [
-			0 => "Oak",
-			1 => "Spruce",
-			2 => "Birch",
-			3 => "Jungle",
-			4 => "Acacia",
-			5 => "Dark Oak",
-			6 => "",
-			7 => ""
-		];
-		return (($this->meta & 0x08) === 0x08 ? "Upper " : "") . $names[$this->meta & 0x07] . " Wooden Slab";
+	public function getName() : string{
+		return "Purpur Slab";
 	}
 
 	protected function recalculateBoundingBox(){
@@ -78,31 +68,31 @@ class WoodSlab extends Transparent{
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$this->meta &= 0x07;
 		if($face === 0){
-			if($target->getId() === self::WOOD_SLAB and ($target->getDamage() & 0x08) === 0x08 and ($target->getDamage() & 0x07) === ($this->meta & 0x07)){
-				$this->getLevel()->setBlock($target, Block::get(Item::DOUBLE_WOOD_SLAB, $this->meta), true);
+			if($target->getId() === self::PURPUR_SLAB and ($target->getDamage() & 0x08) === 0x08 and ($target->getDamage() & 0x07) === ($this->meta & 0x07)){
+				$this->getLevel()->setBlock($target, Block::get(self::DOUBLE_PURPUR_SLAB, $this->meta), true);
 
 				return true;
-			}elseif($block->getId() === self::WOOD_SLAB and ($block->getDamage() & 0x07) === ($this->meta & 0x07)){
-				$this->getLevel()->setBlock($block, Block::get(Item::DOUBLE_WOOD_SLAB, $this->meta), true);
+			}elseif($block->getId() === self::PURPUR_SLAB and ($block->getDamage() & 0x07) === ($this->meta & 0x07)){
+				$this->getLevel()->setBlock($block, Block::get(self::DOUBLE_PURPUR_SLAB, $this->meta), true);
 
 				return true;
 			}else{
 				$this->meta |= 0x08;
 			}
 		}elseif($face === 1){
-			if($target->getId() === self::WOOD_SLAB and ($target->getDamage() & 0x08) === 0 and ($target->getDamage() & 0x07) === ($this->meta & 0x07)){
-				$this->getLevel()->setBlock($target, Block::get(Item::DOUBLE_WOOD_SLAB, $this->meta), true);
+			if($target->getId() === self::PURPUR_SLAB and ($target->getDamage() & 0x08) === 0 and ($target->getDamage() & 0x07) === ($this->meta & 0x07)){
+				$this->getLevel()->setBlock($target, Block::get(self::DOUBLE_PURPUR_SLAB, $this->meta), true);
 
 				return true;
-			}elseif($block->getId() === self::WOOD_SLAB and ($block->getDamage() & 0x07) === ($this->meta & 0x07)){
-				$this->getLevel()->setBlock($block, Block::get(Item::DOUBLE_WOOD_SLAB, $this->meta), true);
+			}elseif($block->getId() === self::PURPUR_SLAB and ($block->getDamage() & 0x07) === ($this->meta & 0x07)){
+				$this->getLevel()->setBlock($block, Block::get(self::DOUBLE_PURPUR_SLAB, $this->meta), true);
 
 				return true;
 			}
 		}else{ //TODO: collision
-			if($block->getId() === self::WOOD_SLAB){
+			if($block->getId() === self::PURPUR_SLAB){
 				if(($block->getDamage() & 0x07) === ($this->meta & 0x07)){
-					$this->getLevel()->setBlock($block, Block::get(Item::DOUBLE_WOOD_SLAB, $this->meta), true);
+					$this->getLevel()->setBlock($block, Block::get(self::DOUBLE_PURPUR_SLAB, $this->meta), true);
 
 					return true;
 				}
@@ -115,7 +105,7 @@ class WoodSlab extends Transparent{
 			}
 		}
 
-		if($block->getId() === self::WOOD_SLAB and ($target->getDamage() & 0x07) !== ($this->meta & 0x07)){
+		if($block->getId() === self::PURPUR_SLAB and ($target->getDamage() & 0x07) !== ($this->meta & 0x07)){
 			return false;
 		}
 		$this->getLevel()->setBlock($block, $this, true, true);
@@ -124,12 +114,16 @@ class WoodSlab extends Transparent{
 	}
 
 	public function getToolType(){
-		return Tool::TYPE_AXE;
+		return Tool::TYPE_PICKAXE;
 	}
 
-	public function getDrops(Item $item){
-		return [
-			[$this->id, $this->meta & 0x07, 1],
-		];
+	public function getDrops(Item $item) : array {
+		if($item->isPickaxe() >= 1){
+			return [
+				[Item::PURPUR_SLAB, 0, 1],
+			];
+		}else{
+			return [];
+		}
 	}
 }
