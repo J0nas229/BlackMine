@@ -24,33 +24,32 @@ namespace pocketmine\block;
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 
-class Cobblestone extends Solid{
+class ChorusFlower extends Solid{
 
-	protected $id = self::COBBLESTONE;
-
-	public function __construct(){
-
+	protected $id = self::CHORUS_FLOWER;
+  
+	public function __construct($meta = 0){
+		$this->meta = $meta;
 	}
-
+  
+ 	public function getHardness(){
+		return 0.4;
+	}
+  
 	public function getToolType(){
-		return Tool::TYPE_PICKAXE;
+		return Tool::TYPE_AXE;
 	}
-
-	public function getName(){
-		return "Cobblestone";
+  
+	public function getName() : string{
+		return "Chorus Flower";
 	}
-
-	public function getHardness(){
-		return 2;
-	}
-
-	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
-			return [
-				[Item::COBBLESTONE, 0, 1],
-			];
-		}else{
-			return [];
+  
+	public function getDrops(Item $item) : array {
+		$drops = [];
+		if($this->meta >= 0x07){
+			$drops[] = [Item::CHORUS_FRUIT, 0, 1];
 		}
+		return $drops;
 	}
+  
 }

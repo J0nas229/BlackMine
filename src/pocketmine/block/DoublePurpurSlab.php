@@ -23,31 +23,33 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
+use pocketmine\math\AxisAlignedBB;
+use pocketmine\Player;
 
-class Cobblestone extends Solid{
+class DoublePurpurSlab extends DoubleSlab{
 
-	protected $id = self::COBBLESTONE;
+	protected $id = self::DOUBLE_PURPUR_SLAB;
 
-	public function __construct(){
+	public function __construct($meta = 0){
+		$this->meta = $meta;
+	}
 
+	public function getHardness() {
+		return 3;
+	}
+
+	public function getName() : string{
+		return "Double Purpur Slab";
 	}
 
 	public function getToolType(){
 		return Tool::TYPE_PICKAXE;
 	}
 
-	public function getName(){
-		return "Cobblestone";
-	}
-
-	public function getHardness(){
-		return 2;
-	}
-
-	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
+	public function getDrops(Item $item) : array {
+		if($item->isPickaxe() >= 1){
 			return [
-				[Item::COBBLESTONE, 0, 1],
+				[Item::DOUBLE_PURPUR_SLAB, $this->meta, 2],
 			];
 		}else{
 			return [];

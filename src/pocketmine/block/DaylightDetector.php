@@ -22,12 +22,12 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
-use pocketmine\tile\DLDetector;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\tile\Tile;
+use pocketmine\tile\DLDetector;
 
 class DaylightDetector extends RedstoneSource{
 	protected $id = self::DAYLIGHT_SENSOR;
@@ -66,7 +66,7 @@ class DaylightDetector extends RedstoneSource{
 				new IntTag("y", $this->y),
 				new IntTag("z", $this->z)
 			]);
-			return Tile::createTile(Tile::DAY_LIGHT_DETECTOR, $this->getLevel(), $nbt);
+			return Tile::createTile(Tile::DAY_LIGHT_DETECTOR, $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), $nbt);
 		}
 	}
 

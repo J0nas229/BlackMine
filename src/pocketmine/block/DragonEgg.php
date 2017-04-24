@@ -1,5 +1,4 @@
 <?php
-
 /*
  *
  *  ____            _        _   __  __ _                  __  __ ____
@@ -22,35 +21,27 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
-use pocketmine\item\Tool;
 
-class Cobblestone extends Solid{
+class DragonEgg extends Solid{
 
-	protected $id = self::COBBLESTONE;
-
+	protected $id = self::DRAGON_EGG;
+  
 	public function __construct(){
-
 	}
-
-	public function getToolType(){
-		return Tool::TYPE_PICKAXE;
-	}
-
+  
 	public function getName(){
-		return "Cobblestone";
+		return "Dragon Egg";
 	}
-
+  
 	public function getHardness(){
-		return 2;
+		return -1;
 	}
-
-	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
-			return [
-				[Item::COBBLESTONE, 0, 1],
-			];
-		}else{
-			return [];
-		}
+	
+	public function getResistance(){
+		return 18000000;
+	}
+  
+	public function isBreakable(Item $item){
+		return false;
 	}
 }
