@@ -88,6 +88,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\utils\Utils;
 use pocketmine\utils\UUID;
 use pocketmine\utils\VersionString;
+use pocketmine\katana\Katana;
 
 /**
  * The class that manages everything
