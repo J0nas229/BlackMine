@@ -573,6 +573,25 @@ class Utils
         $ret = curl_exec($ch);
         curl_close($ch);
 
-        return $ret;
-    }
+		return $ret;
+	}
+
+	public static function javaStringHash($string){
+		$hash = 0;
+		for($i = 0; $i < strlen($string); $i++){
+			$ord = ord($string{$i});
+			if($ord & 0x80){
+				$ord -= 0x100;
+			}
+			$hash = 31 * $hash + $ord;
+			while($hash > 0x7FFFFFFF){
+				$hash -= 0x100000000;
+			}
+			while($hash < -0x80000000){
+				$hash += 0x100000000;
+			}
+			$hash &= 0xFFFFFFFF;
+		}
+		return $hash;
+	}
 }
