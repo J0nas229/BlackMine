@@ -26,7 +26,6 @@ use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\command\data\CommandParameter;
 
 class DeopCommand extends VanillaCommand{
 
@@ -34,11 +33,9 @@ class DeopCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.deop.description",
-			"%commands.deop.usage"
+			"%pocketmine.command.deop.usage"
 		);
 		$this->setPermission("pocketmine.command.op.take");
-		//$this->commandParameters["default"] = [new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)];
-
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){

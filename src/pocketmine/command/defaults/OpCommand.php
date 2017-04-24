@@ -26,7 +26,6 @@ use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\command\data\CommandParameter;
 
 class OpCommand extends VanillaCommand{
 
@@ -34,11 +33,9 @@ class OpCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.op.description",
-			"%commands.op.usage"
+			"%pocketmine.command.op.usage"
 		);
 		$this->setPermission("pocketmine.command.op.give");
-		$this->commandParameters["default"] = [new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)];
-
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){

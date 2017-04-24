@@ -1,20 +1,4 @@
 <?php
-
-/*
- * DevTools plugin for PocketMine-MP
- * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-*/
-
 namespace pocketmine\command\defaults;
 
 use pocketmine\command\CommandSender;
@@ -29,8 +13,7 @@ class MakePluginCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"Creates a Phar plugin from a unarchived",
-			"/makeplugin <pluginName> (nogz)",
-			["mp"]
+			"/mp <pluginName> (nogz)"
 		);
 		$this->setPermission("pocketmine.command.makeplugin");
 	}
@@ -57,7 +40,7 @@ class MakePluginCommand extends VanillaCommand{
 			return true;
 		}
 
-		$pharPath = Server::getInstance()->getPluginPath() . DIRECTORY_SEPARATOR . "BDevTools" . DIRECTORY_SEPARATOR . $description->getName() . "_v" . $description->getVersion() . ".phar";
+		$pharPath = Server::getInstance()->getPluginPath() . DIRECTORY_SEPARATOR . "Tesseract" . DIRECTORY_SEPARATOR . $description->getName() . "_v" . $description->getVersion() . ".phar";
 		if(file_exists($pharPath)){
 			$sender->sendMessage("Phar plugin already exists, overwriting...");
 			@unlink($pharPath);
@@ -77,7 +60,7 @@ class MakePluginCommand extends VanillaCommand{
 		if($description->getName() === "DevTools"){
 			$phar->setStub('<?php require("phar://". __FILE__ ."/src/DevTools/ConsoleScript.php"); __HALT_COMPILER();');
 		}else{
-			$phar->setStub('<?php echo "PocketMine-MP/BlueLight plugin ' . $description->getName() . ' v' . $description->getVersion() . '\nThis file has been generated using BlueLight by BlueLightJapan Technologies at ' . date("r") . '\n----------------\n";if(extension_loaded("phar")){$phar = new \Phar(__FILE__);foreach($phar->getMetadata() as $key => $value){echo ucfirst($key).": ".(is_array($value) ? implode(", ", $value):$value)."\n";}} __HALT_COMPILER();');
+			$phar->setStub('<?php echo "PocketMine-MP/Tesseract plugin ' . $description->getName() . ' v' . $description->getVersion() . '\nThis file has been generated using Tesseract by TesseractTeam at ' . date("r") . '\n----------------\n";if(extension_loaded("phar")){$phar = new \Phar(__FILE__);foreach($phar->getMetadata() as $key => $value){echo ucfirst($key).": ".(is_array($value) ? implode(", ", $value):$value)."\n";}} __HALT_COMPILER();');
 		}
 		$phar->setSignatureAlgorithm(\Phar::SHA1);
 		$reflection = new \ReflectionClass("pocketmine\\plugin\\PluginBase");
@@ -91,7 +74,7 @@ class MakePluginCommand extends VanillaCommand{
 				continue;
 			}
 			$phar->addFile($file, $path);
-			$sender->sendMessage("[BlueLight] Adding $path");
+			$sender->sendMessage("[Tesseract] Adding $path");
 		}
 
 		foreach($phar as $file => $finfo){
@@ -104,7 +87,7 @@ class MakePluginCommand extends VanillaCommand{
 			$phar->compressFiles(\Phar::GZ);
 		}
 		$phar->stopBuffering();
-		$sender->sendMessage("[BlueLight] Phar plugin " . $description->getName() . " v" . $description->getVersion() . " has been created on " . $pharPath);
+		$sender->sendMessage("Phar plugin " . $description->getName() . " v" . $description->getVersion() . " has been created on " . $pharPath);
 		return true;
 	}
 }

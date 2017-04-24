@@ -27,7 +27,6 @@ use pocketmine\event\TranslationContainer;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\command\data\CommandParameter;
 
 class TeleportCommand extends VanillaCommand{
 
@@ -35,11 +34,9 @@ class TeleportCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.tp.description",
-			"%commands.tp.usage"
+			"%pocketmine.command.tp.usage"
 		);
 		$this->setPermission("pocketmine.command.teleport");
-		//$this->commandParameters["default"] = [new CommandParameter("destination", CommandParameter::ARG_TYPE_BLOCK_POS, false)];
-
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
@@ -47,9 +44,6 @@ class TeleportCommand extends VanillaCommand{
 			return true;
 		}
 
-		$args = array_filter($args, function($arg){
-			return strlen($arg) > 0;
-		});
 		if(count($args) < 1 or count($args) > 6){
 			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
 

@@ -21,11 +21,11 @@
 
 namespace pocketmine\command\defaults;
 
-use pocketmine\command\data\CommandParameter;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
+
 
 class BanCommand extends VanillaCommand{
 
@@ -33,10 +33,9 @@ class BanCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.ban.player.description",
-			"%commands.ban.usage"
+			"%pocketmine.command.ban.player.ban.usage"
 		);
 		$this->setPermission("pocketmine.command.ban.player");
-		//$this->commandParameters["default"] = [new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)];
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
@@ -51,12 +50,22 @@ class BanCommand extends VanillaCommand{
 		}
 
 		$name = array_shift($args);
-		$reason = implode(" ", $args);
+		if(isset($args[0]) and isset($args[1])){
+			$reason = implode(" ", $args);
+			if(is_numeric(end($args))){
+				$reason = str_replace(end($args), " ", $reason);
+				$until = new \DateTime('@' . (end($args) * 86400 + time()));
+				$sender->getServer()->getNameBans()->addBan($name, $reason, $until, $sender->getName());
+			}else{
+				$until = null;
+				$sender->getServer()->getNameBans()->addBan($name, $reason = implode(" ", $args), $until, $sender->getName());
+			}	
+		} else {
+			$sender->getServer()->getNameBans()->addBan($name);
+		}
 
-		$sender->getServer()->getNameBans()->addBan($name, $reason, null, $sender->getName());
-
-		if(($player = $sender->getServer()->getPlayerExact($name)) instanceof Player){
-			$player->kick($reason !== "" ? "Banned by admin. Reason: " . $reason : "Banned by admin.");
+        if(($player = $sender->getServer()->getPlayerExact($name)) instanceof Player){
+			$player->kick($reason !== "" ? "Banned by admin. Reason: " . $reason : "Banned by admin." . "Banned Until:" . date('r'), $until = "Forever");
 		}
 
 		Command::broadcastCommandMessage($sender, new TranslationContainer("%commands.ban.success", [$player !== null ? $player->getName() : $name]));

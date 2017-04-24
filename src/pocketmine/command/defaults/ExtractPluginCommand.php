@@ -1,20 +1,4 @@
 <?php
-
-/*
- * DevTools plugin for PocketMine-MP
- * Copyright (C) 2014 PocketMine Team <https://github.com/PocketMine/DevTools>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-*/
-
 namespace pocketmine\command\defaults;
 
 use pocketmine\command\CommandSender;
@@ -29,8 +13,7 @@ class ExtractPluginCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"Extracts the source code from a Phar plugin",
-			"/extractplugin <pluginName>",
-			["ep"]
+			"/ep <pluginName>"
 		);
 		$this->setPermission("pocketmine.command.extractplugin");
 	}
@@ -57,7 +40,7 @@ class ExtractPluginCommand extends VanillaCommand{
 			return true;
 		}
 
-		$folderPath = Server::getInstance()->getPluginPath().DIRECTORY_SEPARATOR . "BDevTools" . DIRECTORY_SEPARATOR . $description->getName()."_v".$description->getVersion()."/";
+		$folderPath = Server::getInstance()->getPluginPath().DIRECTORY_SEPARATOR . "Tesseract" . DIRECTORY_SEPARATOR . $description->getName()."_v".$description->getVersion()."/";
 		if(file_exists($folderPath)){
 			$sender->sendMessage("Plugin already exists, overwriting...");
 		}else{
@@ -74,7 +57,7 @@ class ExtractPluginCommand extends VanillaCommand{
 			@mkdir(dirname($folderPath . str_replace($pharPath, "", $path)), 0755, true);
 			file_put_contents($folderPath . str_replace($pharPath, "", $path), file_get_contents($path));
 		}
-		$sender->sendMessage("[BlueLight] Source plugin ".$description->getName() ." v".$description->getVersion()." has been created on ".$folderPath);
+		$sender->sendMessage("Source plugin ".$description->getName() ." v".$description->getVersion()." has been created on ".$folderPath);
 		return true;
 	}
 }

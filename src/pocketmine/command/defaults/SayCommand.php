@@ -26,7 +26,6 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\command\data\CommandParameter;
 
 class SayCommand extends VanillaCommand{
 
@@ -34,11 +33,10 @@ class SayCommand extends VanillaCommand{
 		parent::__construct(
 			$name,
 			"%pocketmine.command.say.description",
-			"%commands.say.usage"
+			"%pocketmine.command.say.usage",
+			["broadcast", "announce"]
 		);
 		$this->setPermission("pocketmine.command.say");
- 		$this->commandParameters["default"] = [new CommandParameter("message", CommandParameter::ARG_TYPE_STRING, false)];
-
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){

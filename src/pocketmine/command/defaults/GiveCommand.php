@@ -29,7 +29,6 @@ use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\command\data\CommandParameter;
 
 class GiveCommand extends VanillaCommand{
 
@@ -40,8 +39,6 @@ class GiveCommand extends VanillaCommand{
 			"%pocketmine.command.give.usage"
 		);
 		$this->setPermission("pocketmine.command.give");
-		//$this->commandParameters["default"] = [new CommandParameter("player", CommandParameter::ARG_TYPE_TARGET, false)];
-
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
@@ -69,7 +66,7 @@ class GiveCommand extends VanillaCommand{
 			$data = implode(" ", array_slice($args, 3));
 			try{
 				$tags = NBT::parseJSON($data);
-			}catch(\Throwable $ex){
+			}catch (\Throwable $ex){
 				$exception = $ex;
 			}
 
