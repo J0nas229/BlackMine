@@ -1815,15 +1815,13 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
         if (!$this->server->isWhitelisted(strtolower($this->getName()))) {
             $this->close($this->getLeaveMessage(), "Server is white-listed");
 
-            return;
-        } elseif ($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress()) or $this->server->getCIDBans()->isBanned($this->randomClientId)) {
-            $banentry = new BanEntry($this->getName());
-            $reason = $banentry->getReason();
-            $this->close($this->getLeaveMessage(), TextFormat::RED . "You are banned. Reason: \n" . $reason);
+       			return;
+		}elseif($this->server->getNameBans()->isBanned(strtolower($this->getName())) or $this->server->getIPBans()->isBanned($this->getAddress())){
+			$this->close($this->getLeaveMessage(), "You are banned");
 
-            return;
-        }
-
+			return;
+		}
+	    
         if ($this->hasPermission(Server::BROADCAST_CHANNEL_USERS)) {
             $this->server->getPluginManager()->subscribeToPermission(Server::BROADCAST_CHANNEL_USERS, $this);
         }
