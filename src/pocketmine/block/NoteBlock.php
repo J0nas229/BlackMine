@@ -1,36 +1,34 @@
 <?php
 
 /*
- *   ____  _            _      _       _     _
- *  |  _ \| |          | |    (_)     | |   | |
- *  | |_) | |_   _  ___| |     _  __ _| |__ | |_
- *  |  _ <| | | | |/ _ \ |    | |/ _` | '_ \| __|
- *  | |_) | | |_| |  __/ |____| | (_| | | | | |_
- *  |____/|_|\__,_|\___|______|_|\__, |_| |_|\__|
- *                                __/ |
- *                               |___/
+ *
+ *  _____   _____   __   _   _   _____  __    __  _____
+ * /  ___| | ____| |  \ | | | | /  ___/ \ \  / / /  ___/
+ * | |     | |__   |   \| | | | | |___   \ \/ /  | |___
+ * | |  _  |  __|  | |\   | | | \___  \   \  /   \___  \
+ * | |_| | | |___  | | \  | | |  ___| |   / /     ___| |
+ * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
+ *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author BlueLightJapan Team
- * 
-*/
+ * @author iTX Technologies
+ * @link https://itxtech.org
+ *
+ */
 
 namespace pocketmine\block;
 
-use pocketmine\item\Tool;
 use pocketmine\item\Item;
-use pocketmine\level\particle\NoteParticle;
+use pocketmine\item\Tool;
 use pocketmine\level\sound\NoteblockSound;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 
-
-class NoteBlock extends Solid{
-
-	protected $id = self::NOTE_BLOCK;
+class Noteblock extends Solid implements ElectricalAppliance{
+	protected $id = self::NOTEBLOCK;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
@@ -139,7 +137,6 @@ class NoteBlock extends Solid{
 		$up = $this->getSide(Vector3::SIDE_UP);
 		if($up->getId() == 0){
 			$this->getLevel()->addSound(new NoteblockSound($this, $this->getInstrument(), $this->getStrength()));
-			$this->getLevel()->addParticle(new NoteParticle($this, $this->getInstrument(), $this->getStrength()));
 			return true;
 		}else{
 			return false;
