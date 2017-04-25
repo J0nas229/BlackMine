@@ -73,48 +73,103 @@ class MainLogger extends \AttachableThreadedLogger{
 		$this->start();
 	}
 
-	/**
-	 * @return MainLogger
-	 */
-	public static function getLogger(){
-		return static::$logger;
-	}
+    /**
+     *
+     * @return MainLogger
+     */
+    public function Disable()
+    {
+        $this->enabled = false;
+    }
 
-	public function emergency($message, $name = "EMERGENCY"){
-		$this->send($message, \LogLevel::EMERGENCY, $name, TextFormat::RED);
-	}
 
-	public function alert($message, $name = "ALERT"){
-		$this->send($message, \LogLevel::ALERT, $name, TextFormat::RED);
-	}
 
-	public function critical($message, $name = "CRITICAL"){
-		$this->send($message, \LogLevel::CRITICAL, $name, TextFormat::RED);
-	}
+    /**
+     *
+     */
+    public function Enable()
+    {
+        $this->enabled = true;
+    }
 
-	public function error($message, $name = "ERROR"){
-		$this->send($message, \LogLevel::ERROR, $name, TextFormat::DARK_RED);
-	}
+    /**
+     *
+     * @return unknown
+     */
+    public static function getLogger()
+    {
+        return static::$logger;
+    }
 
-	public function warning($message, $name = "WARNING"){
-		$this->send($message, \LogLevel::WARNING, $name, TextFormat::YELLOW);
-	}
 
-	public function notice($message, $name = "NOTICE"){
-		$this->send(TextFormat::BOLD . $message, \LogLevel::NOTICE, $name, TextFormat::AQUA);
-	}
+    /**
+     *
+     * @param unknown $message
+     */
+    public function emergency($message)
+    {
+        $this->send($message, \LogLevel::EMERGENCY, "emergency", TextFormat::RED);
+    }
 
-	public function info($message, $name = "INFO"){
-		$this->send($message, \LogLevel::INFO, $name, TextFormat::WHITE);
-	}
 
-	public function debug($message, $name = "DEBUG"){
-		if($this->logDebug === false){
-			return;
-		}
-		$this->send($message, \LogLevel::DEBUG, $name, TextFormat::GRAY);
-	}
+    /**
+     *
+     * @param unknown $message
+     */
+    public function alert($message)
+    {
+        $this->send($message, \LogLevel::ALERT, "alert", TextFormat::RED);
+    }
 
+
+    /**
+     *
+     * @param unknown $message
+     */
+    public function critical($message)
+    {
+        $this->send($message, \LogLevel::CRITICAL, "critical", TextFormat::RED);
+    }
+
+
+    /**
+     *
+     * @param unknown $message
+     */
+    public function error($message)
+    {
+        $this->send($message, \LogLevel::ERROR, "error", TextFormat::DARK_RED);
+    }
+
+
+    /**
+     *
+     * @param unknown $message
+     */
+    public function warning($message)
+    {
+        $this->send($message, \LogLevel::WARNING, "warning", TextFormat::YELLOW);
+    }
+
+
+    /**
+     *
+     * @param unknown $message
+     */
+    public function notice($message)
+    {
+        $this->send($message, \LogLevel::NOTICE, "notice", TextFormat::AQUA);
+    }
+
+
+    /**
+     *
+     * @param unknown $message
+     */
+    public function info($message)
+    {
+        $this->send($message, \LogLevel::INFO, "system", TextFormat::GOLD);
+    }
 	/**
 	 * @param bool $logDebug
 	 */
