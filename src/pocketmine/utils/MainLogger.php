@@ -378,7 +378,7 @@ class MainLogger extends \AttachableThreadedLogger
     public function run()
     {
         $this->shutdown = false;
-        while ($this->shutdown === false) {
+        while ($this->shutdown === false) {//setWrite
 
             /**
              *
@@ -388,15 +388,25 @@ class MainLogger extends \AttachableThreadedLogger
                         $chunk = $this->logStream->shift();
                         $this->logResource = file_put_contents($this->logFile, $chunk, FILE_APPEND);
                     }
-                    $this->wait(25000);
-                });
-        }
+				$this->wait(200000);
+			});
+		}
 
-        if ($this->logStream->count() > 0) {
-            while ($this->logStream->count() > 0 and $this->enabled) {
-                $chunk = $this->logStream->shift();
-                $this->logResource = file_put_contents($this->logFile, $chunk, FILE_APPEND);
-            }
-        }
-    }
+		if($this->logStream->count() > 0){
+			while($this->logStream->count() > 0){
+				$chunk = $this->logStream->shift();
+				if($this->write){
+					$this->logResource = file_put_contents($this->logFile, $chunk, FILE_APPEND);
+				}
+			}
+		}
+	}
+
+	public function setWrite($write){
+		$this->write = $write;
+	}
+	
+	public function setConsoleCallback($callback){
+		$this->consoleCallback = $callback;
+	}
 }

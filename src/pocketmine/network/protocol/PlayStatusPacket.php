@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class PlayStatusPacket extends DataPacket{
-
 	const NETWORK_ID = Info::PLAY_STATUS_PACKET;
 	
 	const LOGIN_SUCCESS = 0;
@@ -42,13 +41,6 @@ class PlayStatusPacket extends DataPacket{
 	public function encode(){
 		$this->reset();
 		$this->putInt($this->status);
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "PlayStatusPacket";
 	}
 
 }

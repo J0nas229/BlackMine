@@ -2,24 +2,19 @@
 
 /*
  *
- *  _                       _           _ __  __ _
- * (_)                     (_)         | |  \/  (_)
- *  _ _ __ ___   __ _  __ _ _  ___ __ _| | \  / |_ _ __   ___
- * | | '_ ` _ \ / _` |/ _` | |/ __/ _` | | |\/| | | '_ \ / _ \
- * | | | | | | | (_| | (_| | | (_| (_| | | |  | | | | | |  __/
- * |_|_| |_| |_|\__,_|\__, |_|\___\__,_|_|_|  |_|_|_| |_|\___|
- *                     __/ |
- *                    |___/
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
- * This program is a third party build by ImagicalMine.
- *
- * ImagicalMine is free software: you can redistribute it and/or modify
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author ImagicalMine Team
- * @link http://forums.imagicalcorp.ml/
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
  *
  *
 */
@@ -33,6 +28,7 @@ use pocketmine\network\protocol\Info as ProtocolInfo;
 use pocketmine\Player;
 use pocketmine\Server;
 use raklib\protocol\EncapsulatedPacket;
+use raklib\protocol\PacketReliability;
 use raklib\RakLib;
 use raklib\server\RakLibServer;
 use raklib\server\ServerHandler;
@@ -78,11 +74,14 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		$work = false;
 		if($this->interface->handlePacket()){
 			$work = true;
+			$lasttime = time();
 			while($this->interface->handlePacket()){
+				$diff = time() - $lasttime;
+				if($diff >= 1) break;
 			}
 		}
 
-		if($this->rakLib->isTerminated()){
+		if(!$this->rakLib->isRunning() and !$this->rakLib->isShutdown()){
 			$this->network->unregisterInterface($this);
 
 			throw new \Exception("RakLib Thread crashed");
@@ -142,21 +141,21 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 					}
 				}
 			}catch(\Throwable $e){
+				$logger = $this->server->getLogger();
 				if(\pocketmine\DEBUG > 1 and isset($pk)){
-					$logger = $this->server->getLogger();
-					$logger->debug("Packet " . get_class($pk) . " 0x" . bin2hex($packet->buffer));
-					$logger->logException($e);
+					$logger->debug("Exception in packet " . get_class($pk) . " 0x" . bin2hex($packet->buffer));
 				}
-
-				if(isset($this->players[$identifier])){
-					$this->interface->blockAddress($this->players[$identifier]->getAddress(), 5);
-				}
+				$logger->logException($e);
 			}
 		}
 	}
 
 	public function blockAddress($address, $timeout = 300){
 		$this->interface->blockAddress($address, $timeout);
+	}
+	
+	public function unblockAddress($address){
+		$this->interface->unblockAddress($address);
 	}
 
 	public function handleRaw($address, $port, $payload){
@@ -172,14 +171,26 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 	}
 
 	public function setName($name){
-		$info = $this->server->getQueryInformation();
+
+		if($this->server->isDServerEnabled()){
+			if($this->server->dserverConfig["motdMaxPlayers"] > 0) $pc = $this->server->dserverConfig["motdMaxPlayers"];
+			elseif($this->server->dserverConfig["motdAllPlayers"]) $pc = $this->server->getDServerMaxPlayers();
+			else $pc = $this->server->getMaxPlayers();
+
+			if($this->server->dserverConfig["motdPlayers"]) $poc = $this->server->getDServerOnlinePlayers();
+			else $poc = count($this->server->getOnlinePlayers());
+		}else{
+			$info = $this->server->getQueryInformation();
+			$pc = $info->getMaxPlayerCount();
+			$poc = $info->getPlayerCount();
+		}
 
 		$this->interface->sendOption("name",
-			"MCPE;" . addcslashes($name, ";") . ";" .
+			"MCPE;" . rtrim(addcslashes($name, ";"), '\\') . ";" .
 			Info::CURRENT_PROTOCOL . ";" .
-			\pocketmine\MINECRAFT_VERSION_NETWORK . ";" .
-			$info->getPlayerCount() . ";" .
-			$info->getMaxPlayerCount()
+			Info::MINECRAFT_VERSION_NETWORK . ";" .
+			$poc . ";" .
+			$pc
 		);
 	}
 
@@ -200,12 +211,13 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 			$pk = null;
 			if(!$packet->isEncoded){
 				$packet->encode();
+				$packet->isEncoded = true;
 			}elseif(!$needACK){
 				if(!isset($packet->__encapsulatedPacket)){
 					$packet->__encapsulatedPacket = new CachedEncapsulatedPacket;
 					$packet->__encapsulatedPacket->identifierACK = null;
 					$packet->__encapsulatedPacket->buffer = chr(0xfe) . $packet->buffer; // #blameshoghi
-					$packet->__encapsulatedPacket->reliability = 3;
+					$packet->__encapsulatedPacket->reliability = PacketReliability::RELIABLE_ORDERED;
 					$packet->__encapsulatedPacket->orderChannel = 0;
 				}
 				$pk = $packet->__encapsulatedPacket;
@@ -221,7 +233,7 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 			if($pk === null){
 				$pk = new EncapsulatedPacket();
 				$pk->buffer = chr(0xfe) . $packet->buffer; // #blameshoghi
-				$packet->reliability = 3;
+				$packet->reliability = PacketReliability::RELIABLE_ORDERED;
 				$packet->orderChannel = 0;
 
 				if($needACK === true){

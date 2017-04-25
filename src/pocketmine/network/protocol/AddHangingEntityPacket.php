@@ -24,7 +24,6 @@ namespace pocketmine\network\protocol;
 #include <rules/DataPacket.h>
 
 class AddHangingEntityPacket extends DataPacket{
-
 	const NETWORK_ID = Info::ADD_HANGING_ENTITY_PACKET;
 
 	public $entityUniqueId;
@@ -44,13 +43,6 @@ class AddHangingEntityPacket extends DataPacket{
 		$this->putEntityId($this->entityRuntimeId);
 		$this->putBlockCoords($this->x, $this->y, $this->z);
 		$this->putVarInt($this->unknown);
-	}
-
-	/**
-	 * @return AddHangingEntityPacket|string
-     */
-	public function getName(){
-		return "AddHangingEntityPacket";
 	}
 
 }

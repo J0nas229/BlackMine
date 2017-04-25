@@ -25,7 +25,6 @@ namespace pocketmine\network\protocol;
 
 
 class ContainerSetContentPacket extends DataPacket{
-
 	const NETWORK_ID = Info::CONTAINER_SET_CONTENT_PACKET;
 
 	const SPECIAL_INVENTORY = 0;
@@ -72,13 +71,6 @@ class ContainerSetContentPacket extends DataPacket{
 		}else{
 			$this->putUnsignedVarInt(0);
 		}
-	}
-
-	/**
-	 * @return PacketName|string
-     */
-	public function getName(){
-		return "ContainerSetContentPacket";
 	}
 
 }
