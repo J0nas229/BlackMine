@@ -19,7 +19,6 @@
  *
 */
 
-
 namespace pocketmine\network\protocol;
 
 #include <rules/DataPacket.h>
@@ -47,4 +46,5 @@ class ResourcePackChunkDataPacket extends DataPacket{
 		$this->putLInt(strlen($this->data));
 		$this->put($this->data);
 	}
+
 }
