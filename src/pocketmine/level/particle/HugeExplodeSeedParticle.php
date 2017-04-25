@@ -19,13 +19,12 @@
  *
 */
 
-namespace pocketmine\level\sound;
+namespace pocketmine\level\particle;
 
 use pocketmine\math\Vector3;
-use pocketmine\network\protocol\LevelEventPacket;
 
-class PopSound extends GenericSound{
-	public function __construct(Vector3 $pos, $pitch = 0){
-		parent::__construct($pos, LevelEventPacket::EVENT_SOUND_POP, $pitch);
+class HugeExplodeSeedParticle extends GenericParticle{
+	public function __construct(Vector3 $pos){
+		parent::__construct($pos, Particle::TYPE_HUGE_EXPLODE_SEED);
 	}
 }
