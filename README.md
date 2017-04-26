@@ -39,7 +39,7 @@ Supported platforms: Linux, Windows, OS X, Raspberry Pi, and ODROID
 
 **External Links**
 * __[Gitter chat](https://gitter.im/ImagicalMine-MP-mcpe/Lobby)__
-* __[Plugin Repository](http://forums.imagicalmine.net/plugins)__
+* __[Plugin Repository](https://poggit.pmmp.io/review)__
 
 ## Third-party libraries and protocols used
 
