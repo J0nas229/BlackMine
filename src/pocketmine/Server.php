@@ -1655,10 +1655,10 @@ class Server{
 
 			$onlineMode = $this->getConfigBoolean("online-mode", false);
 			if(!extension_loaded("openssl")){
-				$this->logger->warning("OpenSSL is needed ).");
+				$this->logger->warning("OpenSSL is needed for online mode and more).");
 				$this->setConfigBool("online-mode", false);
 			}elseif(!$onlineMode){
-				$this->logger->warning("runing on offline mode can be a danger!");
+				$this->logger->warning("runing on offline mode can be a danger and fun for hackers!");
 			}
 
 			$this->forceLanguage = $this->getProperty("settings.force-language", false);
