@@ -1,4 +1,4 @@
-# Main configuration file for ImagicalMine
+# Main configuration file for PocketMine-MP
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically on this file when upgrading.
@@ -9,13 +9,12 @@ settings:
  language: "eng"
  #Whether to send all strings translated to server locale or let the device handle them
  force-language: false
- shutdown-message: "Server closed. Thanks for playing on an ImagicalMine server!"
+ #When server shut down, the players will get kicked and this is what will show on there screen.
+ shutdown-message: "Server closed"
  #Allow listing plugins via Query
  query-plugins: true
  #Show a console message when a plugin uses deprecated API methods
  deprecated-verbose: true
- #Enable plugin with incompatible API 
- incompatible-plugins: true
  #Enable plugin and core profiling by default
  enable-profiling: false
  #Will only add results when tick measurement is below or equal to given value (default 20)
@@ -25,6 +24,8 @@ settings:
  #Set this approximately to your number of cores.
  #If set to auto, it'll try to detect the number of cores (or use 2)
  async-workers: auto
+ #Enables use of non-production, development builds. WARNING: DO NOT enable this unless you are sure you know what you are doing.
+ enable-testing: false
 
 memory:
  #Global soft memory limit in megabytes. Set to 0 to disable
