@@ -1,7 +1,7 @@
 # ![ImagicalMine](http://i.imgur.com/6Hlm8mn.gif)
 
 
-[![CircleCI](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine.svg?style=svg)](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine)download link (github login needed)
+[![CircleCI](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine.svg?style=svg)](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine)<=download link (github login needed)
 
 
 ## Acknowledgements
