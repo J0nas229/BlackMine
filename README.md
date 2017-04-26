@@ -20,6 +20,7 @@
 
 Below is the ImagicalMine demo server details, you can see what features ImagicalMine has before downloading it.<br>
 * warning this server is not 24 7 online
+
 **IP: nightcorepe.tk**<br>
 **Port: 19132**
 
@@ -37,7 +38,7 @@ Supported platforms: Linux, Windows, OS X, Raspberry Pi, and ODROID
 * __[Contributing Guidelines](https://github.com/ImagicalCorp/ImagicalMine/blob/master//.github/CONTRIBUTING.md)__
 
 **External Links**
-* __[Gitter chat](https://gitter.im/ImagicalCorp/ImagicalMine)__
+* __[Gitter chat](https://gitter.im/ImagicalMine-MP-mcpe/Lobby)__
 * __[Plugin Repository](http://forums.imagicalmine.net/plugins)__
 
 ## Third-party libraries and protocols used
