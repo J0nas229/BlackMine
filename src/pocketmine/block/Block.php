@@ -2,20 +2,23 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ *  _____            _               _____           
+ * / ____|          (_)             |  __ \          
+ *| |  __  ___ _ __  _ ___ _   _ ___| |__) | __ ___  
+ *| | |_ |/ _ \ '_ \| / __| | | / __|  ___/ '__/ _ \ 
+ *| |__| |  __/ | | | \__ \ |_| \__ \ |   | | | (_) |
+ * \_____|\___|_| |_|_|___/\__, |___/_|   |_|  \___/ 
+ *                         __/ |                    
+ *                        |___/                     
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- * 
+ * @author GenisysPro
+ * @link https://github.com/GenisysPro/GenisysPro
+ *
  *
 */
 
@@ -192,7 +195,6 @@ class Block extends Position implements BlockIds, Metadatable{
 
 			self::$list[self::BREWING_STAND_BLOCK] = BrewingStand::class;
 			self::$list[self::END_PORTAL_FRAME] = EndPortalFrame::class;
-			self::$list[self::END_PORTAL] = EndPortal::class;
 			self::$list[self::END_STONE] = EndStone::class;
 
 			self::$list[self::END_STONE_BRICKS] = EndStoneBricks::class;
@@ -221,8 +223,6 @@ class Block extends Position implements BlockIds, Metadatable{
 
 			self::$list[self::TRAPPED_CHEST] = TrappedChest::class;
 			self::$list[self::REDSTONE_BLOCK] = Redstone::class;
-			
-			self::$list[self::COMMAND_BLOCK] = CommandBlock::class;
 
 			self::$list[self::QUARTZ_BLOCK] = Quartz::class;
 			self::$list[self::QUARTZ_STAIRS] = QuartzStairs::class;
@@ -268,6 +268,7 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::STONE_PRESSURE_PLATE] = StonePressurePlate::class;
 			self::$list[self::LIGHT_WEIGHTED_PRESSURE_PLATE] = LightWeightedPressurePlate::class;
 			self::$list[self::HEAVY_WEIGHTED_PRESSURE_PLATE] = HeavyWeightedPressurePlate::class;
+			self::$list[self::REDSTONE_WIRE] = RedstoneWire::class;
 			self::$list[self::LIT_REDSTONE_LAMP] = LitRedstoneLamp::class;
 			self::$list[self::REDSTONE_LAMP] = RedstoneLamp::class;
 			self::$list[self::REDSTONE_TORCH] = RedstoneTorch::class;
@@ -293,6 +294,7 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::INVISIBLE_BEDROCK] = InvisibleBedrock::class;
 			self::$list[self::HOPPER_BLOCK] = Hopper::class;
 			self::$list[self::DRAGON_EGG] = DragonEgg::class;
+			self::$list[self::COMMAND_BLOCK] = CommandBlock::class;
 
 			foreach(self::$list as $id => $class){
 				if($class !== null){
@@ -315,6 +317,8 @@ class Block extends Position implements BlockIds, Metadatable{
 							}else{
 								self::$lightFilter[$id] = 1;
 							}
+						}elseif($block instanceof SolidLight){
+							self::$lightFilter[$id] = 1;
 						}else{
 							self::$lightFilter[$id] = 15;
 						}
