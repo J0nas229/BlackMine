@@ -1,47 +1,24 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Ignore JSON and XML files
-*.xml
+players/*
+worlds/*
+plugins/*
+bin/*
+timings/*
+resource_packs/*
+*.log
+*.phar
 *.json
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
+server.properties
+/pocketmine.yml
+*.txt
+tesseract.yml
+crashdumps/*
+.idea/*
+nbproject/*
+Thumbs.db
+Desktop.ini
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+/nbproject/private/
+/docs/build/
+!/docs/requirements.txt
+.project
+src/.idea/*
