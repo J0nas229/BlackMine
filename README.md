@@ -1,7 +1,10 @@
 # ![ImagicalMine](http://i.imgur.com/6Hlm8mn.gif)
 
 
-[![CircleCI](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine.svg?style=svg)](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine)<=download link (github login needed)
+
+## Can you Download PHAR from CircleCI, but Login GITHUB is required
+
+[![CircleCI](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine.svg?style=svg)](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine)
 
 
 ## Acknowledgements
@@ -16,10 +19,9 @@
 - The potion class was written by @thebigsmileXD.
 - The website was written by @0-Eclipse-0.
 
-## Demo Server
+## Demo Server <=> NOT ALL TIME ONLINE.
 
 Below is the ImagicalMine demo server details, you can see what features ImagicalMine has before downloading it.<br>
-* warning this server is not 24 7 online
 
 **IP: nightcorepe.tk**<br>
 **Port: 19132**
