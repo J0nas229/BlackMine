@@ -167,8 +167,6 @@ class Server{
 	/** @var CraftingManager */
 	private $craftingManager;
 
-        private $resourceManager;
-
 	/** @var ConsoleCommandSender */
 	private $consoleSender;
 
@@ -245,6 +243,9 @@ class Server{
 
 	/** @var Level[] */
 	private $levels = [];
+	
+	/** @var ResourcePackManager */
+ 	private $resourceManager;
 
 	/** @var Level */
 	private $levelDefault = null;
@@ -689,10 +690,6 @@ class Server{
 	/**
 	 * @return ResourcePackManager
 	 */
-	public function getResourceManager() : ResourcePackManager{
-		return $this->resourceManager;
-	}
-
 	public function getResourcePackManager() : ResourcePackManager{
 	    return $this->resourceManager;
     }
@@ -1770,9 +1767,9 @@ class Server{
 			Color::init();
 			$this->craftingManager = new CraftingManager();
 
-	if($this->resourceEnabled){
-    $this->resourceManager = new ResourcePackManager($this, \pocketmine\PATH . "resource_packs" . DIRECTORY_SEPARATOR);
- 			}
+	$this->resourceManager = new ResourcePackManager($this, \pocketmine\PATH . "resource_packs" . DIRECTORY_SEPARATOR);
+
+	
 			$this->pluginManager = new PluginManager($this, $this->commandMap);
 			$this->pluginManager->subscribeToPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE, $this->consoleSender);
 			$this->pluginManager->setUseTimings($this->getProperty("settings.enable-profiling", false));
