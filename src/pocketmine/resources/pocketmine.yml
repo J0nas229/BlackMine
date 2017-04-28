@@ -1,4 +1,4 @@
-# Main configuration file for PocketMine-MP
+# Main configuration file for ImagicalMine
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically on this file when upgrading.
@@ -9,12 +9,13 @@ settings:
  language: "eng"
  #Whether to send all strings translated to server locale or let the device handle them
  force-language: false
- #When server shut down, the players will get kicked and this is what will show on there screen.
- shutdown-message: "Server closed"
+ shutdown-message: "Server closed. Thanks for playing on an ImagicalMine server!"
  #Allow listing plugins via Query
  query-plugins: true
  #Show a console message when a plugin uses deprecated API methods
  deprecated-verbose: true
+ #Enable plugin with incompatible API 
+ incompatible-plugins: false
  #Enable plugin and core profiling by default
  enable-profiling: false
  #Will only add results when tick measurement is below or equal to given value (default 20)
@@ -24,8 +25,6 @@ settings:
  #Set this approximately to your number of cores.
  #If set to auto, it'll try to detect the number of cores (or use 2)
  async-workers: auto
- #Enables use of non-production, development builds. WARNING: DO NOT enable this unless you are sure you know what you are doing.
- enable-testing: false
 
 memory:
  #Global soft memory limit in megabytes. Set to 0 to disable
@@ -104,7 +103,7 @@ player:
  save-player-data: true
  anti-cheat:
   #If false, will try to prevent speed and noclip cheats. May cause movement issues with some blocks which are not yet properly implemented.
-  allow-movement-cheats: true
+  allow-movement-cheats: false
   #If false, times block breaks to ensure players are not cheating. May cause issues with some blocks which are not yet properly implemented.
   allow-instabreak: false
 
@@ -198,15 +197,3 @@ worlds:
  #world:
  # seed: 404
  # generator: FLAT:2;7,59x1,3x3,2;1;decoration(treecount=80 grasscount=45)
-
-resource_packs:
- #Setting ResourcePacks Enabled.
- resource-pack-enable: false
- #Setting load packs.
- #Examples
- #resource-packs: [vanilla.zip, natural.zip]
- resource-packs: []
- #savestop: [save-all, stop]
- #Choose whether players must use your chosen resource packs to join the server.
- #This will do nothing if there are no resource packs in the stack below.
- force_resources: false
