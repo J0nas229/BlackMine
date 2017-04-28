@@ -61,39 +61,45 @@ class ResourcePackManager{
 			throw new \InvalidArgumentException("Resource packs path $path exists and is not a directory");
 		}
 
-		$this->resourcePacksConfig = new Config("pocketmine.yml", Config::YAML, []);
-		$this->serverForceResources = (bool) $this->resourcePacksConfig->get("resource_packs.force_resources", false);
+		if(!file_exists($this->path . "resource_packs.yml")){
+			file_put_contents($this->path . "resource_packs.yml", file_get_contents($this->server->getFilePath() . "src/pocketmine/resources/resource_packs.yml"));
+		}
+
+		$this->resourcePacksConfig = new Config($this->path . "resource_packs.yml", Config::YAML, []);
+
+		$this->serverForceResources = (bool) $this->resourcePacksConfig->get("force_resources", false);
+
 		$this->server->getLogger()->info("Loading resource packs...");
 
-		if($this->resourcePacksConfig->get("resource_packs.resource-pack-enable", true)){
-			foreach($this->resourcePacksConfig->get("resource_packs.resource_packs", []) as $pos => $pack){
-				try{
-					$packPath = $this->path . DIRECTORY_SEPARATOR . $pack;
-					if(file_exists($packPath)){
-						$newPack = null;
-						if(is_dir($packPath)){//Detect the type of resource pack.
-							$this->server->getLogger()->warning("Skipped resource entry $pack due to directory resource packs currently unsupported");
-						}else{
-							$info = new \SplFileInfo($packPath);
-							switch($info->getExtension()){
-								case "zip":
-									$newPack = new ZippedResourcePack($packPath);
-									break;
-								default:
-									$this->server->getLogger()->warning("Skipped resource entry $pack due to format not recognized");
-									break;
-							}
-						}
-						if($newPack instanceof ResourcePack){
-							$this->resourcePacks[] = $newPack;
-							$this->uuidList[$newPack->getPackId()] = $newPack;
-						}
+		foreach($this->resourcePacksConfig->get("resource_stack", []) as $pos => $pack){
+			try{
+				$packPath = $this->path . DIRECTORY_SEPARATOR . $pack;
+				if(file_exists($packPath)){
+					$newPack = null;
+					//Detect the type of resource pack.
+					if(is_dir($packPath)){
+						$this->server->getLogger()->warning("Skipped resource entry $pack due to directory resource packs currently unsupported");
 					}else{
-						$this->server->getLogger()->warning("Skipped resource entry $pack due to file or directory not found");
+						$info = new \SplFileInfo($packPath);
+						switch($info->getExtension()){
+							case "zip":
+								$newPack = new ZippedResourcePack($packPath);
+								break;
+							default:
+								$this->server->getLogger()->warning("Skipped resource entry $pack due to format not recognized");
+								break;
+						}
 					}
-				}catch(\Throwable $e){
-					$this->server->getLogger()->logException($e);
+
+					if($newPack instanceof ResourcePack){
+						$this->resourcePacks[] = $newPack;
+						$this->uuidList[$newPack->getPackId()] = $newPack;
+					}
+				}else{
+					$this->server->getLogger()->warning("Skipped resource entry $pack due to file or directory not found");
 				}
+			}catch(\Throwable $e){
+				$this->server->getLogger()->logException($e);
 			}
 		}
 
