@@ -2,7 +2,7 @@
 
 
 
-## Can you Download PHAR from CircleCI, but Login GITHUB is required
+## you Can Download PHAR from CircleCI, but Login from GITHUB is required
 
 [![CircleCI](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine.svg?style=svg)](https://circleci.com/gh/ImagicalMine-MP/ImagicalMine)
 
