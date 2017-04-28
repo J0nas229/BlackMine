@@ -198,3 +198,15 @@ worlds:
  #world:
  # seed: 404
  # generator: FLAT:2;7,59x1,3x3,2;1;decoration(treecount=80 grasscount=45)
+
+resource_packs:
+ #Setting ResourcePacks Enabled.
+ resource-pack-enable: false
+ #Setting load packs.
+ #Examples
+ #resource-packs: [vanilla.zip, natural.zip]
+ resource-packs: []
+ #savestop: [save-all, stop]
+ #Choose whether players must use your chosen resource packs to join the server.
+ #This will do nothing if there are no resource packs in the stack below.
+ force_resources: false
