@@ -106,16 +106,3 @@ dserver:
 inventory:
  #Set this to true if you have problems with anvils. This will process inventory transactions in a vanilla fashion with no anti-cheats or verification.
  allow-cheats: false
- 
- 
-resource_packs:
- #Setting ResourcePacks Enabled.
- resource-pack-enable: false
- #Setting load packs.
- #Examples
- #resource-packs: [vanilla.zip, natural.zip]
- resource-packs: []
- #savestop: [save-all, stop]
- #Choose whether players must use your chosen resource packs to join the server.
- #This will do nothing if there are no resource packs in the stack below.
- force_resources: false
