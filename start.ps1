@@ -8,12 +8,12 @@ if(Test-Path "bin\php\php.exe"){
 }else{
 	$binary = "php"
 }
-if(Test-Path "PocketMine-MP.phar"){
-	$file = "PocketMine-MP.phar"
+if(Test-Path "ImagicalMine.phar"){
+	$file = "ImagicalMine.phar"
 }elseif(Test-Path "src\pocketmine\PocketMine.php"){
 	$file = "src\pocketmine\PocketMine.php"
 }else{
-	echo "I couldn't find PocketMine-MP's src."
+	echo "I couldn't find ImagicalMine's src."
 	pause
 	exit 1
 }
