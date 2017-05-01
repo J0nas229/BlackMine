@@ -95,9 +95,9 @@ namespace pocketmine {
     use pocketmine\utils\Utils;
     use pocketmine\wizard\Installer;
 
-    const VERSION = "3.0";
+    const VERSION = "1.0 beta";
     const API_VERSION = "3.0.1";
-    const CODENAME = "Imagical";
+    const CODENAME = "BlackMine";
     const MINECRAFT_VERSION = "v1.0.7 alpha";
     const MINECRAFT_VERSION_NETWORK = "1.0.7";
 
