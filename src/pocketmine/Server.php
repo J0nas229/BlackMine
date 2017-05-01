@@ -90,7 +90,6 @@ use pocketmine\utils\TextFormat;
 use pocketmine\utils\Utils;
 use pocketmine\utils\UUID;
 use pocketmine\utils\VersionString;
-use pocketmine\katana\Katana;
 
 /**
  * The class that manages everything
@@ -294,14 +293,6 @@ class Server{
 	public $allowInventoryCheats = false;
 	public $folderpluginloader = true;
 	public $resourceEnabled = false;
-	
-	/**
-	 *
-	 * @return mc3coreLib
-	 */
-	public function getKatana() {
-		return $this->katana;
-	}
 
 	/**
 	 * @return string
@@ -1621,7 +1612,6 @@ class Server{
 			}
 			$internelConfig = new Config($file, Config::YAML, []);
 			$this->advancedConfig = new Config($this->dataPath . "ImagicalMine.yml", Config::YAML, []);
-			$this->katana = new Katana($this);
 			$cfgVer = $this->getAdvancedProperty("config.version", 0, $internelConfig);
 			$advVer = $this->getAdvancedProperty("config.version", 0);
 
