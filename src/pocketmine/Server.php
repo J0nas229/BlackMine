@@ -307,7 +307,7 @@ class Server{
 	 * @return string
 	 */
 	public function getName() : string{
-		return "ImagicalMine";
+		return "BlackMine";
 	}
 
 	/**
