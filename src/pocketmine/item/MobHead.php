@@ -23,9 +23,9 @@ namespace pocketmine\item;
 
 use pocketmine\block\Block;
 
-class ItemFrame extends Item{
+class MobHead extends Item{
 	public function __construct($meta = 0, $count = 1){
-		$this->block = Block::get(Block::ITEM_FRAME_BLOCK);
-		parent::__construct(self::ITEM_FRAME, 0, $count, "Item Frame");
+		$this->block = Block::get(Item::SKULL_BLOCK);
+		parent::__construct(self::MOB_HEAD, $meta, $count, "Mob Head");
 	}
 }
