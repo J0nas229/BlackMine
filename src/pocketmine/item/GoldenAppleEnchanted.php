@@ -21,17 +21,20 @@
 
 namespace pocketmine\item;
 
-class BakedPotato extends Food{
+use pocketmine\entity\Effect;
+
+class GoldenAppleEnchanted extends GoldenApple{
+
 	public function __construct($meta = 0, $count = 1){
-		parent::__construct(self::BAKED_POTATO, $meta, $count, "Baked Potato");
+		Food::__construct(self::ENCHANTED_GOLDEN_APPLE, $meta, $count, "Enchanted Golden Apple"); //skip parent constructor
 	}
 
-	public function getFoodRestore() : int{
-		return 5;
-	}
-
-	public function getSaturationRestore() : float{
-		return 7.2;
+	public function getAdditionalEffects() : array{
+		return [
+			Effect::getEffect(Effect::REGENERATION)->setDuration(600)->setAmplifier(4),
+			Effect::getEffect(Effect::ABSORPTION)->setDuration(2400)->setAmplifier(3),
+			Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setDuration(6000),
+			Effect::getEffect(Effect::FIRE_RESISTANCE)->setDuration(6000),
+		];
 	}
 }
-
