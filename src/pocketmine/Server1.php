@@ -137,35 +137,11 @@ class Server{
 
 	/** @var PluginManager */
 	private $pluginManager = null;
-	
-		/** config */
-	public $weatherEnabled = false;
- 	public $weatherRandomDurationMin = 6000;
- 	public $weatherRandomDurationMax = 12000;
-	public $lightningTime = 200;
-	public $lightningFire = false;
-	public $foodEnabled = false;
-	public $expEnabled = false;
-	public $hungerHealth = 10;
-	public $hungerTimer = 80;
-	public $allowSplashPotion = false;
-	public $devtools = true;
-	public $crashdumps = true;
-	public $destroyblockparticle = true;
-	public $titletick = false;
-	public $stevekick = false;
-	public $golemspawn = false;
-	public $keepInventory = false;
-	public $rideableentity = false;
-	public $enchantingTableEnabled = true;
-	public $cleanentity = false;
-	public $countBookshelf = false;
-	public $mapEnabled = false;
-	public $entityAIEnabled = false;
-	public $allowInventoryCheats = true;
 
 	private $profilingTickRate = 20;
 
+	/** @var AutoUpdater */
+	private $updater = null;
 
 	/** @var ServerScheduler */
 	private $scheduler = null;
@@ -288,7 +264,7 @@ class Server{
 	 * @return string
 	 */
 	public function getName(){
-		return "BlackMine";
+		return "PocketMine-MP";
 	}
 
 	/**
@@ -607,9 +583,9 @@ class Server{
 	/**
 	 * @return AutoUpdater
 	 */
-//	public function getUpdater(){
-	//	return $this->updater;
-	//}
+	public function getUpdater(){
+		return $this->updater;
+	}
 
 	/**
 	 * @return PluginManager
@@ -1433,33 +1409,8 @@ class Server{
 				@file_put_contents($this->dataPath . "pocketmine.yml", $content);
 			}
 			$this->config = new Config($this->dataPath . "pocketmine.yml", Config::YAML, []);
-			
-			$this->properties = new Config($this->dataPath . "blackmine.properties", Config::PROPERTIES, [
-				"CustomConfigVersion" => 1,
-				"DevTools" => true,
-				"CrashDump" => true,
-				"FoodEnabled" => true,
-				"ExpEnabled" => false,
-				"WeatherEnabled" => false,
-				"WeatherRandomDurationMin" => 6000,
-				"WeatherRandomDurationMan" => 12000,
-				"LightningTime" => 6000,
-				"LightningFire" => false,
-				"AllowSplashPotion" => false,
-				"DestroyBlockParticle" => true,
-				"KeepInventory" => false,
-				"TitleTick" => false,
-				"SteveKick" => false,
-				"HungerHealth" => 10,
-				"HungerTimer" => 80,
-				"RideableEntity" => false,
-				"CleanEntity" => false,
-				"MapEnabled" => false,
-				"EntityAIEnabled" => false,
-				"inventory.allow-cheats" => true,
-			]);
 
-			$this->logger->info("Loading server properties and other things");
+			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
 				"motd" => "Minecraft: PE Server",
 				"server-port" => 19132,
@@ -1494,29 +1445,6 @@ class Server{
 
 			$this->logger->info($this->getLanguage()->translateString("pocketmine.server.start", [TextFormat::AQUA . $this->getVersion()]));
 
-			$this->devtools = $this->getProperty("DevTools", true);
-			$this->crashdump = $this->getProperty("CrashDump", true);
-			$this->foodEnabled = $this->getProperty("foodEnabled", true);
-			$this->allowSplashPotion = $this->getProperty("allowSplashPotion", true);
-			$this->expEnabled = $this->getProperty("expEnabled", true);
-			$this->weatherEnabled = $this->getProperty("weatherEnabled", false);
-			$this->weatherRandomDurationMin = $this->getProperty("weatherRandomDurationMin", 6000);
-			$this->weatherRandomDurationMax = $this->getProperty("weatherRandomDurationMax", 12000);
-			$this->lightningTime = $this->getProperty("LightningTime", 200);
-			$this->lightningFire = $this->getProperty("LightningFire", false);
-			$this->hungerHealth = $this->getProperty("HungerHealth", 10);
-			$this->hungerTimer = $this->getProperty("HungerTimer", 80);
-			$this->destroyblockparticle = $this->getProperty("DestroyBlockParticle", true);
-			$this->keepInventory = $this->getProperty("KeepInventory", false);
-			$this->titletick = $this->getProperty("TitleTick", true);
-			$this->stevekick = $this->getProperty("SteveKick", false);
-			$this->golemspawn = $this->getProperty("GolemSpawn", false);
-			$this->rideableentity = $this->getProperty("RideableEntity", false);
-			$this->cleanentity = $this->getProperty("CleanEntity", false);
-			$this->mapEnabled = $this->getProperty("MapEnabled", false);
-			$this->entityAIEnabled = $this->getProperty("EntityAIEnabled", false);
-			$this->allowInventoryCheats = $this->getProperty("inventory.allow-cheats", false);
-			
 			if(($poolSize = $this->getProperty("settings.async-workers", "auto")) === "auto"){
 				$poolSize = ServerScheduler::$WORKERS;
 				$processors = Utils::getCoreCount() - 2;
@@ -1638,6 +1566,8 @@ class Server{
 			$this->network->registerInterface(new RakLibInterface($this));
 
 			$this->pluginManager->loadPlugins($this->pluginPath);
+
+			$this->updater = new AutoUpdater($this, $this->getProperty("auto-updater.host", "www.pocketmine.net"));
 
 			$this->enablePlugins(PluginLoadOrder::STARTUP);
 
