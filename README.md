@@ -1,7 +1,4 @@
-# we are back but we need to rewrite a lot of code to make it none imagicalmine fork
-
-
-
+[![CircleCI](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/rewriten.svg?style=svg)](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/rewriten)
 
 ### BlackMine is a perfect software for your server with :
 
