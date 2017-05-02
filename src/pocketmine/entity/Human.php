@@ -41,7 +41,7 @@ use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
-
+//despawnFrom
 class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	const DATA_PLAYER_FLAG_SLEEP = 1;
@@ -669,16 +669,16 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		}
 	}
 
-	public function despawnFrom(Player $player){
-		if(isset($this->hasSpawned[$player->getLoaderId()])){
+	//public function despawnFrom(Player $player){
+	//	if(isset($this->hasSpawned[$player->getLoaderId()])){
 
-			$pk = new RemoveEntityPacket();
-			$pk->eid = $this->getId();
+		//	$pk = new RemoveEntityPacket();
+			//$pk->eid = $this->getId();
 
-			$player->dataPacket($pk);
-			unset($this->hasSpawned[$player->getLoaderId()]);
-		}
-	}
+			//$player->dataPacket($pk);
+		//	unset($this->hasSpawned[$player->getLoaderId()]);
+	//	}
+	//}
 
 	public function close(){
 		if(!$this->closed){
