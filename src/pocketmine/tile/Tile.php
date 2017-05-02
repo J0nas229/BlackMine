@@ -36,7 +36,7 @@ abstract class Tile extends Position{
 
 	const BREWING_STAND = "BrewingStand";
 	const CHEST = "Chest";
-	const ENCHANT_TABLE = "EnchantTable";
+	//const ENCHANT_TABLE = "EnchantTable";
 	const FLOWER_POT = "FlowerPot";
 	const FURNACE = "Furnace";
 	const ITEM_FRAME = "ItemFrame";
@@ -48,7 +48,7 @@ abstract class Tile extends Position{
 	const CAULDRON = "Cauldron";
 	const HOPPER = "Hopper";
 	const BEACON = "Beacon";
-	const ENDER_CHEST = "EnderChest";
+	//const ENDER_CHEST = "EnderChest";
 
 	public static $tileCount = 1;
 
@@ -73,7 +73,7 @@ abstract class Tile extends Position{
 	public static function init(){
 		self::registerTile(Beacon::class);
 		self::registerTile(Chest::class);
-		self::registerTile(EnchantTable::class);
+		//self::registerTile(EnchantTable::class);
 		self::registerTile(FlowerPot::class);
 		self::registerTile(Furnace::class);
 		self::registerTile(ItemFrame::class);
@@ -81,7 +81,7 @@ abstract class Tile extends Position{
 		self::registerTile(Skull::class);
 		self::registerTile(Cauldron::class);
 		self::registerTile(Hopper::class);
-		self::registerTile(EnderChest::class);
+		//self::registerTile(EnderChest::class);
 
 	}
 
