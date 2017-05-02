@@ -19,12 +19,10 @@
  *
 */
 
-namespace pocketmine\scheduler;
+namespace pocketmine\plugin;
 
-class GarbageCollectionTask extends AsyncTask{
+use pocketmine\utils\ServerException;
 
-	public function onRun(){
-		gc_enable();
-		gc_collect_cycles();
-	}
+class PluginException extends ServerException{
+
 }
