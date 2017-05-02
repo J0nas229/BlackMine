@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  *
  *  ____            _        _   __  __ _                  __  __ ____
  * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
@@ -14,36 +14,28 @@
  * (at your option) any later version.
  *
  * @author PocketMine Team
- * @link   http://www.pocketmine.net/
+ * @link http://www.pocketmine.net/
  *
  *
- */
+*/
 
 namespace pocketmine\event\entity;
 
+use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
 use pocketmine\event\Cancellable;
 
-class EntityCombustEvent extends EntityEvent implements Cancellable{
-	public static $handlerList = null;
+class EntityEffectEvent extends EntityEvent implements Cancellable{
 
-	protected $duration;
+	/** @var Effect */
+	private $effect;
 
-	/**
-	 * @param Entity $combustee
-	 * @param int    $duration
-	 */
-	public function __construct(Entity $combustee, $duration){
-		$this->entity = $combustee;
-		$this->duration = $duration;
+	public function __construct(Entity $entity, Effect $effect){
+		$this->entity = $entity;
+		$this->effect = $effect;
 	}
 
-	public function getDuration(){
-		return $this->duration;
+	public function getEffect() : Effect{
+		return $this->effect;
 	}
-
-	public function setDuration($duration){
-		$this->duration = (int) $duration;
-	}
-
 }
