@@ -22,26 +22,13 @@
 namespace pocketmine\item;
 
 
-interface FoodSource extends Consumable{
+class Hoe extends TieredTool{
 
-	/**
-	 * Returns the number of hunger points this food type will give to the eater.
-	 *
-	 * @return int
-	 */
-	public function getFoodRestore() : int;
+	public function getToolType() : int{
+		return Tool::TYPE_HOE;
+	}
 
-	/**
-	 * Returns the amount of saturation which will be given to the eater when the food is eaten.
-	 *
-	 * @return float
-	 */
-	public function getSaturationRestore() : float;
-
-	/**
-	 * Returns whether the eater must be hungry to eat this item.
-	 *
-	 * @return bool
-	 */
-	public function requiresHunger() : bool;
+	public function isHoe(){
+		return $this->tier;
+	}
 }

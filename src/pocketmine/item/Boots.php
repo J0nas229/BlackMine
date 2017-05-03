@@ -19,29 +19,10 @@
  *
 */
 
+
 namespace pocketmine\item;
 
 
-interface FoodSource extends Consumable{
+class Boots extends Armor{
 
-	/**
-	 * Returns the number of hunger points this food type will give to the eater.
-	 *
-	 * @return int
-	 */
-	public function getFoodRestore() : int;
-
-	/**
-	 * Returns the amount of saturation which will be given to the eater when the food is eaten.
-	 *
-	 * @return float
-	 */
-	public function getSaturationRestore() : float;
-
-	/**
-	 * Returns whether the eater must be hungry to eat this item.
-	 *
-	 * @return bool
-	 */
-	public function requiresHunger() : bool;
 }
