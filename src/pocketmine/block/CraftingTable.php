@@ -23,41 +23,39 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
+use pocketmine\Player;
 
-class DoubleWoodSlab extends Solid{
+class CraftingTable extends Solid{
 
-	protected $id = self::DOUBLE_WOODEN_SLAB;
+	protected $id = self::CRAFTING_TABLE;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
 	public function getHardness(){
-		return 2;
+		return 2.5;
+	}
+
+	public function getName(){
+		return "Crafting Table";
 	}
 
 	public function getToolType(){
 		return Tool::TYPE_AXE;
 	}
 
-	public function getName(){
-		static $names = [
-			0 => "Oak",
-			1 => "Spruce",
-			2 => "Birch",
-			3 => "Jungle",
-			4 => "Acacia",
-			5 => "Dark Oak",
-			6 => "",
-			7 => ""
-		];
-		return "Double " . $names[$this->meta & 0x07] . " Slab";
+	public function onActivate(Item $item, Player $player = null){
+		if($player instanceof Player){
+			$player->craftingType = 1;
+		}
+
+		return true;
 	}
 
 	public function getDrops(Item $item){
 		return [
-			[Item::WOODEN_SLAB, $this->meta & 0x07, 2],
+			[$this->id, 0, 1],
 		];
 	}
-
 }

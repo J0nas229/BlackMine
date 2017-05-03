@@ -21,43 +21,35 @@
 
 namespace pocketmine\block;
 
+use pocketmine\entity\Entity;
 use pocketmine\item\Item;
-use pocketmine\item\Tool;
+use pocketmine\Player;
 
-class DoubleWoodSlab extends Solid{
+class FlowingWater extends Liquid{
 
-	protected $id = self::DOUBLE_WOODEN_SLAB;
+	protected $id = self::FLOWING_WATER;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
-	public function getHardness(){
-		return 2;
-	}
-
-	public function getToolType(){
-		return Tool::TYPE_AXE;
-	}
-
 	public function getName(){
-		static $names = [
-			0 => "Oak",
-			1 => "Spruce",
-			2 => "Birch",
-			3 => "Jungle",
-			4 => "Acacia",
-			5 => "Dark Oak",
-			6 => "",
-			7 => ""
-		];
-		return "Double " . $names[$this->meta & 0x07] . " Slab";
+		return "Flowing Water";
 	}
 
-	public function getDrops(Item $item){
-		return [
-			[Item::WOODEN_SLAB, $this->meta & 0x07, 2],
-		];
+	public function onEntityCollide(Entity $entity){
+		$entity->resetFallDistance();
+		if($entity->fireTicks > 0){
+			$entity->extinguish();
+		}
+
+		$entity->resetFallDistance();
 	}
 
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
+		$ret = $this->getLevel()->setBlock($this, $this, true, false);
+		$this->getLevel()->scheduleDelayedBlockUpdate($this, $this->tickRate());
+
+		return $ret;
+	}
 }
