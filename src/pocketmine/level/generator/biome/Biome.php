@@ -23,7 +23,6 @@ namespace pocketmine\level\generator\biome;
 
 use pocketmine\block\Block;
 use pocketmine\level\ChunkManager;
-use pocketmine\level\generator\hell\HellBiome;
 use pocketmine\level\generator\normal\biome\DesertBiome;
 use pocketmine\level\generator\normal\biome\ForestBiome;
 use pocketmine\level\generator\normal\biome\IcePlainsBiome;
@@ -34,7 +33,6 @@ use pocketmine\level\generator\normal\biome\RiverBiome;
 use pocketmine\level\generator\normal\biome\SmallMountainsBiome;
 use pocketmine\level\generator\normal\biome\SwampBiome;
 use pocketmine\level\generator\normal\biome\TaigaBiome;
-use pocketmine\level\generator\populator\Flower;
 use pocketmine\level\generator\populator\Populator;
 use pocketmine\utils\Random;
 
@@ -81,20 +79,6 @@ abstract class Biome{
 	protected static function register($id, Biome $biome){
 		self::$biomes[(int) $id] = $biome;
 		$biome->setId((int) $id);
-
-		$flowerPopFound = false;
-
-		foreach($biome->getPopulators() as $populator){
-			if($populator instanceof Flower){
-				$flowerPopFound = true;
-				break;
-			}
-		}
-
-		if($flowerPopFound === false){
-			$flower = new Flower();
-			$biome->addPopulator($flower);
-		}
 	}
 
 	public static function init(){
@@ -111,7 +95,6 @@ abstract class Biome{
 
 
 		self::register(self::SMALL_MOUNTAINS, new SmallMountainsBiome());
-		self::register(self::HELL, new HellBiome());
 
 		self::register(self::BIRCH_FOREST, new ForestBiome(ForestBiome::TYPE_BIRCH));
 	}
@@ -122,7 +105,7 @@ abstract class Biome{
 	 * @return Biome
 	 */
 	public static function getBiome($id){
-		return isset(self::$biomes[$id]) ? self::$biomes[$id] : self::$biomes[self::OCEAN];
+		return self::$biomes[$id] ?? self::$biomes[self::OCEAN];
 	}
 
 	public function clearPopulators(){
@@ -154,7 +137,7 @@ abstract class Biome{
 		return $this->id;
 	}
 
-	public abstract function getName();
+	abstract public function getName();
 
 	public function getMinElevation(){
 		return $this->minElevation;

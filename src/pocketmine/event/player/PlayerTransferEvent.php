@@ -2,72 +2,65 @@
 
 /*
  *
- *    _______                                _
- *   |__   __|                              | |
- *      | | ___  ___ ___  ___ _ __ __ _  ___| |_
- *      | |/ _ \/ __/ __|/ _ \  __/ _` |/ __| __|
- *      | |  __/\__ \__ \  __/ | | (_| | (__| |_
- *      |_|\___||___/___/\___|_|  \__,_|\___|\__|
- *
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author Tesseract Team
- * @link http://www.github.com/TesseractTeam/Tesseract
- * 
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
  *
- */
+ *
+*/
+
+declare(strict_types=1);
 
 namespace pocketmine\event\player;
 
 use pocketmine\event\Cancellable;
 use pocketmine\Player;
-use pocketmine\Server;
 
 class PlayerTransferEvent extends PlayerEvent implements Cancellable{
-
 	public static $handlerList = null;
 
-	/** @var string */
 	protected $address;
+	protected $port = 19132;
+	protected $message;
 
-	/** @var int */
-	protected $port;
-
-	public function __construct(Player $player, $address, $port){
+	public function __construct(Player $player, string $address, int $port, string $message){
 		$this->player = $player;
 		$this->address = $address;
 		$this->port = $port;
+		$this->message = $message;
 	}
 
-	public function getPlayer(){
-		return $this->player;
-	}
-	
-	public function getAddress(){
+	public function getAddress() : string{
 		return $this->address;
 	}
 
-	public function setAddress($address){
+	public function setAddress(string $address){
 		$this->address = $address;
 	}
 
-	public function getPort(){
+	public function getPort() : int{
 		return $this->port;
 	}
-	
-	public function setPort($port){
+
+	public function setPort(int $port){
 		$this->port = $port;
 	}
-	
-	/**
-	 * @return EventName|string
-     */
-	public function getName(){
-		return "PlayerTransferEvent";
+
+	public function getMessage() : string{
+		return $this->message;
 	}
 
+	public function setMessage(string $message){
+		$this->message = $message;
+	}
 }

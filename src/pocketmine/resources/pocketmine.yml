@@ -1,4 +1,4 @@
-# Main configuration file for ImagicalMine
+# Main configuration file for PocketMine-MP
 # These settings are the ones that cannot be included in server.properties
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically on this file when upgrading.
@@ -9,13 +9,11 @@ settings:
  language: "eng"
  #Whether to send all strings translated to server locale or let the device handle them
  force-language: false
- shutdown-message: "Server closed. Thanks for playing on an ImagicalMine server!"
+ shutdown-message: "Server closed"
  #Allow listing plugins via Query
  query-plugins: true
  #Show a console message when a plugin uses deprecated API methods
  deprecated-verbose: true
- #Enable plugin with incompatible API 
- incompatible-plugins: true
  #Enable plugin and core profiling by default
  enable-profiling: false
  #Will only add results when tick measurement is below or equal to given value (default 20)
@@ -78,10 +76,10 @@ network:
  #Threshold for batching packets, in bytes. Only these packets will be compressed
  #Set to 0 to compress everything, -1 to disable.
  batch-threshold: 256
- #Compression level used when sending batched packets. Higher = Uses More CPU, Less = More Bandwidth Usage
- compression-level: 2
+ #Compression level used when sending batched packets. Higher = more CPU, less bandwidth usage
+ compression-level: 7
  #Use AsyncTasks for compression. Adds half/one tick delay, less CPU load on main thread
- async-compression: true
+ async-compression: false
  #Experimental, only for Windows. Tries to use UPnP to automatically port forward
  upnp-forwarding: false
 
@@ -96,14 +94,14 @@ debug:
  #If > 1, it will show debug messages in the console
  level: 1
  #Enables /status, /gc
- commands: true
-
+ commands: false
+ 
 player:
  #Choose whether to enable player data saving.
  save-player-data: true
  anti-cheat:
   #If false, will try to prevent speed and noclip cheats. May cause movement issues with some blocks which are not yet properly implemented.
-  allow-movement-cheats: false
+  allow-movement-cheats: true
   #If false, times block breaks to ensure players are not cheating. May cause issues with some blocks which are not yet properly implemented.
   allow-instabreak: false
 
@@ -111,7 +109,7 @@ level-settings:
  #The default format that levels will use when created
  default-format: pmanvil
  #Automatically change levels tick rate to maintain 20 ticks per second
- auto-tick-rate: false
+ auto-tick-rate: true
  auto-tick-rate-limit: 20
  #Sets the base tick rate (1 = 20 ticks per second, 2 = 10 ticks per second, etc.)
  base-tick-rate: 1
@@ -132,7 +130,7 @@ chunk-sending:
 
 chunk-ticking:
  #Max amount of chunks processed each tick
- per-tick: 16
+ per-tick: 40
  #Radius of chunks around a player to tick
  tick-radius: 3
  light-updates: false
@@ -143,15 +141,16 @@ chunk-ticking:
 
 chunk-generation:
  #Max. amount of chunks in the waiting queue to be generated
- queue-size: 2
+ queue-size: 8
  #Max. amount of chunks in the waiting queue to be populated
- population-queue-size: 2
+ population-queue-size: 8
 
 ticks-per:
  animal-spawns: 400
  monster-spawns: 1
  autosave: 6000
  cache-cleanup: 900
+
 spawn-limits:
   monsters: 70
   animals: 15
@@ -160,7 +159,7 @@ spawn-limits:
 
 auto-report:
  #Send crash reports for processing
- enabled: false
+ enabled: true
  send-code: true
  send-settings: true
  send-phpinfo: false
@@ -171,20 +170,25 @@ anonymous-statistics:
  enabled: true
  host: stats.pocketmine.net
 
-commands:
- #Here you can customize server commands
- #Specify command names to override the default set here.
- #If no custom value is defined for a command, the default will be used.
- #NOTE: Some commands cannot be disabled here, such as the important ones like /stop, /reload, etc.
- default: true
- #Set override values per command here
- #For example, uncommenting the below will disable /plugins and /version
- #version: false
- #plugins: false
+auto-updater:
+ enabled: true
+ on-update:
+  warn-console: true
+  warn-ops: true
+ #Can be development, beta or stable.
+ preferred-channel: stable
+ #If using a development version, it will suggest changing the channel
+ suggest-channels: true
+ host: www.pocketmine.net
 
 timings:
  #Choose the host to use for viewing your timings results.
- host: mcpetimings.com
+ host: timings.pmmp.io
+
+console:
+ #Choose whether to enable server stats reporting on the console title.
+ #NOTE: The title ticker will be disabled regardless if console colours are not enabled.
+ title-tick: true
 
 aliases:
  #Examples:
