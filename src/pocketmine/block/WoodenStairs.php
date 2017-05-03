@@ -21,9 +21,32 @@
 
 namespace pocketmine\block;
 
-abstract class Solid extends Block{
+use pocketmine\item\Item;
+use pocketmine\item\Tool;
 
-	public function isSolid(){
-		return true;
+class WoodenStairs extends Stair{
+
+	protected $id = self::OAK_STAIRS;
+
+	public function __construct($meta = 0){
+		$this->meta = $meta;
+	}
+
+	public function getHardness(){
+		return 2;
+	}
+
+	public function getResistance(){
+		return 15;
+	}
+
+	public function getToolType(){
+		return Tool::TYPE_AXE;
+	}
+
+	public function getDrops(Item $item){
+		return [
+			[$this->id, 0, 1],
+		];
 	}
 }

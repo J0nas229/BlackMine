@@ -13,8 +13,8 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author Pocketmine Team
- * @link http://www.pocketmine.net
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
  *
  *
 */
@@ -25,29 +25,40 @@ use pocketmine\item\Item;
 use pocketmine\item\TieredTool;
 use pocketmine\item\Tool;
 
-class Prismarine extends Solid{
+class StoneSlab extends WoodenSlab{
+	const STONE = 0;
+	const SANDSTONE = 1;
+	const WOODEN = 2;
+	const COBBLESTONE = 3;
+	const BRICK = 4;
+	const STONE_BRICK = 5;
+	const QUARTZ = 6;
+	const NETHER_BRICK = 7;
 
-	const NORMAL = 0;
-	const DARK = 1;
-	const BRICKS = 2;
+	protected $id = self::STONE_SLAB;
 
-	protected $id = self::PRISMARINE;
+	protected $doubleId = self::DOUBLE_STONE_SLAB;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
 	}
 
 	public function getHardness(){
-		return 1.5;
+		return 2;
 	}
 
 	public function getName(){
 		static $names = [
-			self::NORMAL => "Prismarine",
-			self::DARK => "Dark Prismarine",
-			self::BRICKS => "Prismarine Bricks",
+			self::STONE => "Stone",
+			self::SANDSTONE => "Sandstone",
+			self::WOODEN => "Wooden",
+			self::COBBLESTONE => "Cobblestone",
+			self::BRICK => "Brick",
+			self::STONE_BRICK => "Stone Brick",
+			self::QUARTZ => "Quartz",
+			self::NETHER_BRICK => "Nether Brick",
 		];
-		return $names[$this->meta & 0x03] ?? "Unknown";
+		return (($this->meta & 0x08) > 0 ? "Upper " : "") . $names[$this->meta & 0x07] . " Slab";
 	}
 
 	public function getToolType(){
@@ -57,7 +68,7 @@ class Prismarine extends Solid{
 	public function getDrops(Item $item){
 		if($item->isPickaxe() >= TieredTool::TIER_WOODEN){
 			return [
-				[$this->id, $this->meta & 0x03, 1],
+				[$this->id, $this->meta & 0x07, 1],
 			];
 		}else{
 			return [];
