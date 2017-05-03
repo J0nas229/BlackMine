@@ -19,7 +19,7 @@ Thanks Genisys, ClearSky and PocketMine and BlueLight and pmmp for the code :)
 - Worlds: Generator has been improved and more biomes!
 - Little to no lag at all!
 
-[![CircleCI](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/rewriten.svg?style=svg)](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/rewriten)
+[![CircleCI](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master.svg?style=svg)](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master)
 
 ### BlackMine is a perfect software for your server with :
 
