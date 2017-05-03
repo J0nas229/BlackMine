@@ -19,34 +19,37 @@
  *
 */
 
+
 namespace pocketmine\command\defaults;
+
 
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
 
-class SeedCommand extends VanillaCommand{
+class TransferServerCommand extends VanillaCommand{
 
 	public function __construct($name){
 		parent::__construct(
 			$name,
-			"%pocketmine.command.seed.description",
-			"%commands.seed.usage"
+			"%pocketmine.command.transferserver.description",
+			"%pocketmine.command.transferserver.usage"
 		);
-		$this->setPermission("pocketmine.command.seed");
+		$this->setPermission("pocketmine.command.transferserver");
 	}
 
-	public function execute(CommandSender $sender, $currentAlias, array $args){
-		if(!$this->testPermission($sender)){
-			return true;
+	public function execute(CommandSender $sender, $commandLabel, array $args){
+		if(count($args) < 1){
+			$sender->sendMessage(new TranslationContainer("commands.generic.usage", [$this->usageMessage]));
+
+			return false;
+		}elseif(!($sender instanceof Player)){
+			$sender->sendMessage("This command must be executed as a player");
+
+			return false;
 		}
 
-		if($sender instanceof Player){
-			$seed = $sender->getLevel()->getSeed();
-		}else{
-			$seed = $sender->getServer()->getDefaultLevel()->getSeed();
-		}
-		$sender->sendMessage(new TranslationContainer("commands.seed.success", [$seed]));
+		$sender->transfer($args[0], (int) ($args[1] ?? 19132));
 
 		return true;
 	}
