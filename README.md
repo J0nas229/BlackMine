@@ -10,6 +10,9 @@ BlackMine is for all. Anyone can copy-paste are code and other features.
 - We are a edited version of pmmp. We have edited their generators to our version and have improved the performance
 - You can download .phar from Circle CI. Tab to latest build, tap to artifacts selection, tap to DevTools and download BlackMine.phar
 
+
+[![CircleCI](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master.svg?style=svg)](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master)
+
 ## Thanks
 
 Thanks Genisys, ClearSky and PocketMine and BlueLight and pmmp for the code :)
@@ -18,8 +21,6 @@ Thanks Genisys, ClearSky and PocketMine and BlueLight and pmmp for the code :)
 
 - Worlds: Generator has been improved and more biomes!
 - Little to no lag at all!
-
-[![CircleCI](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master.svg?style=svg)](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master)
 
 ### BlackMine is a perfect software for your server with :
 
@@ -50,21 +51,9 @@ Thanks Genisys, ClearSky and PocketMine and BlueLight and pmmp for the code :)
  *summon
  *weather
  *xp
-
-
-## Upcoming Update
-
-1.0alpha - remove the copy rigt add some some stuff
-
-1.0dev - Add more biomes is added 
-
-1.0beta - Finish all biomes is added
-
-1.0 - More performance
-
  ...
 
-Attention! All version have new biomes added and more changes in biomes and more performances :)
+Attention! All version have new biomes added and more changes in biomes and more performances :) (not yet coming soon)
  
 ## TODO :
 
