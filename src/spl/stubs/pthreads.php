@@ -5,7 +5,7 @@
  * WARNING: Do not include this file
  *
  * @author  Lisachenko Alexander <lisachenko.it@gmail.com>, updated by Shoghi Cervantes <shoghicp@gmail.com>
- * @version 3.1.5
+ * @version 3.0.0
  * @link    https://github.com/krakjoe/pthreads/blob/master/examples/stub.php
  */
 
@@ -59,42 +59,53 @@ define('PTHREADS_ALLOW_HEADERS', 0x1000000);
  */
 define('PTHREADS_ALLOW_GLOBALS', 0x10000000);
 
+interface Collectable{
+
+	/**
+	 * @return bool
+	 */
+	public function isGarbage();
+}
+
+class Volatile extends Threaded{
+
+}
+
 /**
  * Threaded class
  *
- * Threaded objects form the basis of pthreads ability to execute user code in parallel;
+ * Threaded objects form the basis of pthreads ability to execute user code asynchronously;
  * they expose and include synchronization methods and various useful interfaces.
  *
  * Threaded objects, most importantly, provide implicit safety for the programmer;
  * all operations on the object scope are safe.
  *
- * @link http://www.php.net/manual/en/class.threaded.php
+ * @link  http://www.php.net/manual/en/class.threaded.php
  * @since 2.0.0
  */
-class Threaded implements Traversable, Countable, ArrayAccess, Collectable
-{
+class Threaded implements Traversable, Collectable{
+
+	/**
+	 * @param object $obj
+	 */
+	public static function extend($obj){
+
+	}
+
 	/**
 	 * Fetches a chunk of the objects properties table of the given size
 	 *
-	 * @param int $size The number of items to fetch
-	 *
-	 * @link http://www.php.net/manual/en/threaded.chunk.php
+	 * @param int  $size     The number of items to fetch
+	 * @param bool $preserve default false
 	 * @return array An array of items from the objects member table
+	 * @link http://www.php.net/manual/en/threaded.chunk.php
 	 */
-	public function chunk($size) {}
+	public function chunk($size, bool $preserve = false){}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function count() {}
-
-	/**
-	 * Retrieves terminal error information from the referenced object
-	 *
-	 * @link http://www.php.net/manual/en/threaded.getterminationinfo.php
-	 * @return array|bool array containing the termination conditions of the referenced object
-	 */
-	public function getTerminationInfo() {}
+	public function count(){}
 
 	/**
 	 * Tell if the referenced object is executing
@@ -102,7 +113,7 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.isrunning.php
 	 * @return bool A boolean indication of state
 	 */
-	public function isRunning() {}
+	public function isRunning(){}
 
 	/**
 	 * Tell if the referenced object exited, suffered fatal errors, or threw uncaught exceptions during execution
@@ -110,34 +121,18 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.isterminated.php
 	 * @return bool A boolean indication of state
 	 */
-	public function isTerminated() {}
-
-	/**
-	 * Tell if the referenced object is waiting for notification
-	 *
-	 * @link http://www.php.net/manual/en/threaded.iswaiting.php
-	 * @return bool A boolean indication of state
-	 */
-	public function isWaiting() {}
-
-	/**
-	 * Lock the referenced objects property table
-	 *
-	 * @link http://www.php.net/manual/en/threaded.lock.php
-	 * @return bool A boolean indication of state
-	 */
-	public function lock() {}
+	public function isTerminated(){}
 
 	/**
 	 * Merges data into the current object
 	 *
-	 * @param mixed $from The data to merge
-	 * @param bool $overwrite Overwrite existing keys flag, by default true
+	 * @param mixed $from      The data to merge
+	 * @param bool  $overwrite Overwrite existing keys flag, by default true
 	 *
 	 * @link http://www.php.net/manual/en/threaded.merge.php
 	 * @return bool A boolean indication of success
 	 */
-	public function merge($from, $overwrite = true) {}
+	public function merge($from, $overwrite = true){}
 
 	/**
 	 * Send notification to the referenced object
@@ -145,27 +140,29 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.notify.php
 	 * @return bool A boolean indication of success
 	 */
-	public function notify() {}
+	public function notify(){}
+
+	public function notifyOne(){}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function offsetGet($offset) {}
+	public function offsetGet($offset){}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function offsetSet($offset, $value) {}
+	public function offsetSet($offset, $value){}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function offsetExists($offset) {}
+	public function offsetExists($offset){}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function offsetUnset($offset) {}
+	public function offsetUnset($offset){}
 
 	/**
 	 * Pops an item from the objects property table
@@ -173,7 +170,7 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.pop.php
 	 * @return mixed The last item from the objects properties table
 	 */
-	public function pop() {}
+	public function pop(){}
 
 	/**
 	 * The programmer should always implement the run method for objects that are intended for execution.
@@ -181,7 +178,7 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.run.php
 	 * @return void The methods return value, if used, will be ignored
 	 */
-	public function run() {}
+	public function run(){}
 
 	/**
 	 * Shifts an item from the objects properties table
@@ -189,26 +186,18 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.shift.php
 	 * @return mixed The first item from the objects properties table
 	 */
-	public function shift() {}
+	public function shift(){}
 
 	/**
 	 * Executes the block while retaining the synchronization lock for the current context.
 	 *
 	 * @param \Closure $function The block of code to execute
-	 * @param mixed $args... Variable length list of arguments to use as function arguments to the block
+	 * @param mixed    $args     ... Variable length list of arguments to use as function arguments to the block
 	 *
 	 * @link http://www.php.net/manual/en/threaded.synchronized.php
 	 * @return mixed The return value from the block
 	 */
-	public function synchronized(\Closure $function, $args = null) {}
-
-	/**
-	 * Unlock the referenced objects storage for the calling context
-	 *
-	 * @link http://www.php.net/manual/en/threaded.unlock.php
-	 * @return bool A boolean indication of success
-	 */
-	public function unlock() {}
+	public function synchronized(\Closure $function, $args = null){}
 
 	/**
 	 * Waits for notification from the Stackable
@@ -218,7 +207,21 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
 	 * @link http://www.php.net/manual/en/threaded.wait.php
 	 * @return bool A boolean indication of success
 	 */
-	public function wait($timeout) {}
+	public function wait($timeout){}
+
+	/**
+	 * @return int
+	 */
+	public function getRefCount(){}
+
+	public function addRef(){}
+
+	public function delRef(){}
+
+	/**
+	 * @return bool
+	 */
+	public function isGarbage(){}
 }
 
 /**
@@ -229,15 +232,7 @@ class Threaded implements Traversable, Countable, ArrayAccess, Collectable
  *
  * @link http://www.php.net/manual/en/class.thread.php
  */
-class Thread extends Threaded
-{
-
-	/**
-	 * Detaches a thread
-	 *
-	 * @return bool A boolean indication of success
-	 */
-	public function detach() {}
+class Thread extends Threaded{
 
 	/**
 	 * Will return the identity of the Thread that created the referenced Thread
@@ -245,14 +240,14 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.getcreatorid.php
 	 * @return int A numeric identity
 	 */
-	public function getCreatorId() {}
+	public function getCreatorId(){}
 
 	/**
 	 * Will return the instance of currently executing thread
 	 *
 	 * @return static
 	 */
-	public static function getCurrentThread() {}
+	public static function getCurrentThread(){}
 
 	/**
 	 * Will return the identity of the currently executing thread
@@ -260,7 +255,7 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.getcurrentthreadid.php
 	 * @return int
 	 */
-	public static function getCurrentThreadId() {}
+	public static function getCurrentThreadId(){}
 
 	/**
 	 * Will return the identity of the referenced Thread
@@ -268,7 +263,7 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.getthreadid.php
 	 * @return int
 	 */
-	public function getThreadId() {}
+	public function getThreadId(){}
 
 	/**
 	 * Tell if the referenced Thread has been joined by another context
@@ -276,7 +271,7 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.isjoined.php
 	 * @return bool A boolean indication of state
 	 */
-	public function isJoined() {}
+	public function isJoined(){}
 
 	/**
 	 * Tell if the referenced Thread has been started
@@ -284,7 +279,7 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.isstarted.php
 	 * @return bool A boolean indication of state
 	 */
-	public function isStarted() {}
+	public function isStarted(){}
 
 	/**
 	 * Causes the calling context to wait for the referenced Thread to finish executing
@@ -292,14 +287,7 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.join.php
 	 * @return bool A boolean indication of state
 	 */
-	public function join() {}
-
-	/**
-	 * Kills the referenced thread, dangerously !
-	 *
-	 * @link http://www.php.net/manual/en/thread.kill.php
-	 */
-	public function kill() {}
+	public function join(){}
 
 	/**
 	 * Will start a new Thread to execute the implemented run method
@@ -309,17 +297,7 @@ class Thread extends Threaded
 	 * @link http://www.php.net/manual/en/thread.start.php
 	 * @return bool A boolean indication of success
 	 */
-	public function start($options = PTHREADS_INHERIT_ALL) {}
-
-	/**
-	 * Will execute the Callable in the global scope
-	 *
-	 * @param Callable $block   The code to execute
-	 * @param ...      $args    Variable length list of arguments to pass to the Callable upon execution
-	 * @link http://www.php.net/manual/en/thread.start.php
-	 * @return bool A boolean indication of success
-	 */
-	public static function globally(Callable $block, $args) {}
+	public function start(int $options = PTHREADS_INHERIT_ALL){}
 }
 
 /**
@@ -337,8 +315,7 @@ class Thread extends Threaded
  *
  * @link http://www.php.net/manual/en/class.worker.php
  */
-class Worker extends Thread
-{
+class Worker extends Thread{
 
 	/**
 	 * Returns the number of threaded tasks waiting to be executed by the referenced Worker
@@ -346,7 +323,7 @@ class Worker extends Thread
 	 * @link http://www.php.net/manual/en/worker.getstacked.php
 	 * @return int An integral value
 	 */
-	public function getStacked() {}
+	public function getStacked(){}
 
 	/**
 	 * Tell if the referenced Worker has been shutdown
@@ -354,15 +331,9 @@ class Worker extends Thread
 	 * @link http://www.php.net/manual/en/worker.isshutdown.php
 	 * @return bool A boolean indication of state
 	 */
-	public function isShutdown() {}
+	public function isShutdown(){}
 
-	/**
-	 * Tell if a Worker is executing threaded tasks
-	 *
-	 * @link http://www.php.net/manual/en/worker.isworking.php
-	 * @return bool A boolean indication of state
-	 */
-	public function isWorking() {}
+	public function collector(Collectable $collectable){}
 
 	/**
 	 * Shuts down the Worker after executing all the threaded tasks previously stacked
@@ -370,160 +341,35 @@ class Worker extends Thread
 	 * @link http://www.php.net/manual/en/worker.shutdown.php
 	 * @return bool A boolean indication of success
 	 */
-	public function shutdown() {}
+	public function shutdown(){}
 
 	/**
 	 * Appends the referenced object to the stack of the referenced Worker
 	 *
-	 * @param Threaded $work Threaded object to be executed by the referenced Worker
+	 * @param Collectable $work Collectable object to be executed by the referenced Worker
 	 *
 	 * @link http://www.php.net/manual/en/worker.stack.php
 	 * @return int The new length of the stack
 	 */
-	public function stack(Threaded &$work) {}
+	public function stack(Collectable &$work){}
 
 	/**
-	 * Removes the referenced object ( or all objects if parameter is null ) from stack of the referenced Worker
-	 *
-	 * @param Threaded $work Threaded object previously stacked onto Worker
+	 * Removes the first item from the stack
 	 *
 	 * @link http://www.php.net/manual/en/worker.unstack.php
 	 * @return int The new length of the stack
 	 */
-	public function unstack(Threaded &$work = null) {}
-}
-
-/**
- * Mutex class
- *
- * The static methods contained in the Mutex class provide direct access to Posix Mutex functionality.
- *
- * @link http://www.php.net/manual/en/class.mutex.php
- */
-class Mutex
-{
+	public function unstack(){}
 
 	/**
-	 * Create, and optionally lock a new Mutex for the caller
+	 * Collects finished objects
 	 *
-	 * @param bool $lock Setting lock to true will lock the Mutex for the caller before returning the handle
+	 * @param callable $function
 	 *
-	 * @link http://www.php.net/manual/en/mutex.create.php
-	 * @return int A newly created and optionally locked Mutex handle
+	 * @link http://www.php.net/manual/en/worker.collect.php
+	 * @return void
 	 */
-	final public static function create($lock = false) {}
-
-	/**
-	 * Destroy mutex
-	 *
-	 * Destroying Mutex handles must be carried out explicitly by the programmer when they are
-	 * finished with the Mutex handle.
-	 *
-	 * @param int $mutex A handle returned by a previous call to Mutex::create().
-	 *
-	 * @link http://www.php.net/manual/en/mutex.destroy.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function destroy($mutex) {}
-
-	/**
-	 * Attempt to lock the Mutex for the caller.
-	 *
-	 * An attempt to lock a Mutex owned (locked) by another Thread will result in blocking.
-	 *
-	 * @param int $mutex A handle returned by a previous call to Mutex::create().
-	 *
-	 * @link http://www.php.net/manual/en/mutex.lock.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function lock($mutex) {}
-
-	/**
-	 * Attempt to lock the Mutex for the caller without blocking if the Mutex is owned (locked) by another Thread.
-	 *
-	 * @param int $mutex A handle returned by a previous call to Mutex::create().
-	 *
-	 * @link http://www.php.net/manual/en/mutex.trylock.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function trylock($mutex) {}
-
-	/**
-	 * Release mutex
-	 *
-	 * Attempts to unlock the Mutex for the caller, optionally destroying the Mutex handle.
-	 * The calling thread should own the Mutex at the time of the call.
-	 *
-	 * @param int $mutex A handle returned by a previous call to Mutex::create().
-	 * @param bool $destroy When true pthreads will destroy the Mutex after a successful unlock.
-	 *
-	 * @link http://www.php.net/manual/en/mutex.unlock.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function unlock($mutex, $destroy = false) {}
-}
-
-/**
- * Condition class
- *
- * The static methods contained in the Cond class provide direct access to Posix Condition Variables.
- *
- * @link http://www.php.net/manual/en/class.cond.php
- */
-class Cond
-{
-	/**
-	 * Broadcast to all Threads blocking on a call to Cond::wait().
-	 *
-	 * @param int $condition A handle to a Condition Variable returned by a previous call to Cond::create()
-	 *
-	 * @link http://www.php.net/manual/en/cond.broadcast.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function broadcast($condition) {}
-
-	/**
-	 * Creates a new Condition Variable for the caller.
-	 *
-	 * @link http://www.php.net/manual/en/cond.create.php
-	 * @return int A handle to a Condition Variable
-	 */
-	final public static function create() {}
-
-	/**
-	 * Destroy a condition
-	 *
-	 * Destroying Condition Variable handles must be carried out explicitly by the programmer when they are
-	 * finished with the Condition Variable.
-	 * No Threads should be blocking on a call to Cond::wait() when the call to Cond::destroy() takes place.
-	 *
-	 * @param int $condition A handle to a Condition Variable returned by a previous call to Cond::create()
-	 *
-	 * @link http://www.php.net/manual/en/cond.destroy.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function destroy($condition) {}
-
-	/**
-	 * Signal a Condition
-	 *
-	 * @param int $condition A handle to a Condition Variable returned by a previous call to Cond::create()
-	 *
-	 * @link http://www.php.net/manual/en/cond.signal.php
-	 * @return bool A boolean indication of success
-	 */
-	final public static function signal($condition) {}
-
-	/**
-	 * Wait for a signal on a Condition Variable, optionally specifying a timeout to limit waiting time.
-	 *
-	 * @param int $condition A handle to a Condition Variable returned by a previous call to Cond::create()
-	 * @param int $mutex A handle returned by a previous call to Mutex::create() and owned (locked) by the caller.
-	 * @param int $timeout An optional timeout, in microseconds
-	 *
-	 * @return bool A boolean indication of success
-	 */
-	final public static function wait($condition, $mutex, $timeout = null) {}
+	public function collect(callable $function){}
 }
 
 /**
@@ -535,8 +381,7 @@ class Cond
  *
  * @link http://www.php.net/manual/en/class.pool.php
  */
-class Pool
-{
+class Pool{
 	/**
 	 * The maximum number of Worker threads allowed in this Pool
 	 *
@@ -575,20 +420,13 @@ class Pool
 	/**
 	 * Construct a new Pool of Workers
 	 *
-	 * @param integer $size The maximum number of Workers this Pool can create
-	 * @param string $class The class for new Workers
-	 * @param array $ctor An array of arguments to be passed to new Workers
+	 * @param integer     $size  The maximum number of Workers this Pool can create
+	 * @param string|null $class The class for new Workers
+	 * @param array|null  $ctor  An array of arguments to be passed to new Workers
 	 *
 	 * @link http://www.php.net/manual/en/pool.__construct.php
 	 */
-	public function __construct($size, $class, array $ctor = array()) {}
-
-	/**
-	 * Shuts down all Workers, and collect all Stackables, finally destroys the Pool
-	 *
-	 * @link http://www.php.net/manual/en/pool.__destruct.php
-	 */
-	public function __destruct() {}
+	public function __construct($size, $class, $ctor = []){}
 
 	/**
 	 * Collect references to completed tasks
@@ -599,7 +437,7 @@ class Pool
 	 *
 	 * @link http://www.php.net/manual/en/pool.collect.php
 	 */
-	public function collect(callable $collector) {}
+	public function collect(callable $collector){}
 
 	/**
 	 * Resize the Pool
@@ -608,14 +446,14 @@ class Pool
 	 *
 	 * @link http://www.php.net/manual/en/pool.resize.php
 	 */
-	public function resize($size) {}
+	public function resize($size){}
 
 	/**
 	 * Shutdown all Workers in this Pool
 	 *
 	 * @link http://www.php.net/manual/en/pool.shutdown.php
 	 */
-	public function shutdown() {}
+	public function shutdown(){}
 
 	/**
 	 * Submit the task to the next Worker in the Pool
@@ -624,32 +462,15 @@ class Pool
 	 *
 	 * @return int the identifier of the Worker executing the object
 	 */
-	public function submit(Threaded $task) {}
+	public function submit(Threaded $task){}
 
 	/**
 	 * Submit the task to the specific Worker in the Pool
 	 *
-	 * @param int $worker The worker for execution
-	 * @param Threaded $task The task for execution
+	 * @param int      $worker The worker for execution
+	 * @param Threaded $task   The task for execution
 	 *
 	 * @return int the identifier of the Worker that accepted the object
 	 */
-	public function submitTo($worker, Threaded $task) {}
-}
-
-/**
- * Collectable Class
- *
- * Garbage Collection interface for references to objects on Worker stacks
- *
- * @link http://www.php.net/manual/en/class.collectable.php
- */
-interface Collectable
-{
-	/**
-	 * Determine whether an object is ready to be destroyed
-	 *
-	 * @return bool Whether the referenced object can be destroyed
-	 */
-	public function isGarbage() : bool;
+	public function submitTo($worker, Threaded $task){}
 }
