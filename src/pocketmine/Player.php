@@ -211,6 +211,12 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	const ADVENTURE = 2;
 	const SPECTATOR = 3;
 	const VIEW = Player::SPECTATOR;
+	
+	const CRAFTING_SMALL = 0;
+	const CRAFTING_BIG = 1;
+	const CRAFTING_ANVIL = 2;
+	const CRAFTING_ENCHANT = 3;
+
 
 	/**
 	 * Checks a supplied username and checks it is valid.
