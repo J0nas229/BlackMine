@@ -1,24 +1,5 @@
 <?php
 
-/*
- *
- *  _____   _____   __   _   _   _____  __    __  _____
- * /  ___| | ____| |  \ | | | | /  ___/ \ \  / / /  ___/
- * | |     | |__   |   \| | | | | |___   \ \/ /  | |___
- * | |  _  |  __|  | |\   | | | \___  \   \  /   \___  \
- * | |_| | | |___  | | \  | | |  ___| |   / /     ___| |
- * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * @author iTX Technologies
- * @link https://itxtech.org
- *
- */
-
 namespace pocketmine\level\generator\normal;
 
 use pocketmine\block\Block;
@@ -132,7 +113,6 @@ class Normal2 extends Normal{
 		}, Biome::getBiome(Biome::OCEAN));
 
 		$this->heightOffset = $random->nextRange(-5, 3);
-
 		$this->selector->addBiome(Biome::getBiome(Biome::OCEAN));
 		$this->selector->addBiome(Biome::getBiome(Biome::PLAINS));
 		$this->selector->addBiome(Biome::getBiome(Biome::DESERT));
@@ -144,11 +124,17 @@ class Normal2 extends Normal{
 		$this->selector->addBiome(Biome::getBiome(Biome::ICE_PLAINS));
 		$this->selector->addBiome(Biome::getBiome(Biome::SMALL_MOUNTAINS));
 		$this->selector->addBiome(Biome::getBiome(Biome::BIRCH_FOREST));
-
+		$this->selector->addBiome(Biome::getBiome(Biome::ROOFED_FOREST));
+		$this->selector->addBiome(Biome::getBiome(Biome::SAVANNA));
+		$this->selector->addBiome(Biome::getBiome(Biome::FROZEN_RIVER));
+		$this->selector->addBiome(Biome::getBiome(Biome::MUSHROOM_ISLAND));
+		$this->selector->addBiome(Biome::getBiome(Biome::BEACH));
+		$this->selector->addBiome(Biome::getBiome(Biome::JUNGLE));
+		$this->selector->addBiome(Biome::getBiome(Biome::MESA));
 		$this->selector->recalculate();
 
 		$cover = new GroundCover();
-		$this->generationPopulators[] = $cover;;
+		$this->generationPopulators[] = $cover;
 
 		$cave = new Cave();
 		$this->populators[] = $cave;
