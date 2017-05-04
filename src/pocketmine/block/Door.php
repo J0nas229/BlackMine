@@ -31,10 +31,6 @@ use pocketmine\Player;
 
 abstract class Door extends Transparent{
 
-	public function canBeActivated(){
-		return true;
-	}
-
 	public function isSolid(){
 		return false;
 	}
@@ -270,12 +266,7 @@ abstract class Door extends Transparent{
 			$down = $this->getSide(0);
 			if($down->getId() === $this->getId()){
 				$meta = $down->getDamage() ^ 0x04;
-				$this->getLevel()->setBlock($down, Block::get($this->getId(), $meta), true);
-				$players = $this->getLevel()->getChunkPlayers($this->x >> 4, $this->z >> 4);
-				if($player instanceof Player){
-					unset($players[$player->getLoaderId()]);
-				}
-
+				$this->level->setBlock($down, Block::get($this->getId(), $meta), true);
 				$this->level->addSound(new DoorSound($this));
 				return true;
 			}
@@ -283,11 +274,7 @@ abstract class Door extends Transparent{
 			return false;
 		}else{
 			$this->meta ^= 0x04;
-			$this->getLevel()->setBlock($this, $this, true);
-			$players = $this->getLevel()->getChunkPlayers($this->x >> 4, $this->z >> 4);
-			if($player instanceof Player){
-				unset($players[$player->getLoaderId()]);
-			}
+			$this->level->setBlock($this, $this, true);
 			$this->level->addSound(new DoorSound($this));
 		}
 
