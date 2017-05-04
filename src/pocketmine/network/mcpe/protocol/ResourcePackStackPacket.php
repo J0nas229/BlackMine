@@ -41,14 +41,14 @@ class ResourcePackStackPacket extends DataPacket{
 
 	public function decode(){
 		/*$this->mustAccept = $this->getBool();
-		$behaviorPackCount = $this->getUnsignedVarInt();
+		$behaviorPackCount = $this->getLShort();
 		while($behaviorPackCount-- > 0){
 			$packId = $this->getString();
 			$version = $this->getString();
 			$this->behaviorPackStack[] = new ResourcePackInfoEntry($packId, $version);
 		}
 
-		$resourcePackCount = $this->getUnsignedVarInt();
+		$resourcePackCount = $this->getLShort();
 		while($resourcePackCount-- > 0){
 			$packId = $this->getString();
 			$version = $this->getString();
@@ -60,13 +60,13 @@ class ResourcePackStackPacket extends DataPacket{
 		$this->reset();
 		$this->putBool($this->mustAccept);
 
-		$this->putUnsignedVarInt(count($this->behaviorPackStack));
+		$this->putLShort(count($this->behaviorPackStack));
 		foreach($this->behaviorPackStack as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());
 		}
 
-		$this->putUnsignedVarInt(count($this->resourcePackStack));
+		$this->putLShort(count($this->resourcePackStack));
 		foreach($this->resourcePackStack as $entry){
 			$this->putString($entry->getPackId());
 			$this->putString($entry->getPackVersion());

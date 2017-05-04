@@ -44,6 +44,10 @@ class LoginPacket extends DataPacket{
 
 	public $clientData = [];
 
+	public function canBeBatched() : bool{
+		return false;
+	}
+
 	public function canBeSentBeforeLogin() : bool{
 		return true;
 	}
@@ -58,7 +62,9 @@ class LoginPacket extends DataPacket{
 
 		$this->gameEdition = $this->getByte();
 
-		$this->setBuffer($this->getString(), 0);
+		$str = zlib_decode($this->getString(), 1024 * 1024 * 64);
+
+		$this->setBuffer($str, 0);
 
 		$chainData = json_decode($this->get($this->getLInt()));
 		foreach($chainData->{"chain"} as $chain){
