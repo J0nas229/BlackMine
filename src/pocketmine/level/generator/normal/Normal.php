@@ -44,24 +44,23 @@ use pocketmine\math\Vector3 as Vector3;
 use pocketmine\utils\Random;
 
 class Normal extends Generator{
-	const NAME = "Normal";
 
 	/** @var Populator[] */
-	protected $populators = [];
+	private $populators = [];
 	/** @var ChunkManager */
-	protected $level;
+	private $level;
 	/** @var Random */
-	protected $random;
-	protected $waterHeight = 62;
-	protected $bedrockDepth = 5;
+	private $random;
+	private $waterHeight = 62;
+	private $bedrockDepth = 5;
 
 	/** @var Populator[] */
-	protected $generationPopulators = [];
+	private $generationPopulators = [];
 	/** @var Simplex */
-	protected $noiseBase;
+	private $noiseBase;
 
 	/** @var BiomeSelector */
-	protected $selector;
+	private $selector;
 
 	private static $GAUSSIAN_KERNEL = null;
 	private static $SMOOTH_SIZE = 2;
@@ -89,12 +88,8 @@ class Normal extends Generator{
 		}
 	}
 
-	public function getName() : string{
-		return self::NAME;
-	}
-
-	public function getWaterHeight() : int{
-		return $this->waterHeight;
+	public function getName(){
+		return "normal";
 	}
 
 	public function getSettings(){
@@ -122,8 +117,41 @@ class Normal extends Generator{
 		$this->random->setSeed($this->level->getSeed());
 		$this->noiseBase = new Simplex($this->random, 4, 1 / 4, 1 / 32);
 		$this->random->setSeed($this->level->getSeed());
-		
-		$this->selector = new BiomeSelector($this->random, Biome::getBiome(Biome::OCEAN));
+		$this->selector = new BiomeSelector($this->random, function($temperature, $rainfall){
+			if($rainfall < 0.25){
+				if($temperature < 0.7){
+					return Biome::OCEAN;
+				}elseif($temperature < 0.85){
+					return Biome::RIVER;
+				}else{
+					return Biome::SWAMP;
+				}
+			}elseif($rainfall < 0.60){
+				if($temperature < 0.25){
+					return Biome::ICE_PLAINS;
+				}elseif($temperature < 0.75){
+					return Biome::PLAINS;
+				}else{
+					return Biome::DESERT;
+				}
+			}elseif($rainfall < 0.80){
+				if($temperature < 0.25){
+					return Biome::TAIGA;
+				}elseif($temperature < 0.75){
+					return Biome::FOREST;
+				}else{
+					return Biome::BIRCH_FOREST;
+				}
+			}else{
+				if($rainfall < 0.25){
+					return Biome::MOUNTAINS;
+				}elseif($rainfall < 0.70){
+					return Biome::SMALL_MOUNTAINS;
+				}else{
+					return Biome::RIVER;
+				}
+			}
+		}, Biome::getBiome(Biome::OCEAN));
 
 		$this->selector->addBiome(Biome::getBiome(Biome::OCEAN));
 		$this->selector->addBiome(Biome::getBiome(Biome::PLAINS));
@@ -136,16 +164,8 @@ class Normal extends Generator{
 		$this->selector->addBiome(Biome::getBiome(Biome::ICE_PLAINS));
 		$this->selector->addBiome(Biome::getBiome(Biome::SMALL_MOUNTAINS));
 		$this->selector->addBiome(Biome::getBiome(Biome::BIRCH_FOREST));
-		$this->selector->addBiome(Biome::getBiome(Biome::ROOFED_FOREST));
-		$this->selector->addBiome(Biome::getBiome(Biome::SAVANNA));
-		$this->selector->addBiome(Biome::getBiome(Biome::FROZEN_RIVER));
-		$this->selector->addBiome(Biome::getBiome(Biome::MUSHROOM_ISLAND));
-		$this->selector->addBiome(Biome::getBiome(Biome::BEACH));
-		$this->selector->addBiome(Biome::getBiome(Biome::JUNGLE));
-		$this->selector->addBiome(Biome::getBiome(Biome::MESA));
 
 		$this->selector->recalculate();
-
 
 		$cover = new GroundCover();
 		$this->generationPopulators[] = $cover;
@@ -220,7 +240,7 @@ class Normal extends Generator{
 					if($noiseValue > 0){
 						$chunk->setBlockId($x, $y, $z, Block::STONE);
 					}elseif($y <= $this->waterHeight){
-						$chunk->setBlockId($x, $y, $z, Block::WATER);
+						$chunk->setBlockId($x, $y, $z, Block::STILL_WATER);
 					}
 				}
 			}
