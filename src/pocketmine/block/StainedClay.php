@@ -23,6 +23,7 @@ namespace pocketmine\block;
 
 
 use pocketmine\item\Tool;
+use pocketmine\item\TieredTool;
 
 class StainedClay extends Solid{
 
@@ -53,7 +54,7 @@ class StainedClay extends Solid{
 	}
 
 	public function getToolType(){
-		return Tool::TYPE_PICKAXE;
+		return TieredTool::TYPE_PICKAXE;
 	}
 
 	public function getName() : string{
