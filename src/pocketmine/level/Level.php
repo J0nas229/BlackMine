@@ -40,6 +40,7 @@ use pocketmine\block\Leaves;
 use pocketmine\block\Leaves2;
 use pocketmine\block\MelonStem;
 use pocketmine\block\Mycelium;
+use pocketmine\block\NetherWartPlant;
 use pocketmine\block\Potato;
 use pocketmine\block\PumpkinStem;
 use pocketmine\block\RedMushroom;
@@ -247,6 +248,7 @@ class Level implements ChunkManager, Metadatable{
 		Block::LEAVES2 => Leaves2::class,
 		Block::FIRE => Fire::class,
 		Block::BEETROOT_BLOCK => Beetroot::class,
+		Block::NETHER_WART_PLANT => NetherWartPlant::class
 	];
 
 	/** @var LevelTimings */
@@ -1730,21 +1732,21 @@ class Level implements ChunkManager, Metadatable{
 			$this->server->getPluginManager()->callEvent($ev);
 			if(!$ev->isCancelled()){
 				$target->onUpdate(self::BLOCK_UPDATE_TOUCH);
-				if(!$player->isSneaking() and $target->canBeActivated() === true and $target->onActivate($item, $player) === true){
+				if(!$player->isSneaking() and $target->onActivate($item, $player) === true){
 					return true;
 				}
 
-				if(!$player->isSneaking() and $item->canBeActivated() and $item->onActivate($this, $player, $block, $target, $face, $fx, $fy, $fz)){
+				if(!$player->isSneaking() and $item->onActivate($this, $player, $block, $target, $face, $fx, $fy, $fz)){
 					if($item->getCount() <= 0){
 						$item = Item::get(Item::AIR, 0, 0);
-
-						return true;
 					}
+
+					return true;
 				}
 			}else{
 				return false;
 			}
-		}elseif($target->canBeActivated() === true and $target->onActivate($item, $player) === true){
+		}elseif($target->onActivate($item, $player) === true){
 			return true;
 		}
 
@@ -1755,7 +1757,8 @@ class Level implements ChunkManager, Metadatable{
 			return false;
 		}
 
-		if(!($block->canBeReplaced() === true or ($hand->getId() === Item::WOOD_SLAB and $block->getId() === Item::WOOD_SLAB) or ($hand->getId() === Item::SLAB and $block->getId() === Item::SLAB))){
+		//TODO: remove this hack
+		if(!($block->canBeReplaced() === true or ($hand->getId() === Item::WOODEN_SLAB and $block->getId() === Item::WOODEN_SLAB) or ($hand->getId() === Item::STONE_SLAB and $block->getId() === Item::STONE_SLAB))){
 			return false;
 		}
 
