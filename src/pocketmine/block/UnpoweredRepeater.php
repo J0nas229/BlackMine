@@ -1,36 +1,56 @@
 <?php
-
 /*
  *
- *  _____   _____   __   _   _   _____  __    __  _____
- * /  ___| | ____| |  \ | | | | /  ___/ \ \  / / /  ___/
- * | |     | |__   |   \| | | | | |___   \ \/ /  | |___
- * | |  _  |  __|  | |\   | | | \___  \   \  /   \___  \
- * | |_| | | |___  | | \  | | |  ___| |   / /     ___| |
- * \_____/ |_____| |_|  \_| |_| /_____/  /_/     /_____/
+ *  ____            _        _   __  __ _                  __  __ ____  
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author iTX Technologies
- * @link https://itxtech.org
+ * @author PocketMine Team
+ * @link http://www.pocketmine.net/
+ * 
  *
- */
+*/
 
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
 
-class UnpoweredRepeater extends PoweredRepeater{
-	protected $id = self::UNPOWERED_REPEATER_BLOCK;
-
-	public function getName() : string{
-		return "Unpowered Repeater";
+class RedstoneRepeater extends Transparent{
+	
+	protected $id = self::REDSTONE_REPEATER_BLOCK;
+	public function __construct($meta = 0){
+		$this->meta = $meta;
 	}
-
-	public function onBreak(Item $item){
-		$this->getLevel()->setBlock($this, new Air(), true);
+	public function canBeFlowedInto(){
+		return true;
+	}
+	
+	public function canBeActivated(){
+		return true;
+	}
+	public function getHardness(){
+		return 1;
+	}
+	public function getResistance(){
+		return 0;
+	}
+	public function isSolid(){
+		return false;
+	}
+	public function getBoundingBox(){
+		return null;
+	}
+	
+	public function getDrops(Item $item){
+		return [
+			[Item::REDSTONE_REPEATER, 0, 1],
+		];
 	}
 }
