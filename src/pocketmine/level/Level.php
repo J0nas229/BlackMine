@@ -107,6 +107,11 @@ use pocketmine\tile\Tile;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Random;
 use pocketmine\utils\ReversePriorityQueue;
+use pocketmine\level\weather\Weather; 
+use pocketmine\level\weather\WeatherManager;
+use pocketmine\entity\Lightning;// <- coming soon
+use pocketmine\entity\XPOrb;// <- coming soon
+
 
 #include <rules/Level.h>
 
