@@ -177,9 +177,9 @@ abstract class Liquid extends Transparent{
 	}
 
 	public function tickRate(){
-		if($this instanceof FlowingWater){
+		if($this instanceof Water){
 			return 5;
-		}elseif($this instanceof FlowingLava){
+		}elseif($this instanceof Lava){
 			return 30;
 		}
 
@@ -189,14 +189,14 @@ abstract class Liquid extends Transparent{
 	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			$this->checkForHarden();
-			$this->getLevel()->scheduleDelayedBlockUpdate($this, $this->tickRate());
+			$this->getLevel()->scheduleUpdate($this, $this->tickRate());
 		}elseif($type === Level::BLOCK_UPDATE_SCHEDULED){
 			if($this->temporalVector === null){
 				$this->temporalVector = new Vector3(0, 0, 0);
 			}
 
 			$decay = $this->getFlowDecay($this);
-			$multiplier = $this instanceof FlowingLava ? 2 : 1;
+			$multiplier = $this instanceof Lava ? 2 : 1;
 
 			$flag = true;
 
@@ -222,16 +222,16 @@ abstract class Liquid extends Transparent{
 					}
 				}
 
-				if($this->adjacentSources >= 2 and $this instanceof FlowingWater){
+				if($this->adjacentSources >= 2 and $this instanceof Water){
 					$bottomBlock = $this->level->getBlock($this->level->getBlock($this->temporalVector->setComponents($this->x, $this->y - 1, $this->z)));
 					if($bottomBlock->isSolid()){
 						$k = 0;
-					}elseif($bottomBlock instanceof FlowingWater and $bottomBlock->getDamage() === 0){
+					}elseif($bottomBlock instanceof Water and $bottomBlock->getDamage() === 0){
 						$k = 0;
 					}
 				}
 
-				if($this instanceof FlowingLava and $decay < 8 and $k < 8 and $k > 1 and mt_rand(0, 4) !== 0){
+				if($this instanceof Lava and $decay < 8 and $k < 8 and $k > 1 and mt_rand(0, 4) !== 0){
 					$k = $decay;
 					$flag = false;
 				}
@@ -242,7 +242,7 @@ abstract class Liquid extends Transparent{
 						$this->getLevel()->setBlock($this, new Air(), true);
 					}else{
 						$this->getLevel()->setBlock($this, Block::get($this->id, $decay), true);
-						$this->getLevel()->scheduleDelayedBlockUpdate($this, $this->tickRate());
+						$this->getLevel()->scheduleUpdate($this, $this->tickRate());
 					}
 				}elseif($flag){
 					//$this->getLevel()->scheduleUpdate($this, $this->tickRate());
@@ -255,17 +255,17 @@ abstract class Liquid extends Transparent{
 			$bottomBlock = $this->level->getBlock($this->temporalVector->setComponents($this->x, $this->y - 1, $this->z));
 
 			if($bottomBlock->canBeFlowedInto() or $bottomBlock instanceof Liquid){
-				if($this instanceof FlowingLava and $bottomBlock instanceof FlowingWater){
+				if($this instanceof Lava and $bottomBlock instanceof Water){
 					$this->getLevel()->setBlock($bottomBlock, Block::get(Item::STONE), true);
 					return;
 				}
 
 				if($decay >= 8){
 					$this->getLevel()->setBlock($bottomBlock, Block::get($this->id, $decay), true);
-					$this->getLevel()->scheduleDelayedBlockUpdate($bottomBlock, $this->tickRate());
+					$this->getLevel()->scheduleUpdate($bottomBlock, $this->tickRate());
 				}else{
 					$this->getLevel()->setBlock($bottomBlock, Block::get($this->id, $decay + 8), true);
-					$this->getLevel()->scheduleDelayedBlockUpdate($bottomBlock, $this->tickRate());
+					$this->getLevel()->scheduleUpdate($bottomBlock, $this->tickRate());
 				}
 			}elseif($decay >= 0 and ($decay === 0 or !$bottomBlock->canBeFlowedInto())){
 				$flags = $this->getOptimalFlowDirections();
@@ -310,7 +310,7 @@ abstract class Liquid extends Transparent{
 			}
 
 			$this->getLevel()->setBlock($block, Block::get($this->getId(), $newFlowDecay), true);
-			$this->getLevel()->scheduleDelayedBlockUpdate($block, $this->tickRate());
+			$this->getLevel()->scheduleUpdate($block, $this->tickRate());
 		}
 	}
 
@@ -430,10 +430,10 @@ abstract class Liquid extends Transparent{
 	}
 
 	private function checkForHarden(){
-		if($this instanceof FlowingLava){
+		if($this instanceof Lava){
 			$colliding = false;
 			for($side = 0; $side <= 5 and !$colliding; ++$side){
-				$colliding = $this->getSide($side) instanceof FlowingWater;
+				$colliding = $this->getSide($side) instanceof Water;
 			}
 
 			if($colliding){
