@@ -250,7 +250,10 @@ class Level implements ChunkManager, Metadatable{
 		Block::BEETROOT_BLOCK => Beetroot::class,
 		Block::NETHER_WART_PLANT => NetherWartPlant::class
 	];
-
+	
+	/** @var Weather */
+	private $weather;
+	
 	/** @var LevelTimings */
 	public $timings;
 
@@ -311,6 +314,13 @@ class Level implements ChunkManager, Metadatable{
 	}
 
 	/**
+	 * @return Weather
+	 */
+	public function getWeather(){
+		return $this->weather;
+	}
+	
+	/**
 	 * Init the default level data
 	 *
 	 * @param Server $server
@@ -364,6 +374,9 @@ class Level implements ChunkManager, Metadatable{
 		$this->temporalPosition = new Position(0, 0, 0, $this);
 		$this->temporalVector = new Vector3(0, 0, 0);
 		$this->tickRate = 1;
+		$this->weather = new Weather($this, 0);
+		WeatherManager::registerLevel($this);
+		$this->weather->setCanCalculate(true);
 	}
 
 	public function getTickRate() : int{
@@ -535,8 +548,9 @@ class Level implements ChunkManager, Metadatable{
 		}
 
 		if($this === $defaultLevel){
-			$this->server->setDefaultLevel(null);
-		}
+	        $this->server->setDefaultLevel(null);
+			
+		if($this->weather != null) WeatherManager::unregisterLevel($this);
 
 		$this->close();
 
@@ -665,7 +679,9 @@ class Level implements ChunkManager, Metadatable{
 			$this->sendTime();
 			$this->sendTimeTicker = 0;
 		}
-
+		
+		$this->weather->calcWeather($currentTick);
+		
 		$this->unloadChunks();
 
 		//Do block updates
