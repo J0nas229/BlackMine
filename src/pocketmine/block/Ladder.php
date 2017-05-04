@@ -28,7 +28,7 @@ use pocketmine\level\Level;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\Player;
 
-class Ladder extends Flowable{
+class Ladder extends Transparent{
 
 	protected $id = self::LADDER;
 

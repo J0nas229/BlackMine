@@ -22,11 +22,12 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
+use pocketmine\item\TieredTool;
 use pocketmine\item\Tool;
 
 class NetherBrick extends Solid{
 
-	protected $id = self::NETHER_BRICKS;
+	protected $id = self::NETHER_BRICK;
 
 	public function __construct(){
 
@@ -37,7 +38,7 @@ class NetherBrick extends Solid{
 	}
 
 	public function getName(){
-		return "Nether Bricks";
+		return "Nether Brick";
 	}
 
 	public function getHardness(){
@@ -45,9 +46,9 @@ class NetherBrick extends Solid{
 	}
 
 	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
+		if($item->isPickaxe() >= TieredTool::TIER_WOODEN){
 			return [
-				[Item::NETHER_BRICKS, 0, 1],
+				[Item::NETHER_BRICK, 0, 1],
 			];
 		}else{
 			return [];
