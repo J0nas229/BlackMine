@@ -22,6 +22,7 @@
 namespace pocketmine\block;
 
 use pocketmine\item\Item;
+use pocketmine\item\TieredTool;
 use pocketmine\item\Tool;
 
 class StoneBricks extends Solid{
@@ -30,7 +31,7 @@ class StoneBricks extends Solid{
 	const CRACKED = 2;
 	const CHISELED = 3;
 
-	protected $id = self::STONE_BRICKS;
+	protected $id = self::STONE_BRICK;
 
 	public function __construct($meta = 0){
 		$this->meta = $meta;
@@ -55,9 +56,9 @@ class StoneBricks extends Solid{
 	}
 
 	public function getDrops(Item $item){
-		if($item->isPickaxe() >= Tool::TIER_WOODEN){
+		if($item->isPickaxe() >= TieredTool::TIER_WOODEN){
 			return [
-				[Item::STONE_BRICKS, $this->meta & 0x03, 1],
+				[Item::STONE_BRICK, $this->meta & 0x03, 1],
 			];
 		}else{
 			return [];
