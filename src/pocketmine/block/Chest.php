@@ -41,6 +41,10 @@ class Chest extends Transparent{
 		$this->meta = $meta;
 	}
 
+	public function canBeActivated(){
+		return true;
+	}
+
 	public function getHardness(){
 		return 2.5;
 	}
@@ -159,6 +163,7 @@ class Chest extends Transparent{
 					return true;
 				}
 			}
+			if($player->isCreative()) return true;
 
 			$player->addWindow($chest->getInventory());
 		}

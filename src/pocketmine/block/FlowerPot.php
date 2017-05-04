@@ -48,6 +48,10 @@ class FlowerPot extends Flowable{
 		return "Flower Pot Block";
 	}
 
+	public function canBeActivated(): bool{
+		return true;
+	}
+
 	protected function recalculateBoundingBox(){
 		return new AxisAlignedBB(
 			$this->x + 0.3125,
@@ -81,7 +85,7 @@ class FlowerPot extends Flowable{
 			}
 		}
 
-		Tile::createTile(Tile::FLOWER_POT, $this->getLevel(), $nbt);
+		Tile::createTile(Tile::FLOWER_POT, $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), $nbt);
 		return true;
 	}
 

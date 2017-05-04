@@ -1,30 +1,25 @@
 <?php
 
 /*
- *
- *    _______                                _
- *   |__   __|                              | |
- *      | | ___  ___ ___  ___ _ __ __ _  ___| |_
- *      | |/ _ \/ __/ __|/ _ \  __/ _` |/ __| __|
- *      | |  __/\__ \__ \  __/ | | (_| | (__| |_
- *      |_|\___||___/___/\___|_|  \__,_|\___|\__|
- *
- *
+ *   ____  _            _      _       _     _
+ *  |  _ \| |          | |    (_)     | |   | |
+ *  | |_) | |_   _  ___| |     _  __ _| |__ | |_
+ *  |  _ <| | | | |/ _ \ |    | |/ _` | '_ \| __|
+ *  | |_) | | |_| |  __/ |____| | (_| | | | | |_
+ *  |____/|_|\__,_|\___|______|_|\__, |_| |_|\__|
+ *                                __/ |
+ *                               |___/
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author Tessetact Team
- * @link http://www.github.com/TesseractTeam/Tesseract
+ * @author BlueLightJapan Team
  * 
- *
  */
+
  
 namespace pocketmine\block;
-
-
-
 use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\nbt\tag\CompoundTag;
@@ -33,8 +28,6 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\tile\Tile;
 use pocketmine\tile\Beacon as TileBeacon;
-
-
 class Beacon extends Transparent{
  
  	protected $id = self::BEACON;
@@ -102,7 +95,7 @@ class Beacon extends Transparent{
  				Tile::createTile(Tile::BEACON, $this->getLevel(), $nbt);
  			}
 			
-			if($player->isCreative() and $player->getServer()->limitedCreative){
+			if($player->isCreative()){
 				return true;
 			}
  				$player->addWindow($beacon->getInventory());
