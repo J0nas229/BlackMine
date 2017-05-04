@@ -550,6 +550,8 @@ class Level implements ChunkManager, Metadatable{
 		if($this === $defaultLevel){
 	        $this->server->setDefaultLevel(null);
 			
+		}
+		
 		if($this->weather != null) WeatherManager::unregisterLevel($this);
 
 		$this->close();
