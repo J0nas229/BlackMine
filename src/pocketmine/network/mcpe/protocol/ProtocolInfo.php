@@ -3,7 +3,7 @@
 /**
  * Minecraft: PE multiplayer protocol implementation
  */
-namespace pocketmine\network\protocol;
+namespace pocketmine\network\mcpe\protocol;
 
 
 interface ProtocolInfo{
