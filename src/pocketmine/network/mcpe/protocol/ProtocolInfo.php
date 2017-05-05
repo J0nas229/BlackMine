@@ -1,29 +1,9 @@
 <?php
 
-/*
- *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
- * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * @author PocketMine Team
- * @link http://www.pocketmine.net/
- *
- * This file is generated automatically, do not edit it manually.
- *
-*/
-
 /**
  * Minecraft: PE multiplayer protocol implementation
  */
-namespace pocketmine\network\mcpe\protocol;
+namespace pocketmine\network\protocol;
 
 
 interface ProtocolInfo{
@@ -31,9 +11,10 @@ interface ProtocolInfo{
 	/**
 	 * Actual Minecraft: PE protocol version
 	 */
-	const CURRENT_PROTOCOL = 107;
-	const MINECRAFT_VERSION = 'v1.0.7.0';
-	const MINECRAFT_VERSION_NETWORK = '1.0.7.0';
+	const CURRENT_PROTOCOL = 108;
+	const ACCEPTED_PROTOCOLS = [107,108];	
+	const MINECRAFT_VERSION = ["v1.0.7","v1.0.8"];
+	const MINECRAFT_VERSION_NETWORK = "1.0.8";
 
 	const LOGIN_PACKET = 0x01;
 	const PLAY_STATUS_PACKET = 0x02;
@@ -42,7 +23,7 @@ interface ProtocolInfo{
 	const DISCONNECT_PACKET = 0x05;
 	const BATCH_PACKET = 0x06;
 	const RESOURCE_PACKS_INFO_PACKET = 0x07;
-	const RESOURCE_PACK_STACK_PACKET = 0x08;
+	const RESOURCE_PACK_STACK_PACKET = 0x08; //ResourcePacksStackPacket
 	const RESOURCE_PACK_CLIENT_RESPONSE_PACKET = 0x09;
 	const TEXT_PACKET = 0x0a;
 	const SET_TIME_PACKET = 0x0b;
@@ -99,14 +80,14 @@ interface ProtocolInfo{
 	const CHANGE_DIMENSION_PACKET = 0x3e;
 	const SET_PLAYER_GAME_TYPE_PACKET = 0x3f;
 	const PLAYER_LIST_PACKET = 0x40;
-	const EVENT_PACKET = 0x41;
+	const EVENT_PACKET = 0x41; //TelemetryEventPacket
 	const SPAWN_EXPERIENCE_ORB_PACKET = 0x42;
-	const CLIENTBOUND_MAP_ITEM_DATA_PACKET = 0x43;
+	const CLIENTBOUND_MAP_ITEM_DATA_PACKET = 0x43; //MapItemDataPacket
 	const MAP_INFO_REQUEST_PACKET = 0x44;
 	const REQUEST_CHUNK_RADIUS_PACKET = 0x45;
 	const CHUNK_RADIUS_UPDATED_PACKET = 0x46;
 	const ITEM_FRAME_DROP_ITEM_PACKET = 0x47;
-	const REPLACE_ITEM_IN_SLOT_PACKET = 0x48;
+	const REPLACE_ITEM_IN_SLOT_PACKET = 0x48; //ReplaceSelectedItemPacket
 	const GAME_RULES_CHANGED_PACKET = 0x49;
 	const CAMERA_PACKET = 0x4a;
 	const ADD_ITEM_PACKET = 0x4b;
