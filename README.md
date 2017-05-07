@@ -12,6 +12,12 @@ BlackMine is for all. Anyone can copy-paste are code and other features.
 - We are a edited version of pmmp. We have edited their generators to our version and have improved the performance
 - You can download .phar from Circle CI. Tab to latest build, tap to artifacts selection, tap to DevTools and download BlackMine.phar
 
+### Demo Server <=> NOT ALL TIME ONLINE. always on experimantel
+
+Below is the ImagicalMine demo server details, you can see what features ImagicalMine has before downloading it.
+
+IP: nightcorepe.tk
+Port: 19132
 
 [![CircleCI](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master.svg?style=svg)](https://circleci.com/gh/BlackLight-NL/BlackMine/tree/master)
 
