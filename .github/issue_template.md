@@ -1,4 +1,4 @@
-{Problem description}
+Problem description
 
 Steps to reproduce the issue
 
