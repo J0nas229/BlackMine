@@ -1,4 +1,4 @@
-Problem description
+{Problem description}
 
 Steps to reproduce the issue
 
@@ -7,7 +7,7 @@ OS and versions
 BlackMine:
 PHP:
 Server OS:
-Game version:
+Game version:1.0.8
 Server host:
 
 
