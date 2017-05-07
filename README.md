@@ -11,6 +11,7 @@ BlackMine is for all. Anyone can copy-paste are code and other features.
 
 - We are a edited version of pmmp. We have edited their generators to our version and have improved the performance
 - You can download .phar from Circle CI. Tab to latest build, tap to artifacts selection, tap to DevTools and download BlackMine.phar
+- We now have a discord come and join here : https://discord.gg/9pTmemr
 
 ### Demo Server <=> NOT ALL TIME ONLINE. always on experimantel
 
