@@ -4,7 +4,7 @@ Steps to reproduce the issue
 
 OS and versions
 
-Tesseract:
+BlackMine:
 PHP:
 Server OS:
 Game version:
