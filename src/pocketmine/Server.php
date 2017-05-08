@@ -1628,17 +1628,17 @@ class Server{
 			}
 
 			$lang = $this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE);
-			if(file_exists($this->filePath . "src/pocketmine/resources/tesseract_$lang.yml")){
-				$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/tesseract_$lang.yml");
+			if(file_exists($this->filePath . "src/pocketmine/resources/BlackMine_$lang.yml")){
+				$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/BlackMine_$lang.yml");
 			}else{
-				$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/tesseract_eng.yml");
+				$content = file_get_contents($file = $this->filePath . "src/pocketmine/resources/BlackMine_eng.yml");
 			}
 
-			if(!file_exists($this->dataPath . "tesseract.yml")){
-				@file_put_contents($this->dataPath . "tesseract.yml", $content);
+			if(!file_exists($this->dataPath . "BlackMine.yml")){
+				@file_put_contents($this->dataPath . "BlackMine.yml", $content);
 			}
 			$internelConfig = new Config($file, Config::YAML, []);
-			$this->advancedConfig = new Config($this->dataPath . "tesseract.yml", Config::YAML, []);
+			$this->advancedConfig = new Config($this->dataPath . "BlackMine.yml", Config::YAML, []);
 			$cfgVer = $this->getAdvancedProperty("config.version", 0, $internelConfig);
 			$advVer = $this->getAdvancedProperty("config.version", 0);
 
