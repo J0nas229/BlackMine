@@ -1455,7 +1455,7 @@ class Server{
 			"retryTimes" => $this->getAdvancedProperty("dserver.retry-times", 3),
 			"serverList" => explode(";", $this->getAdvancedProperty("dserver.server-list", ""))
 		];
-		$this->getLogger()->setWrite(!$this->getAdvancedProperty("server.disable-log", false));
+		//$this->getLogger()->setWrite(!$this->getAdvancedProperty("server.disable-log", false));
 		$this->asyncChunkRequest = $this->getAdvancedProperty("server.async-chunk-request", true);
 		$this->limitedCreative = $this->getAdvancedProperty("server.limited-creative", true);
 		$this->chunkRadius = $this->getAdvancedProperty("player.chunk-radius", -1);
