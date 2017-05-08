@@ -42,7 +42,7 @@ use pocketmine\inventory\CraftingManager;
 use pocketmine\inventory\InventoryType;
 use pocketmine\inventory\Recipe;
 use pocketmine\item\enchantment\Enchantment;
-use pocketmine\item\enchantment\EnchantmentLevelTable;
+//use pocketmine\item\enchantment\EnchantmentLevelTable;
 use pocketmine\item\Item;
 use pocketmine\lang\BaseLang;
 use pocketmine\level\format\io\region\Anvil;
@@ -95,7 +95,7 @@ use pocketmine\scheduler\SendUsageTask;
 use pocketmine\scheduler\ServerScheduler;
 use pocketmine\tile\Tile;
 use pocketmine\utils\Binary;
-use pocketmine\utils\Color;
+//use pocketmine\utils\Color;
 use pocketmine\utils\Config;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\ServerException;
@@ -1739,8 +1739,8 @@ class Server{
 			Biome::init();
 			Effect::init();
 			Attribute::init();
-			EnchantmentLevelTable::init();
-			Color::init();
+			//EnchantmentLevelTable::init();
+			//Color::init();
 			$this->craftingManager = new CraftingManager();
 
 			$this->pluginManager = new PluginManager($this, $this->commandMap);
