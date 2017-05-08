@@ -7,7 +7,7 @@ OS and versions
 BlackMine:
 PHP:
 Server OS:
-Game version:1.0.8
+Game version:
 Server host:
 
 
