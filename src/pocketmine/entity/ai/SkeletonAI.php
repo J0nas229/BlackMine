@@ -9,7 +9,7 @@ use pocketmine\math\Vector2;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Skeleton;
 use pocketmine\scheduler\CallbackTask;
-use pocketmine\network\protocol\SetEntityMotionPacket;
+use pocketmine\network\mcpe\protocol\SetEntityMotionPacket;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\nbt\NBT;
@@ -21,6 +21,7 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\item\Item;
+use pocketmine\level\Level;
 
 class SkeletonAI{
 
@@ -504,7 +505,7 @@ class SkeletonAI{
 									   
 								 //$ev = new EntityShootBowEvent($this, $bow, Entity::createEntity("Arrow", $this->chunk, $nbt, $this), $f);
 									//ToDo: Make Strays shoot arrows of slowness
-									$ev = new EntityShootBowEvent($zo, new ITEM(262,0), Entity::createEntity("Arrow", $chunk, $nbt2, $zo), $f);
+									$ev = new EntityShootBowEvent($zo, new ITEM(262,0), Entity::createEntity("Arrow", $level, $nbt2, $zo), $f);
 									   
 									}
 									
