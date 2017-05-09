@@ -63,13 +63,13 @@ class Effect{
 		$config = new Config(\pocketmine\PATH . "src/pocketmine/resources/effects.json", Config::JSON, []);
 
 		foreach($config->getAll() as $name => $data){
-			$color = hexdec(substr($data["color"], 3));
+			$color = hexdec($data["color"]);
 			$r = ($color >> 16) & 0xff;
 			$g = ($color >> 8) & 0xff;
 			$b = $color & 0xff;
 			self::registerEffect($name, new Effect(
 				$data["id"],
-				$data["name"],
+				"%" . $data["name"],
 				$r,
 				$g,
 				$b,
@@ -155,14 +155,6 @@ class Effect{
 	 * @return string
 	 */
 	public function getName(){
-		return "%potion." . $this->getBaseLanguageName();
-	}
-
-	/**
-	 * Returns the base language key for this effect type. Used to translate names for potions and tipped arrows.
-	 * @return string
-	 */
-	public function getBaseLanguageName() : string{
 		return $this->name;
 	}
 
@@ -231,8 +223,16 @@ class Effect{
 	}
 
 	/**
+	 * Returns the level of this effect, which is always one higher than the amplifier.
+	 *
+	 * @return int
+	 */
+	public function getEffectLevel() : int{
+		return $this->amplifier + 1;
+	}
+
+	/**
 	 * Returns the amplifier of this effect.
-	 * TODO: fix mess of amplifier used instead of level for effect calculation.
 	 *
 	 * @return int
 	 */
@@ -345,19 +345,19 @@ class Effect{
 
 			case Effect::HUNGER:
 				if($entity instanceof Human){
-					$entity->exhaust(0.5 * $this->amplifier, PlayerExhaustEvent::CAUSE_POTION);
+					$entity->exhaust(0.5 * $this->getEffectLevel(), PlayerExhaustEvent::CAUSE_POTION);
 				}
 				break;
 			case Effect::INSTANT_HEALTH:
 				//TODO: add particles (witch spell)
 				if($entity->getHealth() < $entity->getMaxHealth()){
-					$amount = 2 * (2 ** (($this->amplifier + 1) % 32));
+					$amount = 2 * (2 ** ($this->getEffectLevel() % 32));
 					$entity->heal($amount, new EntityRegainHealthEvent($entity, $amount, EntityRegainHealthEvent::CAUSE_MAGIC));
 				}
 				break;
 			case Effect::INSTANT_DAMAGE:
 				//TODO: add particles (witch spell)
-				$amount = 2 * (2 ** (($this->amplifier + 1) % 32));
+				$amount = 2 * (2 ** ($this->getEffectLevel() % 32));
 				$entity->attack($amount, new EntityDamageEvent($entity, EntityDamageEvent::CAUSE_MAGIC, $amount));
 				break;
 		}
@@ -418,42 +418,41 @@ class Effect{
 			case Effect::SPEED:
 				$attr = $entity->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
 				if($ev->willModify() and $oldEffect !== null){
-					$speed = $attr->getValue() / (1 + 0.2 * $oldEffect->getAmplifier());
+					$speed = $attr->getValue() / (1 + 0.2 * $oldEffect->getEffectLevel());
 				}else{
 					$speed = $attr->getValue();
 				}
-				$speed *= (1 + 0.2 * $this->amplifier);
+				$speed *= (1 + 0.2 * $this->getEffectLevel());
 				$attr->setValue($speed);
 				break;
 			case Effect::SLOWNESS:
 				$attr = $entity->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
 				if($ev->willModify() and $oldEffect !== null){
-					$speed = $attr->getValue() / (1 - 0.15 * $oldEffect->getAmplifier());
+					$speed = $attr->getValue() / (1 - 0.15 * $oldEffect->getEffectLevel());
 				}else{
 					$speed = $attr->getValue();
 				}
-				$speed *= (1 - 0.15 * $this->amplifier);
+				$speed *= (1 - 0.15 * $this->getEffectLevel());
 				$attr->setValue($speed, true);
 				break;
 
 			case Effect::HEALTH_BOOST:
 				$attr = $entity->getAttributeMap()->getAttribute(Attribute::HEALTH);
 				if($ev->willModify() and $oldEffect !== null){
-					$max = $attr->getMaxValue() - (4 * ($oldEffect->getAmplifier() + 1));
+					$max = $attr->getMaxValue() - (4 * $oldEffect->getEffectLevel());
 				}else{
 					$max = $attr->getMaxValue();
 				}
 
-				$max += (4 * ($this->amplifier + 1));
+				$max += (4 * $this->getEffectLevel());
 				$attr->setMaxValue($max);
 				break;
 			case Effect::ABSORPTION:
-				$new = (4 * ($this->amplifier + 1));
+				$new = (4 * $this->getEffectLevel());
 				if($new > $entity->getAbsorption()){
 					$entity->setAbsorption($new);
 				}
 				break;
-
 		}
 	}
 
@@ -483,39 +482,19 @@ class Effect{
 				break;
 			case Effect::SPEED:
 				$attr = $entity->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
-				$attr->setValue($attr->getValue() / (1 + 0.2 * $this->amplifier));
+				$attr->setValue($attr->getValue() / (1 + 0.2 * $this->getEffectLevel()));
 				break;
 			case Effect::SLOWNESS:
 				$attr = $entity->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
-				$attr->setValue($attr->getValue() / (1 - 0.15 * $this->amplifier));
+				$attr->setValue($attr->getValue() / (1 - 0.15 * $this->getEffectLevel()));
 				break;
 			case Effect::HEALTH_BOOST:
 				$attr = $entity->getAttributeMap()->getAttribute(Attribute::HEALTH);
-				$attr->setMaxValue($attr->getMaxValue() - (4 * ($this->amplifier + 1)));
+				$attr->setMaxValue($attr->getMaxValue() - 4 * $this->getEffectLevel());
 				break;
 			case Effect::ABSORPTION:
 				$entity->setAbsorption(0);
 				break;
 		}
-	}
-
-	/**
-	 * Deserializes JSON data into an effect.
-	 *
-	 * TODO: add a serialization method (need effect names)
-	 *
-	 * @param array $data
-	 *
-	 * @return Effect|null
-	 */
-	public static function fromJsonData(array $data){
-		$effect = Effect::getEffectByName($data["name"] ?? "");
-		if($effect instanceof Effect){
-			$effect->setDuration($data["duration"] * 20); //Stored in seconds, but the method takes ticks >_<
-			$effect->setAmplifier($data["amplifier"]);
-			return $effect;
-		}
-
-		return null;
 	}
 }
