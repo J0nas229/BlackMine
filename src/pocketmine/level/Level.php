@@ -40,7 +40,6 @@ use pocketmine\block\Leaves;
 use pocketmine\block\Leaves2;
 use pocketmine\block\MelonStem;
 use pocketmine\block\Mycelium;
-use pocketmine\block\NetherWartPlant;
 use pocketmine\block\Potato;
 use pocketmine\block\PumpkinStem;
 use pocketmine\block\RedMushroom;
@@ -107,11 +106,6 @@ use pocketmine\tile\Tile;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Random;
 use pocketmine\utils\ReversePriorityQueue;
-use pocketmine\level\weather\Weather; 
-use pocketmine\level\weather\WeatherManager;
-use pocketmine\entity\Lightning;// <- coming soon
-use pocketmine\entity\XPOrb;// <- coming soon
-
 
 #include <rules/Level.h>
 
@@ -253,12 +247,8 @@ class Level implements ChunkManager, Metadatable{
 		Block::LEAVES2 => Leaves2::class,
 		Block::FIRE => Fire::class,
 		Block::BEETROOT_BLOCK => Beetroot::class,
-		Block::NETHER_WART_PLANT => NetherWartPlant::class
 	];
-	
-	/** @var Weather */
-	private $weather;
-	
+
 	/** @var LevelTimings */
 	public $timings;
 
@@ -319,13 +309,6 @@ class Level implements ChunkManager, Metadatable{
 	}
 
 	/**
-	 * @return Weather
-	 */
-	public function getWeather(){
-		return $this->weather;
-	}
-	
-	/**
 	 * Init the default level data
 	 *
 	 * @param Server $server
@@ -379,9 +362,6 @@ class Level implements ChunkManager, Metadatable{
 		$this->temporalPosition = new Position(0, 0, 0, $this);
 		$this->temporalVector = new Vector3(0, 0, 0);
 		$this->tickRate = 1;
-		$this->weather = new Weather($this, 0);
-		WeatherManager::registerLevel($this);
-		$this->weather->setCanCalculate(true);
 	}
 
 	public function getTickRate() : int{
@@ -553,11 +533,8 @@ class Level implements ChunkManager, Metadatable{
 		}
 
 		if($this === $defaultLevel){
-	        $this->server->setDefaultLevel(null);
-			
+			$this->server->setDefaultLevel(null);
 		}
-		
-		if($this->weather != null) WeatherManager::unregisterLevel($this);
 
 		$this->close();
 
@@ -686,9 +663,7 @@ class Level implements ChunkManager, Metadatable{
 			$this->sendTime();
 			$this->sendTimeTicker = 0;
 		}
-		
-		$this->weather->calcWeather($currentTick);
-		
+
 		$this->unloadChunks();
 
 		//Do block updates
@@ -1626,11 +1601,11 @@ class Level implements ChunkManager, Metadatable{
 			}
 
 			if($player->hasEffect(Effect::HASTE)){
-				$breakTime *= 1 - (0.2 * ($player->getEffect(Effect::HASTE)->getAmplifier() + 1));
+				$breakTime *= 1 - (0.2 * $player->getEffect(Effect::HASTE)->getEffectLevel());
 			}
 
 			if($player->hasEffect(Effect::MINING_FATIGUE)){
-				$breakTime *= 1 + (0.3 * ($player->getEffect(Effect::MINING_FATIGUE)->getAmplifier() + 1));
+				$breakTime *= 1 + (0.3 * $player->getEffect(Effect::MINING_FATIGUE)->getEffectLevel());
 			}
 
 			$breakTime -= 1; //1 tick compensation
@@ -1755,21 +1730,21 @@ class Level implements ChunkManager, Metadatable{
 			$this->server->getPluginManager()->callEvent($ev);
 			if(!$ev->isCancelled()){
 				$target->onUpdate(self::BLOCK_UPDATE_TOUCH);
-				if(!$player->isSneaking() and $target->onActivate($item, $player) === true){
+				if(!$player->isSneaking() and $target->canBeActivated() === true and $target->onActivate($item, $player) === true){
 					return true;
 				}
 
-				if(!$player->isSneaking() and $item->onActivate($this, $player, $block, $target, $face, $fx, $fy, $fz)){
+				if(!$player->isSneaking() and $item->canBeActivated() and $item->onActivate($this, $player, $block, $target, $face, $fx, $fy, $fz)){
 					if($item->getCount() <= 0){
 						$item = Item::get(Item::AIR, 0, 0);
-					}
 
-					return true;
+						return true;
+					}
 				}
 			}else{
 				return false;
 			}
-		}elseif($target->onActivate($item, $player) === true){
+		}elseif($target->canBeActivated() === true and $target->onActivate($item, $player) === true){
 			return true;
 		}
 
@@ -1780,8 +1755,7 @@ class Level implements ChunkManager, Metadatable{
 			return false;
 		}
 
-		//TODO: remove this hack
-		if(!($block->canBeReplaced() === true or ($hand->getId() === Item::WOODEN_SLAB and $block->getId() === Item::WOODEN_SLAB) or ($hand->getId() === Item::STONE_SLAB and $block->getId() === Item::STONE_SLAB))){
+		if(!($block->canBeReplaced() === true or ($hand->getId() === Item::WOOD_SLAB and $block->getId() === Item::WOOD_SLAB) or ($hand->getId() === Item::SLAB and $block->getId() === Item::SLAB))){
 			return false;
 		}
 
