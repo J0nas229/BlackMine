@@ -320,7 +320,7 @@ class Server{
 	 * @return string
 	 */
 	public function getName() : string{
-		return "GenisysPro";
+		return "BlackMine";
 	}
 
 	/**
@@ -1719,7 +1719,6 @@ $this->logger->info("
  §b-- Loaded: Properties and Configuration --
  §bDate: $date
  §bVersion: $version Codename: $code
- §bMCPE: $mcpe Protocol: $protocol
  §bIP: $ip Port: $port
  §bQuery: $query
  §b------------------------------------------
