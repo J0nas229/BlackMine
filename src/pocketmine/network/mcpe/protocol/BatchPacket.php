@@ -48,7 +48,7 @@ class BatchPacket extends DataPacket{
 
 	public function encode(){
 		$this->reset();
-		assert($this->compressed);
+		//assert($this->compressed);
 		$this->put($this->payload);
 	}
 
