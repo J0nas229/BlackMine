@@ -184,7 +184,6 @@ use pocketmine\network\mcpe\protocol\StopSoundPacket;
 use pocketmine\network\mcpe\protocol\TakeItemEntityPacket;
 use pocketmine\network\mcpe\protocol\TextPacket;
 use pocketmine\network\mcpe\protocol\TransferPacket;
-use pocketmine\network\mcpe\protocol\UnknownPacket;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\network\mcpe\protocol\UpdateBlockPacket;
 use pocketmine\network\mcpe\protocol\UpdateTradePacket;
@@ -211,12 +210,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	const ADVENTURE = 2;
 	const SPECTATOR = 3;
 	const VIEW = Player::SPECTATOR;
-	
-	const CRAFTING_SMALL = 0;
-	const CRAFTING_BIG = 1;
-	const CRAFTING_ANVIL = 2;
-	const CRAFTING_ENCHANT = 3;
-
 
 	/**
 	 * Checks a supplied username and checks it is valid.
@@ -728,7 +721,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$this->server->updatePlayerListData($this->getUniqueId(), $this->getId(), $this->getDisplayName(), $skinId, $str);
 		}
 	}
-//getUpdater
+
 	/**
 	 * Gets the player IP address
 	 *
@@ -940,9 +933,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 		$this->spawnToAll();
 
-		//if($this->server->getUpdater()->hasUpdate() and $this->hasPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE)){
-			//$this->server->getUpdater()->showPlayerUpdate($this);
-		//}
+		if($this->server->getUpdater()->hasUpdate() and $this->hasPermission(Server::BROADCAST_CHANNEL_ADMINISTRATIVE)){
+			$this->server->getUpdater()->showPlayerUpdate($this);
+		}
 
 		if($this->getHealth() <= 0){
 			$pk = new RespawnPacket();
@@ -1551,7 +1544,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		$delta = pow($this->lastX - $to->x, 2) + pow($this->lastY - $to->y, 2) + pow($this->lastZ - $to->z, 2);
 		$deltaAngle = abs($this->lastYaw - $to->yaw) + abs($this->lastPitch - $to->pitch);
 
-		if(!$revert and ($delta > (1 / 16) or $deltaAngle > 10)){
+		if(!$revert and ($delta > 0.0001 or $deltaAngle > 1.0)){
 
 			$isFirst = ($this->lastX === null or $this->lastY === null or $this->lastZ === null);
 
@@ -1574,7 +1567,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 						$this->level->addEntityMovement($this->x >> 4, $this->z >> 4, $this->getId(), $this->x, $this->y + $this->getEyeHeight(), $this->z, $this->yaw, $this->pitch, $this->yaw);
 
 						$distance = $from->distance($to);
-
 						//TODO: check swimming (adds 0.015 exhaustion in MCPE)
 						if($this->isSprinting()){
 							$this->exhaust(0.1 * $distance, PlayerExhaustEvent::CAUSE_SPRINTING);
@@ -3247,7 +3239,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 		$tile = $this->level->getTile($this->temporalVector->setComponents($packet->x, $packet->y, $packet->z));
 		if($tile instanceof ItemFrame){
+			$ev = new PlayerInteractEvent($this, $this->inventory->getItemInHand(), $tile->getBlock(), 5 - $tile->getBlock()->getDamage(), PlayerInteractEvent::LEFT_CLICK_BLOCK);
+			$this->server->getPluginManager()->callEvent($ev);
+
 			if($this->isSpectator()){
+				$ev->setCancelled();
+			}
+
+			if($ev->isCancelled()){
 				$tile->spawnTo($this);
 				return true;
 			}
