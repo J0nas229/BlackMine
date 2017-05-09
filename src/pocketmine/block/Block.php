@@ -26,7 +26,6 @@ namespace pocketmine\block;
 
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
-use pocketmine\item\TieredTool;
 use pocketmine\item\Tool;
 use pocketmine\level\Level;
 use pocketmine\level\MovingObjectPosition;
@@ -55,6 +54,12 @@ class Block extends Position implements BlockIds, Metadatable{
 	public static $hardness = null;
 	/** @var \SplFixedArray */
 	public static $transparent = null;
+
+	protected $id;
+	protected $meta = 0;
+
+	/** @var AxisAlignedBB */
+	public $boundingBox = null;
 
 	public static function init(){
 		if(self::$list === null){
@@ -127,11 +132,6 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::BURNING_FURNACE] = BurningFurnace::class;
 			self::$list[self::SIGN_POST] = SignPost::class;
 			self::$list[self::WOOD_DOOR_BLOCK] = WoodDoor::class;
-			self::$list[self::SPRUCE_DOOR_BLOCK] = SpruceDoor::class;
-			self::$list[self::BIRCH_DOOR_BLOCK] = BirchDoor::class;
-			self::$list[self::JUNGLE_DOOR_BLOCK] = JungleDoor::class;
-			self::$list[self::ACACIA_DOOR_BLOCK] = AcaciaDoor::class;
-			self::$list[self::DARK_OAK_DOOR_BLOCK] = DarkOakDoor::class;
 			self::$list[self::LADDER] = Ladder::class;
 			self::$list[self::RAIL] = Rail::class;
 
@@ -185,22 +185,18 @@ class Block extends Position implements BlockIds, Metadatable{
 
 			self::$list[self::ENCHANTING_TABLE] = EnchantingTable::class;
 			self::$list[self::BREWING_STAND_BLOCK] = BrewingStand::class;
-			self::$list[self::END_PORTAL] = EndPortal::class;
 			self::$list[self::END_PORTAL_FRAME] = EndPortalFrame::class;
 			self::$list[self::END_STONE] = EndStone::class;
-			self::$list[self::END_STONE_BRICKS] = EndStoneBricks::class;
 			self::$list[self::REDSTONE_LAMP] = RedstoneLamp::class;
 			self::$list[self::LIT_REDSTONE_LAMP] = LitRedstoneLamp::class;
 			self::$list[self::SANDSTONE_STAIRS] = SandstoneStairs::class;
 			self::$list[self::EMERALD_ORE] = EmeraldOre::class;
-			self::$list[self::ENDER_CHEST] = EnderChest::class;
 			self::$list[self::TRIPWIRE_HOOK] = TripwireHook::class;
 			self::$list[self::TRIPWIRE] = Tripwire::class;
 			self::$list[self::EMERALD_BLOCK] = Emerald::class;
 			self::$list[self::SPRUCE_WOOD_STAIRS] = SpruceWoodStairs::class;
 			self::$list[self::BIRCH_WOOD_STAIRS] = BirchWoodStairs::class;
 			self::$list[self::JUNGLE_WOOD_STAIRS] = JungleWoodStairs::class;
-			self::$list[self::BEACON] = Beacon::class;
 			self::$list[self::STONE_WALL] = StoneWall::class;
 			self::$list[self::FLOWER_POT_BLOCK] = FlowerPot::class;
 			self::$list[self::CARROT_BLOCK] = Carrot::class;
@@ -215,7 +211,6 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::DAYLIGHT_SENSOR] = DaylightSensor::class;
 			self::$list[self::REDSTONE_BLOCK] = Redstone::class;
 
-			self::$list[self::COMMAND_BLOCK] = CommandBlock::class;
 			self::$list[self::QUARTZ_BLOCK] = Quartz::class;
 			self::$list[self::QUARTZ_STAIRS] = QuartzStairs::class;
 			self::$list[self::DOUBLE_WOOD_SLAB] = DoubleWoodSlab::class;
@@ -251,52 +246,40 @@ class Block extends Position implements BlockIds, Metadatable{
 			self::$list[self::STONECUTTER] = Stonecutter::class;
 			self::$list[self::GLOWING_OBSIDIAN] = GlowingObsidian::class;
 
-			self::$list[self::HOPPER_BLOCK] = Hopper::class;
-		        self::$list[self::DRAGON_EGG] = DragonEgg::class;
-			self::$list[self::CHORUS_FLOWER] = ChorusFlower::class;
- 			self::$list[self::CHORUS_PLANT] = ChorusPlant::class;
-			self::$list[self::INVISIBLE_BEDROCK] = InvisibleBedrock::class;
-						
-			foreach(self::$list as $id => $block){
-				if($block === null){
-					self::registerBlock(new UnknownBlock($id));
-				}
-			}
-		}
-	}
+			foreach(self::$list as $id => $class){
+				if($class !== null){
+					/** @var Block $block */
+					$block = new $class();
 
-	/**
-	 * Adds a Block type to the index. Plugins may use this method to register new block types, or override existing ones.
-	 * @since API 3.0.0
-	 *
-	 * @param Block $block
-	 */
-	public static function registerBlock(Block $block){
-		self::$list[$block->id] = $block;
-		for($data = 0; $data < 16; ++$data){
-			$b = clone $block;
-			$b->meta = $data;
-			self::$fullList[($block->id << 4) | $data] = $b;
-		}
+					for($data = 0; $data < 16; ++$data){
+						self::$fullList[($id << 4) | $data] = new $class($data);
+					}
 
-		self::$solid[$block->id] = $block->isSolid();
-		self::$transparent[$block->id] = $block->isTransparent();
-		self::$hardness[$block->id] = $block->getHardness();
-		self::$light[$block->id] = $block->getLightLevel();
+					self::$solid[$id] = $block->isSolid();
+					self::$transparent[$id] = $block->isTransparent();
+					self::$hardness[$id] = $block->getHardness();
+					self::$light[$id] = $block->getLightLevel();
 
-		//TODO: remove this mess and add an OOP API for light-filtering
-		if($block->isSolid()){
-			if($block->isTransparent()){
-				if($block instanceof Liquid or $block instanceof Ice){
-					self::$lightFilter[$block->id] = 2;
+					if($block->isSolid()){
+						if($block->isTransparent()){
+							if($block instanceof Liquid or $block instanceof Ice){
+								self::$lightFilter[$id] = 2;
+							}else{
+								self::$lightFilter[$id] = 1;
+							}
+						}else{
+							self::$lightFilter[$id] = 15;
+						}
+					}else{
+						self::$lightFilter[$id] = 1;
+					}
 				}else{
-					self::$lightFilter[$block->id] = 1;
+					self::$lightFilter[$id] = 1;
+					for($data = 0; $data < 16; ++$data){
+						self::$fullList[($id << 4) | $data] = new UnknownBlock($id, $data);
+					}
 				}
-			}else{
-				self::$lightFilter[$block->id] = 15;
 			}
-		}else{
-			self::$lightFilter[$block->id] = 1;
 		}
 	}
 
@@ -309,7 +292,12 @@ class Block extends Position implements BlockIds, Metadatable{
 	 */
 	public static function get($id, $meta = 0, Position $pos = null){
 		try{
-			$block = clone self::$fullList[($id << 4) | $meta];
+			$block = self::$list[$id];
+			if($block !== null){
+				$block = new $block($meta);
+			}else{
+				$block = new UnknownBlock($id, $meta);
+			}
 		}catch(\RuntimeException $e){
 			$block = new UnknownBlock($id, $meta);
 		}
@@ -323,15 +311,6 @@ class Block extends Position implements BlockIds, Metadatable{
 
 		return $block;
 	}
-
-	protected $fallbackName = "Unknown";
-
-	protected $id;
-	protected $meta = 0;
-
-	/** @var AxisAlignedBB */
-	public $boundingBox = null;
-
 
 	/**
 	 * @param int $id
@@ -406,14 +385,14 @@ class Block extends Position implements BlockIds, Metadatable{
 	}
 
 	/**
-	 * @return float
+	 * @return int
 	 */
 	public function getHardness(){
 		return 10;
 	}
 
 	/**
-	 * @return float
+	 * @return int
 	 */
 	public function getResistance(){
 		return $this->getHardness() * 5;
@@ -476,6 +455,15 @@ class Block extends Position implements BlockIds, Metadatable{
 		return false;
 	}
 
+	/**
+	 * AKA: Block->isActivable
+	 *
+	 * @return bool
+	 */
+	public function canBeActivated(){
+		return false;
+	}
+
 	public function hasEntityCollision(){
 		return false;
 	}
@@ -488,20 +476,7 @@ class Block extends Position implements BlockIds, Metadatable{
 	 * @return string
 	 */
 	public function getName(){
-		return $this->fallbackName;
-	}
-
-	/**
-	 * Sets the fallback English name of the block.
-	 * @since API 3.0.0
-	 *
-	 * @param string $name
-	 * @return $this
-	 */
-	public function setName(string $name){
-		$this->fallbackName = $name;
-
-		return $this;
+		return "Unknown";
 	}
 
 	/**
@@ -509,18 +484,6 @@ class Block extends Position implements BlockIds, Metadatable{
 	 */
 	final public function getId(){
 		return $this->id;
-	}
-
-	/**
-	 * Sets the ID of the block type.
-	 * @internal
-	 *
-	 * @param int $id
-	 * @return $this
-	 */
-	final protected function setId(int $id){
-		$this->id = $id;
-		return $this;
 	}
 
 	public function addVelocityToEntity(Entity $entity, Vector3 $vector){
@@ -589,19 +552,19 @@ class Block extends Position implements BlockIds, Metadatable{
 				($this->getToolType() === Tool::TYPE_SHOVEL and ($tier = $item->isShovel()) !== false)
 			){
 				switch($tier){
-					case TieredTool::TIER_WOODEN:
+					case Tool::TIER_WOODEN:
 						$base /= 2;
 						break;
-					case TieredTool::TIER_STONE:
+					case Tool::TIER_STONE:
 						$base /= 4;
 						break;
-					case TieredTool::TIER_IRON:
+					case Tool::TIER_IRON:
 						$base /= 6;
 						break;
-					case TieredTool::TIER_DIAMOND:
+					case Tool::TIER_DIAMOND:
 						$base /= 8;
 						break;
-					case TieredTool::TIER_GOLD:
+					case Tool::TIER_GOLD:
 						$base /= 12;
 						break;
 				}
