@@ -67,9 +67,10 @@ Attention! All version have new biomes added and more changes in biomes and more
  
 ## TODO :
 
+ ● WE ARE PLANNING TO ADD MOB AI!
  ● [All Items](https://github.com/BlackLight-NL/BlackLight/issues/9)
  ● [Fishing](https://github.com/BlackLight-NL/BlackLight/pull/6)
- ● Redstone (need many times)
+ ● https://github.com/NFGamerMCRedstone (need many times)
  
  If you have epic ideas, create an issue and tell us the idea!
 
