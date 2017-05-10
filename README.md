@@ -1,3 +1,5 @@
+![blackmine](https://github.com/BlackLight-NL/BlackMine/blob/master/logo.jpg)
+
 # BlackMine (PHP7)
 ### BlackMine is a Minecraft: PE Server Software with an improved Generator and a lot more features. 
 
